@@ -15,9 +15,9 @@
   --orange:  #ff8a3d;
   --yellow:  #ffd23d;
 
-  --ink:      #f5f7ff;
-  --ink-dim:  #b9c0e0;
-  --ink-soft: #8b93bf;
+  --ink:      #f7f9ff;
+  --ink-dim:  #d8deff;
+  --ink-soft: #9aa2cf;
 
   --glass:        rgba(255, 255, 255, 0.06);
   --glass-strong: rgba(255, 255, 255, 0.10);
@@ -113,20 +113,21 @@ html, body {
   position: absolute;
   inset: -14% -12%;
   z-index: -1;
-  background: radial-gradient(ellipse 62% 64% at 50% 50%,
-    rgba(5, 3, 15, 0.62) 0%,
-    rgba(5, 3, 15, 0.38) 42%,
-    rgba(5, 3, 15, 0.0) 72%);
-  filter: blur(22px);
+  background: radial-gradient(ellipse 56% 58% at 50% 50%,
+    rgba(5, 3, 15, 0.66) 0%,
+    rgba(5, 3, 15, 0.34) 46%,
+    rgba(5, 3, 15, 0.0) 74%);
+  filter: blur(26px);
   pointer-events: none;
 }
 
 /* legibility for type sitting over the particle field */
-h1, .quote blockquote, .august h2, .recap h2 {
-  text-shadow: 0 2px 30px rgba(3, 1, 12, 0.7), 0 1px 4px rgba(3, 1, 12, 0.5);
+h1, h2, .quote blockquote {
+  color: #ffffff;
+  text-shadow: 0 2px 26px rgba(3, 1, 12, 0.85), 0 2px 6px rgba(3, 1, 12, 0.7);
 }
 .cover .sub, .recap .lede, .august .sub, .quote .attrib, .recap .canvas-note {
-  text-shadow: 0 1px 18px rgba(3, 1, 12, 0.8);
+  text-shadow: 0 1px 16px rgba(3, 1, 12, 0.9), 0 1px 3px rgba(3, 1, 12, 0.8);
 }
 
 /* Eyebrow / kicker */
@@ -156,10 +157,12 @@ h1, .quote blockquote, .august h2, .recap h2 {
 h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.02; letter-spacing: -0.02em; }
 
 .gradient-text {
-  background: linear-gradient(110deg, #aeb8ff 0%, var(--indigo) 45%, var(--purple) 100%);
+  background: linear-gradient(110deg, #ffffff 0%, #d6dcff 38%, #aeb4ff 72%, #c9b4ff 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  /* subtle bloom so the bright gradient still pops over the field */
+  filter: drop-shadow(0 2px 22px rgba(120, 130, 255, 0.45));
 }
 
 .eq-credit {
