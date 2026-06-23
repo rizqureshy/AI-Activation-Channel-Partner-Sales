@@ -68,42 +68,34 @@ function animateOut(slide) {
 }
 
 /* ---- navigation ----
-   The morphing field swirls AND surges forward (in front of the slide)
-   to obscure it mid-transition, then recedes back behind as it settles.
-   We raise the canvas above the DOM for the duration, swap the slide at
-   the obscured peak, and drop the canvas back once the field recedes. */
+   The field stays behind the slide at all times (no layer flip). On a
+   change it morphs + swirls + surges forward while the current slide
+   DISSOLVES — so the big bright whirl is all that's visible (it reads as
+   the dance coming forward and obscuring) — then the next slide fades
+   back in as the field recedes. Pure opacity + motion = no snap. */
 function go(index) {
   if (index < 0 || index >= total || index === current || animating) return;
   animating = true;
   const prevSlide = slides[current];
   const nextSlide = slides[index];
+  const prevFade = prevSlide.querySelectorAll(".slide-inner, .eq-credit");
+  const nextFade = nextSlide.querySelectorAll(".slide-inner, .eq-credit");
 
-  bgCanvas.classList.add("front");        // field renders over the slide
+  applyScene(nextSlide);                 // morph + swirl + forward surge (behind)
+  gsap.to(prevFade, { opacity: 0, duration: 0.5, ease: "power2.in" });
   animateOut(prevSlide);
-  applyScene(nextSlide);                   // morph + swirl + forward surge
   current = index;
   updateChrome();
 
-  // swap the slide at the obscured peak
+  // swap at the obscured peak; reveal the next slide as the field recedes
   setTimeout(() => {
     prevSlide.classList.remove("is-active");
     nextSlide.classList.add("is-active");
+    gsap.set(nextFade, { opacity: 0 });
     animateIn(nextSlide);
-  }, 600);
-
-  // smooth hand-off: briefly dip the field's brightness, flip the canvas
-  // back behind the content during the dip, then restore — so the layer
-  // swap is invisible instead of an on/off snap
-  setTimeout(() => {
-    gsap.to(cosmos.uniforms.uFade, {
-      value: 0.35, duration: 0.22, ease: "power2.in",
-      onComplete: () => {
-        bgCanvas.classList.remove("front");
-        gsap.to(cosmos.uniforms.uFade, { value: 1, duration: 0.45, ease: "power2.out" });
-      },
-    });
-  }, 1500);
-  setTimeout(() => (animating = false), 1900);
+    gsap.to(nextFade, { opacity: 1, duration: 0.7, ease: "power2.out" });
+  }, 620);
+  setTimeout(() => (animating = false), 1500);
 }
 
 function next() { go(current + 1); }

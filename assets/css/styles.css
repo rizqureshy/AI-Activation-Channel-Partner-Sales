@@ -52,9 +52,6 @@ html, body {
   z-index: 0;
   display: block;
 }
-/* during a transition the field surges forward; raise it above the slide
-   so it obscures the content, then it drops back behind as it recedes */
-#bg-canvas.front { z-index: 35; }   /* above slides (5), below nav chrome (40) */
 
 .cosmos-wash {
   position: fixed;
