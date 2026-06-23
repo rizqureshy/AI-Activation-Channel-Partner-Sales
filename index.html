@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover" />
+  <title>AI Activation · Channel Partner Sales</title>
+  <meta name="description" content="An interactive 3D presentation: AI Activation for the Channel Partner Sales team — a fun-universe recap of AI April and a reveal of AI August." />
+
+  <!-- Fonts (graceful system fallback if offline) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="assets/css/styles.css" />
+
+  <!-- GSAP (animations) — vendored locally, no network needed -->
+  <script src="assets/vendor/gsap.min.js"></script>
+
+  <!-- Three.js modules — vendored locally -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "./assets/vendor/three/three.module.js",
+      "three/addons/": "./assets/vendor/three/addons/"
+    }
+  }
+  </script>
+</head>
+<body>
+
+  <!-- Loader -->
+  <div id="loader">
+    <div class="orb"></div>
+    <div class="lbl">Spinning up the universe…</div>
+  </div>
+
+  <!-- 3D background -->
+  <canvas id="bg-canvas"></canvas>
+  <div class="cosmos-wash"></div>
+  <div class="vignette"></div>
+
+  <!-- Top chrome -->
+  <div class="progress"><div class="bar" id="bar"></div></div>
+  <header class="chrome brandbar">
+    <div class="logo"><span class="spark"></span> AI Activation</div>
+    <div class="count"><b id="c-now">01</b> / <span id="c-tot">04</span></div>
+  </header>
+
+  <!-- Nav arrows -->
+  <button class="nav-btn prev" id="prev" aria-label="Previous slide">
+    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
+  <button class="nav-btn next" id="next" aria-label="Next slide">
+    <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+  </button>
+
+  <!-- Dots -->
+  <nav class="chrome dots" id="dots" aria-label="Slide navigation"></nav>
+
+  <!-- ====================== SLIDES ====================== -->
+  <main id="stage">
+
+    <!-- 1 · Cover -->
+    <section class="slide cover" data-slide="0">
+      <div class="slide-inner">
+        <span class="kicker reveal"><span class="dot"></span> Channel Partner Sales · 2026</span>
+        <h1 class="reveal">A summer of <span class="gradient-text">AI Activation</span></h1>
+        <p class="sub reveal">Fun, discovery and learning — an interactive look at how the GTM Enablement team turned curiosity into shipped AI work, and what's coming next.</p>
+        <div class="scroll-hint reveal"><span class="mouse"></span> scroll or use arrows</div>
+      </div>
+      <div class="eq-credit">© 2026 Equinix, Inc.</div>
+    </section>
+
+    <!-- 2 · Quote -->
+    <section class="slide quote" data-slide="1">
+      <div class="slide-inner">
+        <span class="quote-mark reveal">&ldquo;</span>
+        <blockquote class="reveal">
+          The magic of AI in GTM isn't the technology itself; it's what it gives you back:
+          <span class="hl">time</span>… more time to do what humans do best — build real relationships and close deals.
+        </blockquote>
+        <div class="attrib reveal">
+          <span class="avatar"></span>
+          <span class="who"><b>Yamini Rangan</b><span>CEO, HubSpot</span></span>
+        </div>
+      </div>
+      <div class="eq-credit">© 2026 Equinix, Inc.</div>
+    </section>
+
+    <!-- 3 · AI April recap -->
+    <section class="slide recap" data-slide="2">
+      <div class="slide-inner">
+        <div class="head">
+          <span class="kicker reveal"><span class="dot"></span> A recap for the Channel Partner Sales team</span>
+          <h2 class="reveal">AI April <span class="gradient-text">was a blast.</span></h2>
+          <p class="lede reveal">Here's how the GTM Enablement team spent a month turning curiosity into real, shipped AI work.</p>
+        </div>
+
+        <div class="weeks">
+          <article class="wk" style="--wk-grad:linear-gradient(135deg,#2b88ff,#6b5bff);--wk-glow:radial-gradient(circle at 50% 0,#2b88ff,transparent);--wk-shadow:#2b88ff;">
+            <div class="badge"><svg viewBox="0 0 24 24"><path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8z"/></svg></div>
+            <div class="wk-no">Week 1</div>
+            <h3>Generate &amp; Play</h3>
+            <ul><li>AI alter egos &amp; personas</li><li>Triple-style portraits</li><li>AI strategy decks</li></ul>
+          </article>
+
+          <article class="wk" style="--wk-grad:linear-gradient(135deg,#e3008c,#9b4dff);--wk-glow:radial-gradient(circle at 50% 0,#e3008c,transparent);--wk-shadow:#ff4db8;">
+            <div class="badge"><svg viewBox="0 0 24 24"><path d="M9.4 7.6L4.8 12l4.6 4.4-1.4 1.5L1.9 12l6.1-5.9zM14.6 7.6l1.4-1.5L22.1 12l-6.1 5.9-1.4-1.5L19.2 12z"/></svg></div>
+            <div class="wk-no">Week 2</div>
+            <h3>Vibe-Code It</h3>
+            <ul><li>Artemis II HTML animation</li><li>Browser-based bands</li><li>Live team dashboards</li></ul>
+          </article>
+
+          <article class="wk" style="--wk-grad:linear-gradient(135deg,#18c8b6,#22c55e);--wk-glow:radial-gradient(circle at 50% 0,#18c8b6,transparent);--wk-shadow:#18c8b6;">
+            <div class="badge"><svg viewBox="0 0 24 24"><path d="M4 20V10h4v10zm6 0V4h4v16zm6 0v-7h4v7z"/></svg></div>
+            <div class="wk-no">Week 3</div>
+            <h3>Data Quest</h3>
+            <ul><li>Synthetic datasets</li><li>Sketch-to-screen UIs</li><li>AI-built courses</li></ul>
+          </article>
+
+          <article class="wk" style="--wk-grad:linear-gradient(135deg,#ff8a3d,#ffd23d);--wk-glow:radial-gradient(circle at 50% 0,#ff8a3d,transparent);--wk-shadow:#ff8a3d;">
+            <div class="badge"><svg viewBox="0 0 24 24"><path d="M12 2c3 2 4.5 5 4.5 8.5L18 13l-2 .8-1 3h-6l-1-3L6 13l1.5-2.5C7.5 7 9 4 12 2zm0 7a1.8 1.8 0 100 3.6A1.8 1.8 0 0012 9zM8.5 18.5c-.5 1.3-.4 2.6 0 3.5 1-.4 1.9-1.2 2.4-2.4zM15.5 18.5l-2.4 1.1c.5 1.2 1.4 2 2.4 2.4.4-.9.5-2.2 0-3.5z"/></svg></div>
+            <div class="wk-no">Week 4</div>
+            <h3>Ship &amp; Show</h3>
+            <ul><li>Git + GitHub workflows</li><li>GitHub Pages sites</li><li>Public AI portfolios</li></ul>
+          </article>
+        </div>
+
+        <p class="canvas-note reveal">It all came together at the <span class="chip">GTM AI Canvas</span> — a live showcase of everything the team built.</p>
+      </div>
+      <div class="eq-credit">© 2026 Equinix, Inc.</div>
+    </section>
+
+    <!-- 4 · AI August reveal -->
+    <section class="slide august" data-slide="3">
+      <div class="slide-inner">
+        <span class="kicker reveal"><span class="dot"></span> Coming this August</span>
+        <h2 class="reveal"><small>Your very own</small> <span class="gradient-text">AI August</span></h2>
+        <p class="sub reveal">A custom activation built for the Channel Partner Sales team. Lift the lid for your own summer of AI Activation.</p>
+        <div class="pills">
+          <span class="pill a reveal">Fun</span>
+          <span class="pill b reveal">Discovery</span>
+          <span class="pill c reveal">Learning</span>
+        </div>
+      </div>
+      <div class="eq-credit">© 2026 Equinix, Inc.</div>
+    </section>
+
+  </main>
+
+  <script type="module" src="assets/js/app.js"></script>
+</body>
+</html>
