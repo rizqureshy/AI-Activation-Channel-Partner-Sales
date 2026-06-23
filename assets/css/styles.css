@@ -104,6 +104,29 @@ html, body {
 .slide-inner {
   width: min(1180px, 100%);
   position: relative;
+  z-index: 1;
+}
+/* soft focal scrim: dims particles right behind the text so it stays readable,
+   while keeping the field visible around the edges */
+.slide-inner::before {
+  content: "";
+  position: absolute;
+  inset: -14% -12%;
+  z-index: -1;
+  background: radial-gradient(ellipse 62% 64% at 50% 50%,
+    rgba(5, 3, 15, 0.62) 0%,
+    rgba(5, 3, 15, 0.38) 42%,
+    rgba(5, 3, 15, 0.0) 72%);
+  filter: blur(22px);
+  pointer-events: none;
+}
+
+/* legibility for type sitting over the particle field */
+h1, .quote blockquote, .august h2, .recap h2 {
+  text-shadow: 0 2px 30px rgba(3, 1, 12, 0.7), 0 1px 4px rgba(3, 1, 12, 0.5);
+}
+.cover .sub, .recap .lede, .august .sub, .quote .attrib, .recap .canvas-note {
+  text-shadow: 0 1px 18px rgba(3, 1, 12, 0.8);
 }
 
 /* Eyebrow / kicker */
