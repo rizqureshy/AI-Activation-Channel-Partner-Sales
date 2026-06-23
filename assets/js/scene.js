@@ -35,7 +35,7 @@ export class Cosmos {
     this.pointer = new THREE.Vector2(0, 0);
     this.pointerTarget = new THREE.Vector2(0, 0);
     this.reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    this.N = this.reduced ? 5000 : 15000;
+    this.N = this.reduced ? 5000 : 13000;
 
     this._initRenderer();
     this._initScene();
@@ -124,7 +124,7 @@ export class Cosmos {
     const aSize = new Float32Array(N);
     for (let i = 0; i < N; i++) {
       aRand[i] = Math.random();
-      aSize[i] = 0.3 + Math.random() * 0.85;
+      aSize[i] = 0.42 + Math.random() * 1.05;
     }
 
     // initial formation = orb
@@ -176,7 +176,7 @@ export class Cosmos {
           pos.x += cos(uTime*0.5 + aRand*6.2831)*0.05;
 
           vec4 mv = modelViewMatrix * vec4(pos,1.0);
-          gl_PointSize = aSize * (150.0 / -mv.z) * uPix * (0.7 + 0.3*sin(uTime*2.0 + aRand*30.0));
+          gl_PointSize = aSize * (165.0 / -mv.z) * uPix * (0.7 + 0.3*sin(uTime*2.0 + aRand*30.0));
           gl_Position = projectionMatrix * mv;
           vCol = mix(cFrom, cTo, e);
         }`,
@@ -185,7 +185,9 @@ export class Cosmos {
         void main(){
           float d = length(gl_PointCoord - 0.5);
           float a = smoothstep(0.5, 0.0, d);
-          gl_FragColor = vec4(vCol, a*0.8);
+          // brighter, radiant core
+          vec3 col = vCol * (1.15 + 0.5 * (1.0 - d * 2.0));
+          gl_FragColor = vec4(col, a*0.85);
         }`,
     });
 
