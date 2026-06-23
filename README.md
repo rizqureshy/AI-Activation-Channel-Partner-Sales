@@ -37,9 +37,10 @@ Full guide → **[AUTHORING.md](AUTHORING.md)**.
 
 ## What the engine gives you
 
-- **Whirlwind transitions** — on each slide change the particle field swirls and dances in
-  the background as it morphs between the slide shapes (arc displacement + an enveloped spin
-  that peaks mid-transition and settles at rest). Content is always crisp DOM on top.
+- **Whirlwind transitions** — on each slide change the particle field swirls and dances as it
+  morphs between the slide shapes, and **surges forward to obscure the slide** mid-transition
+  before receding back behind to reveal the next one (arc displacement + an enveloped spin and
+  depth-surge that peak mid-transition and are zero at rest). Content is always crisp DOM.
 - **Restrained cosmic theme** — cool white/violet/blue with sparse accent pops
 - **Glowing, radiating key words** + crisp readable text (focal scrim + dark halo)
 - **Framer-style flows** — depth-based reveals, card cascades, per-slide camera moves

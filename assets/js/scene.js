@@ -148,13 +148,14 @@ export class Cosmos {
       uArc: { value: 1.3 },
       uSpin: { value: 0.0 },
       uSwirl: { value: 2.4 },   // whirlwind: extra rotation that peaks mid-transition
+      uForward: { value: 6.2 }, // depth surge toward the camera, peaks mid-transition
     };
 
     const mat = new THREE.ShaderMaterial({
       transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
       uniforms: this.uniforms,
       vertexShader: `
-        uniform float uTime, uMix, uPix, uArc, uSpin, uSwirl;
+        uniform float uTime, uMix, uPix, uArc, uSpin, uSwirl, uForward;
         attribute vec3 aFrom; attribute vec3 aTo;
         attribute vec3 cFrom; attribute vec3 cTo;
         attribute float aRand; attribute float aSize;
@@ -177,6 +178,9 @@ export class Cosmos {
           pos = vec3(pos.x*c - pos.z*s, pos.y, pos.x*s + pos.z*c);
           pos.y += sin(uTime*0.7 + aRand*6.2831)*0.07 + arc*0.6*sin(aRand*30.0); // lift + scatter mid-swirl
           pos.x += cos(uTime*0.5 + aRand*6.2831)*0.05;
+          // surge toward the camera mid-transition so the dance comes forward
+          // and obscures the slide, then recedes back (arc = 0 at rest)
+          pos.z += arc * uForward;
 
           vec4 mv = modelViewMatrix * vec4(pos,1.0);
           gl_PointSize = aSize * (165.0 / -mv.z) * uPix * (0.7 + 0.3*sin(uTime*2.0 + aRand*30.0));

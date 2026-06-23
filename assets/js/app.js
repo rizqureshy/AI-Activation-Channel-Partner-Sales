@@ -6,7 +6,8 @@ import { Cosmos } from "./scene.js";
 
 const gsap = window.gsap;
 
-const cosmos = new Cosmos(document.getElementById("bg-canvas"));
+const bgCanvas = document.getElementById("bg-canvas");
+const cosmos = new Cosmos(bgCanvas);
 cosmos.start();
 
 const slides = Array.from(document.querySelectorAll(".slide"));
@@ -66,27 +67,33 @@ function animateOut(slide) {
   });
 }
 
-/* ---- navigation ---- */
+/* ---- navigation ----
+   The morphing field swirls AND surges forward (in front of the slide)
+   to obscure it mid-transition, then recedes back behind as it settles.
+   We raise the canvas above the DOM for the duration, swap the slide at
+   the obscured peak, and drop the canvas back once the field recedes. */
 function go(index) {
   if (index < 0 || index >= total || index === current || animating) return;
   animating = true;
   const prevSlide = slides[current];
   const nextSlide = slides[index];
 
+  bgCanvas.classList.add("front");        // field renders over the slide
   animateOut(prevSlide);
-
-  // drive the 3D scene from the slide's own declaration
-  applyScene(nextSlide);
+  applyScene(nextSlide);                   // morph + swirl + forward surge
   current = index;
   updateChrome();
 
-  // deterministic swap once the out-animation has played
+  // swap the slide at the obscured peak
   setTimeout(() => {
     prevSlide.classList.remove("is-active");
     nextSlide.classList.add("is-active");
     animateIn(nextSlide);
-    setTimeout(() => (animating = false), 650);
-  }, 360);
+  }, 600);
+
+  // drop the field back behind the content as it recedes
+  setTimeout(() => bgCanvas.classList.remove("front"), 1450);
+  setTimeout(() => (animating = false), 1550);
 }
 
 function next() { go(current + 1); }
