@@ -242,38 +242,97 @@ export class Cosmos {
     return { pos, col };
   }
 
-  _formClusters() {
+  _formClusters(n = 4, y = -3.4) {
     const { pos, col } = this._alloc(), N = this.N;
-    const cols = [C.blue, C.violet, C.teal, C.gold];
-    const spacing = 3.1;
+    const palette = [C.blue, C.violet, C.teal, C.gold, C.iris, C.pink];
+    const spacing = n <= 3 ? 3.7 : 3.0;
     for (let i = 0; i < N; i++) {
-      const g = i % 4;
-      const cx = (g - 1.5) * spacing;
-      // rounded box-ish gaussian cloud
+      const g = i % n;
+      const cx = (g - (n - 1) / 2) * spacing;
       const rx = (Math.random() - 0.5) * 1.7;
       const ry = (Math.random() - 0.5) * 1.7;
       const rz = (Math.random() - 0.5) * 1.0;
       pos[i * 3] = cx + rx;
-      pos[i * 3 + 1] = -3.4 + ry;
+      pos[i * 3 + 1] = y + ry;
       pos[i * 3 + 2] = rz;
-      this._setCol(col, i, cols[g], 0.12);
+      this._setCol(col, i, palette[g], 0.12);
     }
     return { pos, col };
   }
 
-  _formChest() {
-    const { pos, col } = this._alloc(), N = this.N;
-    const W = 1.9, H = 1.3, D = 1.3;
+  // bright, dense little sphere — the "ACE core", offset to one side
+  _formCore() {
+    const { pos, col } = this._alloc(), N = this.N, R = 2.0;
+    const tmp = new THREE.Color();
     for (let i = 0; i < N; i++) {
-      // points on the surface of a rounded box (the "treasure box")
-      const f = Math.floor(Math.random() * 6);
-      let x = (Math.random() - 0.5) * W, y = (Math.random() - 0.5) * H, z = (Math.random() - 0.5) * D;
-      if (f === 0) y = H / 2; else if (f === 1) y = -H / 2;
-      else if (f === 2) x = W / 2; else if (f === 3) x = -W / 2;
-      else if (f === 4) z = D / 2; else z = -D / 2;
-      pos[i * 3] = x; pos[i * 3 + 1] = y - 2.4; pos[i * 3 + 2] = z;
-      const tcol = Math.random() < 0.35 ? C.gold : C.violet;
-      this._setCol(col, i, tcol, 0.1);
+      const u = Math.random() * Math.PI * 2;
+      const ct = 2 * Math.random() - 1;
+      const st = Math.sqrt(Math.max(0, 1 - ct * ct));
+      const rad = R * (0.45 + 0.55 * Math.random());        // fill the volume a bit
+      const px = Math.cos(u) * st * rad;
+      const py = ct * rad;
+      const pz = Math.sin(u) * st * rad;
+      pos[i * 3] = px + 3.3;
+      pos[i * 3 + 1] = py + 0.2;
+      pos[i * 3 + 2] = pz;
+      const near = rad < R * 0.7;
+      const tcol = near ? C.white : tmp.copy(C.violet).lerp(C.blue, Math.random());
+      this._setCol(col, i, tcol, 0.08);
+    }
+    return { pos, col };
+  }
+
+  // two distinct clouds — the "two sides / trust boundary" duality
+  _formSplit() {
+    const { pos, col } = this._alloc(), N = this.N;
+    for (let i = 0; i < N; i++) {
+      const side = i % 2;
+      const cx = side ? 3.1 : -3.1;
+      const rx = (Math.random() - 0.5) * 2.2;
+      const ry = (Math.random() - 0.5) * 3.0;
+      const rz = (Math.random() - 0.5) * 1.2;
+      pos[i * 3] = cx + rx;
+      pos[i * 3 + 1] = ry + 0.2;
+      pos[i * 3 + 2] = rz;
+      this._setCol(col, i, side ? C.violet : C.blue, 0.1);
+    }
+    return { pos, col };
+  }
+
+  // a lattice plane — the "scan across the content estate"
+  _formGrid() {
+    const { pos, col } = this._alloc(), N = this.N;
+    const cols = Math.round(Math.sqrt(N * 1.7));
+    const rows = Math.ceil(N / cols);
+    const W = 12, H = 6.5;
+    const tmp = new THREE.Color();
+    for (let i = 0; i < N; i++) {
+      const c = i % cols, r = (i / cols) | 0;
+      const x = (c / (cols - 1) - 0.5) * W;
+      const y = (r / (rows - 1) - 0.5) * H + 0.3;
+      const z = Math.sin(c * 0.6) * 0.35 + (Math.random() - 0.5) * 0.25;
+      pos[i * 3] = x;
+      pos[i * 3 + 1] = y;
+      pos[i * 3 + 2] = z;
+      const tcol = Math.random() < 0.08 ? C.gold : tmp.copy(C.teal).lerp(C.blue, c / cols);
+      this._setCol(col, i, tcol, 0.06);
+    }
+    return { pos, col };
+  }
+
+  // a horizontal flowing band — the "Build › Validate › Publish › Field" pipeline
+  _formStream() {
+    const { pos, col } = this._alloc(), N = this.N;
+    const tmp = new THREE.Color();
+    for (let i = 0; i < N; i++) {
+      const u = Math.random();
+      const x = (u - 0.5) * 13.5;
+      const wave = Math.sin(u * Math.PI * 2.4) * 0.7;
+      pos[i * 3] = x;
+      pos[i * 3 + 1] = wave - 0.4 + (Math.random() - 0.5) * 0.9;
+      pos[i * 3 + 2] = Math.cos(u * Math.PI * 2.0) * 0.6 + (Math.random() - 0.5) * 0.5;
+      const tcol = Math.random() < 0.07 ? C.gold : tmp.copy(C.blue).lerp(C.teal, u);
+      this._setCol(col, i, tcol, 0.07);
     }
     return { pos, col };
   }
@@ -281,7 +340,7 @@ export class Cosmos {
   _formBurst() {
     const { pos, col } = this._alloc(), N = this.N;
     for (let i = 0; i < N; i++) {
-      // upward-biased exploding shell — the "treasure" fountain
+      // exploding shell — the celebratory finale
       const dirx = (Math.random() - 0.5) * 2;
       const diry = Math.random();             // bias up
       const dirz = (Math.random() - 0.5) * 2;
@@ -291,7 +350,7 @@ export class Cosmos {
       pos[i * 3 + 1] = (diry / len) * rad - 1.0;
       pos[i * 3 + 2] = (dirz / len) * rad;
       const r = Math.random();
-      const tcol = r < 0.15 ? ACCENTS[(r * 100 | 0) % ACCENTS.length] : (r < 0.6 ? C.gold : C.white);
+      const tcol = r < 0.18 ? ACCENTS[(r * 100 | 0) % ACCENTS.length] : (r < 0.6 ? C.gold : C.white);
       this._setCol(col, i, tcol, 0.1);
     }
     return { pos, col };
@@ -325,24 +384,44 @@ export class Cosmos {
   /* ---------------- per-slide choreography ---------------- */
   setSlide(index, gsap) {
     this.gsap = gsap;
-    if (this._chestTimer) { this._chestTimer.kill(); this._chestTimer = null; }
 
-    if (index === 0) {
-      this._morphTo(this._formOrb(), { spin: 0.05, arc: 1.5 });
-      this._camTo(0, 0.5, 13);
-    } else if (index === 1) {
-      this._morphTo(this._formRing(), { spin: 0.10, arc: 1.2 });
-      this._camTo(-0.6, 0.1, 12.5);
-    } else if (index === 2) {
-      this._morphTo(this._formClusters(), { spin: 0.0, arc: 1.8, dur: 1.9 });
-      this._camTo(0, 0.3, 14.5);
-    } else if (index === 3) {
-      // gather into a chest, then erupt
-      this._morphTo(this._formChest(), { spin: 0.0, arc: 1.2, dur: 1.3 });
-      this._camTo(0, 0.0, 13);
-      this._chestTimer = gsap.delayedCall(1.5, () => {
-        this._morphTo(this._formBurst(), { spin: 0.06, arc: 2.6, dur: 1.6, ease: "power2.out" });
-      });
+    switch (index) {
+      case 0: // cover — orb
+        this._morphTo(this._formOrb(), { spin: 0.05, arc: 1.5 });
+        this._camTo(0, 0.5, 13);
+        break;
+      case 1: // Meet ACE — bright core, offset right
+        this._morphTo(this._formCore(), { spin: 0.0, arc: 1.3 });
+        this._camTo(-0.6, 0.1, 12.8);
+        break;
+      case 2: // ACE deeper & wider — 3 clusters
+        this._morphTo(this._formClusters(3, -3.6), { spin: 0.0, arc: 1.8, dur: 1.9 });
+        this._camTo(0, 0.3, 14.2);
+        break;
+      case 3: // Claude in Copilot — split / duality
+        this._morphTo(this._formSplit(), { spin: 0.0, arc: 1.6, dur: 1.8 });
+        this._camTo(0, 0.2, 13.6);
+        break;
+      case 4: // Access — orbital ring
+        this._morphTo(this._formRing(), { spin: 0.10, arc: 1.2 });
+        this._camTo(-0.5, 0.1, 12.8);
+        break;
+      case 5: // AICVUE — scan grid
+        this._morphTo(this._formGrid(), { spin: 0.0, arc: 1.4, dur: 1.9 });
+        this._camTo(0, 0.2, 13.8);
+        break;
+      case 6: // Publishing pipeline — flowing stream
+        this._morphTo(this._formStream(), { spin: 0.0, arc: 1.3, dur: 1.8 });
+        this._camTo(0, 0.1, 13.4);
+        break;
+      case 7: // Activation Studio — 4 clusters
+        this._morphTo(this._formClusters(4, -3.5), { spin: 0.0, arc: 1.8, dur: 1.9 });
+        this._camTo(0, 0.3, 14.5);
+        break;
+      case 8: // Five moves — burst finale
+        this._morphTo(this._formBurst(), { spin: 0.06, arc: 2.6, dur: 1.7, ease: "power2.out" });
+        this._camTo(0, 0.0, 13);
+        break;
     }
   }
 

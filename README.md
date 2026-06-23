@@ -1,31 +1,37 @@
-# AI Activation — Channel Partner Sales
+# AI Activation — What's New, What's Next
 
-An interactive, **3D HTML presentation** of the *AI Activation for Channel Partner Sales* deck.
-A single **morphing particle field** (≈7,000 GPU points) flies between formations as you move
-through the slides — restrained, cosmic, and Framer-style.
+An interactive, **3D HTML presentation** for the AI Activation monthly learning session —
+covering **ACE, Claude in Copilot, AICVUE, the Publishing Pipeline, and the Activation
+Studio**. A single **morphing particle field** (~13,000 GPU points) flies between a
+different formation for every slide.
 
 ![Cover](docs/preview/01-cover.png)
 
 ## What's inside
 
-The whole deck is driven by **one WebGL particle system** that transforms from shape to
-shape. Particles arc and fly between formations on every transition (they visibly "come and
-go"), then breathe and sway at rest:
+The whole deck is driven by **one WebGL particle system** that transforms shape to shape.
+Particles arc and fly between formations on every transition, then breathe and sway at rest.
+Each formation is chosen to match the slide's idea:
 
 | # | Slide | Particle formation |
 |---|-------|--------------------|
-| 1 | **A summer of AI Activation** (cover) | Particles gather into a glowing **sphere** — the "AI" core |
-| 2 | **The quote** (Yamini Rangan, HubSpot) | They flow into a slow **orbital ring** ("time") drifting beside the quote |
-| 3 | **AI April was a blast** (recap) | The field splits into **four week-constellations** beneath the content cards |
-| 4 | **Your very own AI August** (reveal) | Particles gather into a **treasure chest**, then **erupt** in a celebratory burst |
+| 1 | **What's New, What's Next** (cover) | glowing **sphere** |
+| 2 | **Meet ACE** | a bright, dense **core** |
+| 3 | **ACE gets deeper, and wider** | **three clusters** (IBX-KB · Sustainability · SharePoint) |
+| 4 | **Claude is in Copilot now** | a **split** into two clouds — the trust-boundary duality |
+| 5 | **Getting access** | an orbital **ring** |
+| 6 | **AICVUE** | a scanning **lattice grid** |
+| 7 | **Publishing Pipeline** | a flowing **stream** behind Build › Validate › Publish › Field |
+| 8 | **The Activation Studio** | **four clusters** under the named owners |
+| 9 | **Five moves, one direction** | a celebratory **burst** finale |
 
-The palette is deliberately restrained — mostly cool white / violet / blue with sparse
-accent pops (and gold for the treasure). It all sits inside a faint starfield with soft
-nebula and pointer-driven camera parallax.
+The palette is deliberately restrained — cool white / violet / blue with sparse accent
+pops — and the **key words glow and radiate**. Text sits over a soft focal scrim with a
+tight dark halo so it stays crisp over the bright field.
 
-| Quote (ring) | Recap (clusters) | AI August (burst) |
+| Clarification (split) | Pipeline (stream) | Finale (burst) |
 |---|---|---|
-| ![Quote](docs/preview/02-quote.png) | ![Recap](docs/preview/03-recap.png) | ![August](docs/preview/04-august.png) |
+| ![Clarification](docs/preview/02-clarification.png) | ![Pipeline](docs/preview/03-pipeline.png) | ![Finale](docs/preview/04-finale.png) |
 
 ## Controls
 
@@ -38,11 +44,10 @@ nebula and pointer-driven camera parallax.
 
 ## Running it
 
-It's a fully static site with **no build step** and **no network dependencies** — Three.js
-and GSAP are vendored under `assets/vendor/`.
+A fully static site with **no build step** and **no network dependencies** — Three.js and
+GSAP are vendored under `assets/vendor/`.
 
 ```bash
-# any static server works, e.g.
 python3 -m http.server 8000
 # then open http://localhost:8000
 ```
@@ -52,8 +57,7 @@ python3 -m http.server 8000
 
 ### Deploy to GitHub Pages
 
-Push this repo and enable **Settings → Pages → Deploy from branch** (root). The site is
-served as-is.
+Push this repo and enable **Settings → Pages → Deploy from branch** (root).
 
 ## Tech
 
@@ -66,9 +70,9 @@ served as-is.
 ## Project layout
 
 ```
-index.html              # markup + slide content + import map
+index.html              # markup + all nine slides + import map
 assets/
-  css/styles.css        # theme, glassmorphism, chrome, responsive
+  css/styles.css        # theme, glass components, chrome, responsive
   js/scene.js           # the morphing particle field + formations + shader
   js/app.js             # slide controller, navigation, GSAP flows
   vendor/               # three.js + gsap (local, offline-friendly)
@@ -77,4 +81,4 @@ docs/preview/           # screenshots used in this README
 
 ---
 
-*© 2026 Equinix, Inc. — content from the AI Activation for Channel Partner Sales deck.*
+*© 2026 Equinix, Inc. — content from the AI Activation Session deck.*

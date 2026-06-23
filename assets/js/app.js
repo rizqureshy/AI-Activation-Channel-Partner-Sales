@@ -47,13 +47,13 @@ function animateIn(slide) {
     }
   );
 
-  // week cards cascade in with depth + tilt
-  const wks = slide.querySelectorAll(".wk");
+  // cards / panels cascade in with depth + tilt
+  const wks = slide.querySelectorAll(".pop");
   if (wks.length) {
     gsap.fromTo(
       wks,
-      { y: 70, z: -200, opacity: 0, rotateX: -35, rotateY: 12, transformPerspective: 900 },
-      { y: 0, z: 0, opacity: 1, rotateX: 0, rotateY: 0, duration: 1.1, ease: "back.out(1.5)", stagger: 0.1, delay: 0.4 }
+      { y: 64, z: -180, opacity: 0, rotateX: -32, rotateY: 10, transformPerspective: 900 },
+      { y: 0, z: 0, opacity: 1, rotateX: 0, rotateY: 0, duration: 1.05, ease: "back.out(1.5)", stagger: 0.085, delay: 0.4 }
     );
   }
 }
