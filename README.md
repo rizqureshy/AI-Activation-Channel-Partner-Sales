@@ -1,84 +1,77 @@
-# AI Activation — What's New, What's Next
+# Particle Engine — Presentation Platform
 
-An interactive, **3D HTML presentation** for the AI Activation monthly learning session —
-covering **ACE, Claude in Copilot, AICVUE, the Publishing Pipeline, and the Activation
-Studio**. A single **morphing particle field** (~13,000 GPU points) flies between a
-different formation for every slide.
+A reusable **3D particle presentation engine**. One WebGL particle field (~13,000 GPU
+points) morphs between formations as you move through slides, with a restrained cosmic
+theme, glowing key words, Framer-style flows, and full slide controls.
 
-![Cover](docs/preview/01-cover.png)
+This branch (`particle-engine-template`) is the **platform/template**. Decks are authored
+by writing HTML only — branch off this, fill in content, brand it, ship it.
 
-## What's inside
+![Template cover](docs/preview/01-cover.png)
 
-The whole deck is driven by **one WebGL particle system** that transforms shape to shape.
-Particles arc and fly between formations on every transition, then breathe and sway at rest.
-Each formation is chosen to match the slide's idea:
+## Make a deck
 
-| # | Slide | Particle formation |
-|---|-------|--------------------|
-| 1 | **What's New, What's Next** (cover) | glowing **sphere** |
-| 2 | **Meet ACE** | a bright, dense **core** |
-| 3 | **ACE gets deeper, and wider** | **three clusters** (IBX-KB · Sustainability · SharePoint) |
-| 4 | **Claude is in Copilot now** | a **split** into two clouds — what it does / what it doesn't |
-| 5 | **Getting access** | an orbital **ring** |
-| 6 | **AICVUE** | a scanning **lattice grid** |
-| 7 | **Publishing Pipeline** | a flowing **stream** behind Build › Validate › Publish › Field |
-| 8 | **The Activation Studio** | **four clusters** under the named owners |
-| 9 | **Five moves, one direction** | a celebratory **burst** finale |
+```bash
+git checkout particle-engine-template
+git checkout -b deck/<your-deck-name>
+# edit index.html — duplicate slides, set data-formation, write content
+python3 -m http.server 8000   # preview at http://localhost:8000
+```
 
-The palette is deliberately restrained — cool white / violet / blue with sparse accent
-pops — and the **key words glow and radiate**. Text sits over a soft focal scrim with a
-tight dark halo so it stays crisp over the bright field.
+Each slide declares its particle artwork in HTML:
 
-| Clarification (split) | Pipeline (stream) | Finale (burst) |
-|---|---|---|
-| ![Clarification](docs/preview/02-clarification.png) | ![Pipeline](docs/preview/03-pipeline.png) | ![Finale](docs/preview/04-finale.png) |
+```html
+<section class="slide content" data-formation="clusters:3">
+  <div class="slide-inner"> … your content … </div>
+</section>
+```
+
+**Formations:** `orb · core · core-center · clusters:N · split · ring · grid · stream · burst`
+
+Dots, counter, and navigation update automatically from the number of slides.
+Full guide → **[AUTHORING.md](AUTHORING.md)**.
+
+| Content slide (clusters) | Closing (burst) |
+|---|---|
+| ![Content](docs/preview/02-content.png) | ![Closing](docs/preview/03-closing.png) |
+
+## What the engine gives you
+
+- **Morphing particle field** — a custom GLSL shader eases particles between formations
+  (with arc displacement so they visibly fly between shapes) and adds idle drift at rest
+- **Restrained cosmic theme** — cool white/violet/blue with sparse accent pops
+- **Glowing, radiating key words** + crisp readable text (focal scrim + dark halo)
+- **Framer-style flows** — depth-based reveals, card cascades, per-slide camera moves
+- **Full controls** — arrows, ↑/↓, Space, Page keys, Home/End, wheel, touch swipe,
+  on-screen arrows, dot navigator, progress bar, mouse parallax
+- **Zero build, zero runtime network** — Three.js + GSAP vendored locally; deploys as-is to
+  GitHub Pages
 
 ## Controls
 
 - **← / →**, **↑ / ↓**, **Space**, **Page Up/Down** — move between slides
-- **Home / End** — jump to first / last slide
-- **Mouse wheel / trackpad** — scroll to advance
-- **Touch swipe** — on mobile / tablet
-- **On-screen** — arrows, progress bar, and the dot navigator
-- Move the mouse to gently parallax the whole scene
-
-## Running it
-
-A fully static site with **no build step** and **no network dependencies** — Three.js and
-GSAP are vendored under `assets/vendor/`.
-
-```bash
-python3 -m http.server 8000
-# then open http://localhost:8000
-```
-
-> ES module import maps require the page to be served over `http(s)://`
-> (opening `index.html` via `file://` won't load the modules).
-
-### Deploy to GitHub Pages
-
-Push this repo and enable **Settings → Pages → Deploy from branch** (root).
+- **Home / End** — first / last slide
+- **Wheel / swipe** — advance · **Mouse move** — parallax
 
 ## Tech
 
-- **[Three.js](https://threejs.org/) r160** — WebGL rendering; a custom GLSL particle
-  shader handles the morph (eased mix between formations + arc displacement + idle motion)
-- **[GSAP](https://gsap.com/) 3.12** — drives the morph (`uMix`), camera moves, and the
-  depth-based DOM reveals
-- Vanilla JS, CSS, and a single `index.html` — no framework, no bundler
+- **[Three.js](https://threejs.org/) r160** — WebGL + custom particle shader
+- **[GSAP](https://gsap.com/) 3.12** — morph driver, camera, DOM reveals
+- Vanilla JS/CSS, single `index.html`, no framework or bundler
 
 ## Project layout
 
 ```
-index.html              # markup + all nine slides + import map
+index.html              # the deck (content) + import map
+AUTHORING.md            # how to author a deck on this engine
 assets/
-  css/styles.css        # theme, glass components, chrome, responsive
-  js/scene.js           # the morphing particle field + formations + shader
+  css/styles.css        # theme tokens + glass components + chrome
+  js/scene.js           # particle engine + formation registry
   js/app.js             # slide controller, navigation, GSAP flows
   vendor/               # three.js + gsap (local, offline-friendly)
-docs/preview/           # screenshots used in this README
+docs/preview/           # template screenshots
 ```
 
 ---
 
-*© 2026 Equinix, Inc. — content from the AI Activation Session deck.*
+*Built for the AI Activation sessions. Restrained "fun universe" theme.*

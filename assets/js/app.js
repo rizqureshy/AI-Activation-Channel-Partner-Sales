@@ -75,8 +75,8 @@ function go(index) {
 
   animateOut(prevSlide);
 
-  // drive the 3D scene
-  cosmos.setSlide(index, gsap);
+  // drive the 3D scene from the slide's own declaration
+  applyScene(nextSlide);
   current = index;
   updateChrome();
 
@@ -91,6 +91,16 @@ function go(index) {
 
 function next() { go(current + 1); }
 function prev() { go(current - 1); }
+
+/* Read a slide's particle declaration and drive the engine.
+   data-formation="orb|core|clusters:3|split|ring|grid|stream|burst|…"
+   data-cam="x,y,z"  (optional camera override) */
+function applyScene(slide) {
+  const spec = slide.dataset.formation || "orb";
+  const over = {};
+  if (slide.dataset.cam) over.cam = slide.dataset.cam.split(",").map(Number);
+  cosmos.applyFormation(spec, gsap, over);
+}
 
 function updateChrome() {
   dots.forEach((d, i) => d.classList.toggle("is-active", i === current));
@@ -138,7 +148,7 @@ window.addEventListener("touchend", (e) => {
 
 /* ---- boot ---- */
 function boot() {
-  cosmos.setSlide(0, gsap);
+  applyScene(slides[0]);
   slides[0].classList.add("is-active");
   animateIn(slides[0]);
   updateChrome();
@@ -146,5 +156,10 @@ function boot() {
   loader.classList.add("hidden");
 }
 
-// Give the WebGL + fonts a moment, then reveal
-window.addEventListener("load", () => setTimeout(boot, 650));
+// Boot on DOM-ready (not window.load) so a slow/blocked font never
+// stalls the intro. The module is deferred, so the DOM is already parsed.
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", () => setTimeout(boot, 350));
+} else {
+  setTimeout(boot, 350);
+}

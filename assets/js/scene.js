@@ -260,8 +260,8 @@ export class Cosmos {
     return { pos, col };
   }
 
-  // bright, dense little sphere — the "ACE core", offset to one side
-  _formCore() {
+  // bright, dense little sphere — the "core". offsetX shifts it aside.
+  _formCore(offsetX = 3.3) {
     const { pos, col } = this._alloc(), N = this.N, R = 2.0;
     const tmp = new THREE.Color();
     for (let i = 0; i < N; i++) {
@@ -272,7 +272,7 @@ export class Cosmos {
       const px = Math.cos(u) * st * rad;
       const py = ct * rad;
       const pz = Math.sin(u) * st * rad;
-      pos[i * 3] = px + 3.3;
+      pos[i * 3] = px + offsetX;
       pos[i * 3 + 1] = py + 0.2;
       pos[i * 3 + 2] = pz;
       const near = rad < R * 0.7;
@@ -381,49 +381,44 @@ export class Cosmos {
     gsap.to(this.uniforms.uSpin, { value: opts.spin ?? 0.0, duration: 1.5, ease: "power2.out" });
   }
 
-  /* ---------------- per-slide choreography ---------------- */
-  setSlide(index, gsap) {
-    this.gsap = gsap;
-
-    switch (index) {
-      case 0: // cover — orb
-        this._morphTo(this._formOrb(), { spin: 0.05, arc: 1.5 });
-        this._camTo(0, 0.5, 13);
-        break;
-      case 1: // Meet ACE — bright core, offset right
-        this._morphTo(this._formCore(), { spin: 0.0, arc: 1.3 });
-        this._camTo(-0.6, 0.1, 12.8);
-        break;
-      case 2: // ACE deeper & wider — 3 clusters
-        this._morphTo(this._formClusters(3, -3.6), { spin: 0.0, arc: 1.8, dur: 1.9 });
-        this._camTo(0, 0.3, 14.2);
-        break;
-      case 3: // Claude in Copilot — split / duality
-        this._morphTo(this._formSplit(), { spin: 0.0, arc: 1.6, dur: 1.8 });
-        this._camTo(0, 0.2, 13.6);
-        break;
-      case 4: // Access — orbital ring
-        this._morphTo(this._formRing(), { spin: 0.10, arc: 1.2 });
-        this._camTo(-0.5, 0.1, 12.8);
-        break;
-      case 5: // AICVUE — scan grid
-        this._morphTo(this._formGrid(), { spin: 0.0, arc: 1.4, dur: 1.9 });
-        this._camTo(0, 0.2, 13.8);
-        break;
-      case 6: // Publishing pipeline — flowing stream
-        this._morphTo(this._formStream(), { spin: 0.0, arc: 1.3, dur: 1.8 });
-        this._camTo(0, 0.1, 13.4);
-        break;
-      case 7: // Activation Studio — 4 clusters
-        this._morphTo(this._formClusters(4, -3.5), { spin: 0.0, arc: 1.8, dur: 1.9 });
-        this._camTo(0, 0.3, 14.5);
-        break;
-      case 8: // Five moves — burst finale
-        this._morphTo(this._formBurst(), { spin: 0.06, arc: 2.6, dur: 1.7, ease: "power2.out" });
-        this._camTo(0, 0.0, 13);
-        break;
-    }
+  /* ============================================================
+     Formation registry — the platform's public vocabulary.
+     Each entry: make(arg) -> {pos,col}, a default camera [x,y,z],
+     and default morph opts. Slides select one via HTML:
+        <section class="slide" data-formation="clusters:3">
+     ============================================================ */
+  get _registry() {
+    return {
+      orb:          { make: () => this._formOrb(),               cam: [0, 0.5, 13.0],  opts: { spin: 0.05, arc: 1.5 } },
+      core:         { make: () => this._formCore(3.3),           cam: [-0.6, 0.1, 12.8], opts: { spin: 0.0, arc: 1.3 } },
+      "core-center":{ make: () => this._formCore(0),             cam: [0, 0.2, 12.8],  opts: { spin: 0.0, arc: 1.3 } },
+      clusters:     { make: (n) => this._formClusters(Math.max(2, parseInt(n) || 3), -3.6),
+                                                                 cam: [0, 0.3, 14.2],  opts: { spin: 0.0, arc: 1.8, dur: 1.9 } },
+      split:        { make: () => this._formSplit(),             cam: [0, 0.2, 13.6],  opts: { spin: 0.0, arc: 1.6, dur: 1.8 } },
+      ring:         { make: () => this._formRing(),              cam: [-0.5, 0.1, 12.8], opts: { spin: 0.10, arc: 1.2 } },
+      grid:         { make: () => this._formGrid(),              cam: [0, 0.2, 13.8],  opts: { spin: 0.0, arc: 1.4, dur: 1.9 } },
+      stream:       { make: () => this._formStream(),            cam: [0, 0.1, 13.4],  opts: { spin: 0.0, arc: 1.3, dur: 1.8 } },
+      burst:        { make: () => this._formBurst(),             cam: [0, 0.0, 13.0],  opts: { spin: 0.06, arc: 2.6, dur: 1.7, ease: "power2.out" } },
+    };
   }
+
+  /**
+   * Public, data-driven entry point. Called once per slide.
+   * @param {string} spec   formation name, optionally "name:arg" (e.g. "clusters:4")
+   * @param {object} gsap   the GSAP instance
+   * @param {object} over   optional overrides: { cam:[x,y,z], spin, arc, dur, ease }
+   */
+  applyFormation(spec, gsap, over = {}) {
+    this.gsap = gsap;
+    const [nameRaw, arg] = String(spec || "orb").trim().split(":");
+    const def = this._registry[nameRaw] || this._registry.orb;
+    this._morphTo(def.make(arg), { ...def.opts, ...over });
+    const cam = over.cam || def.cam;
+    this._camTo(cam[0], cam[1], cam[2]);
+  }
+
+  /** List available formation names (handy for tooling/docs). */
+  get formationNames() { return Object.keys(this._registry); }
 
   _camTo(x, y, z) {
     this.camBase = { x, y, z };
