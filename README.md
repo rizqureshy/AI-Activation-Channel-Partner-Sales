@@ -18,7 +18,7 @@ Each formation is chosen to match the slide's idea:
 | 1 | **What's New, What's Next** (cover) | glowing **sphere** |
 | 2 | **Meet ACE** | a bright, dense **core** |
 | 3 | **ACE gets deeper, and wider** | **three clusters** (IBX-KB · Sustainability · SharePoint) |
-| 4 | **Claude is in Copilot now** | a **split** into two clouds — the trust-boundary duality |
+| 4 | **Claude is in Copilot now** | a **split** into two clouds — what it does / what it doesn't |
 | 5 | **Getting access** | an orbital **ring** |
 | 6 | **AICVUE** | a scanning **lattice grid** |
 | 7 | **Publishing Pipeline** | a flowing **stream** behind Build › Validate › Publish › Field |
