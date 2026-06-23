@@ -1,8 +1,9 @@
 # Particle Engine — Presentation Platform
 
-A reusable **3D particle presentation engine**. One WebGL particle field (~13,000 GPU
-points) morphs between formations as you move through slides, with a restrained cosmic
-theme, glowing key words, Framer-style flows, and full slide controls.
+A reusable **3D particle presentation engine**. One WebGL particle field (~34,000 GPU
+points) **builds each slide out of particles** — the headline and containers are sampled
+from the live DOM, so on every change the shapes shatter into a storm and reassemble into
+the next slide. Restrained cosmic theme, crisp body copy, Framer-style flows, full controls.
 
 This branch (`particle-engine-template`) is the **platform/template**. Decks are authored
 by writing HTML only — branch off this, fill in content, brand it, ship it.
@@ -14,31 +15,36 @@ by writing HTML only — branch off this, fill in content, brand it, ship it.
 ```bash
 git checkout particle-engine-template
 git checkout -b deck/<your-deck-name>
-# edit index.html — duplicate slides, set data-formation, write content
+# edit index.html — duplicate slides, tag the headline + containers, write content
 python3 -m http.server 8000   # preview at http://localhost:8000
 ```
 
-Each slide declares its particle artwork in HTML:
+You tag which elements the particles build, right in the HTML:
 
 ```html
-<section class="slide content" data-formation="clusters:3">
-  <div class="slide-inner"> … your content … </div>
+<section class="slide content">
+  <div class="slide-inner">
+    <h2 data-particle="text">Headline built from particles</h2>
+    <article class="card pop" data-particle="box" data-accent="#2b88ff"> … </article>
+  </div>
 </section>
 ```
 
-**Formations:** `orb · core · core-center · clusters:N · split · ring · grid · stream · burst`
+- `data-particle="text"` → the headline's words are rendered in particles
+- `data-particle="box"` → the container's outline is drawn in particles; the card fades in inside
 
 Dots, counter, and navigation update automatically from the number of slides.
 Full guide → **[AUTHORING.md](AUTHORING.md)**.
 
-| Content slide (clusters) | Closing (burst) |
+| Content (particle headline + containers) | Mid-transition (shatter / storm) |
 |---|---|
-| ![Content](docs/preview/02-content.png) | ![Closing](docs/preview/03-closing.png) |
+| ![Content](docs/preview/02-content.png) | ![Storm](docs/preview/03-storm.png) |
 
 ## What the engine gives you
 
-- **Morphing particle field** — a custom GLSL shader eases particles between formations
-  (with arc displacement so they visibly fly between shapes) and adds idle drift at rest
+- **Particle construction** — the headline and containers are sampled from the live DOM and
+  built from particles; on change they shatter → storm → reassemble (custom GLSL shader with
+  arc displacement so they visibly fly between shapes)
 - **Restrained cosmic theme** — cool white/violet/blue with sparse accent pops
 - **Glowing, radiating key words** + crisp readable text (focal scrim + dark halo)
 - **Framer-style flows** — depth-based reveals, card cascades, per-slide camera moves
@@ -66,7 +72,7 @@ index.html              # the deck (content) + import map
 AUTHORING.md            # how to author a deck on this engine
 assets/
   css/styles.css        # theme tokens + glass components + chrome
-  js/scene.js           # particle engine + formation registry
+  js/scene.js           # particle construction engine (DOM → particles)
   js/app.js             # slide controller, navigation, GSAP flows
   vendor/               # three.js + gsap (local, offline-friendly)
 docs/preview/           # template screenshots

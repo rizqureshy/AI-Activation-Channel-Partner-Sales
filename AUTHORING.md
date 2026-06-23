@@ -10,21 +10,45 @@ only write **HTML content** — no JavaScript changes required.
 
 ---
 
+## How it works (the big idea)
+
+The particles **are** the slide. For each slide the engine measures the live DOM and turns
+tagged elements into particle targets:
+
+- `data-particle="text"` — the element's words are rasterised and **rendered in particles**
+  (use on the headline). The DOM node is hidden but still laid out, so the particles sit
+  exactly where the text would be.
+- `data-particle="box"` `data-accent="#hex"` — the element's outline is **drawn in
+  particles** (use on cards / containers). The crisp card then fades in inside the outline.
+
+On every slide change the shapes **shatter → swirl into a storm → reassemble** into the next
+slide. Crisp body copy (everything not tagged) fades in once the particles finish assembling.
+The camera is fixed head-on so particle shapes stay aligned with the DOM.
+
 ## 1. Anatomy of a slide
 
 Every slide is one `<section class="slide">` inside `<main id="stage">`:
 
 ```html
-<section class="slide content" data-slide="1" data-formation="clusters:3">
+<section class="slide content" data-slide="1">
   <div class="slide-inner">
-    <!-- your content -->
+    <div class="lead">
+      <span class="kicker reveal"><span class="dot"></span> Section</span>
+      <h2 data-particle="text">Headline built from particles</h2>
+      <p class="lede reveal">Crisp body copy that fades in.</p>
+    </div>
+    <div class="cards c3">
+      <article class="card pop" data-particle="box" data-accent="#2b88ff"> … </article>
+      …
+    </div>
   </div>
   <div class="eq-credit">© 2026 Your Org</div>
 </section>
 ```
 
 - `data-slide` is just a label (ordering comes from DOM order).
-- `data-formation` picks the particle artwork (see §3).
+- Tag the **headline** with `data-particle="text"` and **containers** with
+  `data-particle="box" data-accent="#hex"`.
 - The dots, counter, and prev/next **update automatically** from the number of slides —
   add or remove `<section class="slide">` blocks and everything follows.
 
@@ -55,31 +79,23 @@ Wrap words in `gradient-text` to make them glow and radiate:
 
 ---
 
-## 3. Particle formations (`data-formation`)
+## 3. Particle tags
 
-| Spec | Vibe / good for |
-|------|-----------------|
-| `orb` | hero sphere — covers, big statements |
-| `core` | a tight, bright core offset to the right — "one thing" with text on the left |
-| `core-center` | same core, centered |
-| `clusters:N` | N constellations in a row — N parallel items / cards (`clusters:3`, `clusters:4`) |
-| `split` | two clouds — a duality, "does / doesn't", two facets |
-| `ring` | an orbital ring — cycles, access, time, flow |
-| `grid` | a scanning lattice — data, coverage, "across the estate" |
-| `stream` | a flowing horizontal band — pipelines, processes, journeys |
-| `burst` | a celebratory explosion — finales, thank-you, big reveals |
+| Tag | Put it on | Result |
+|-----|-----------|--------|
+| `data-particle="text"` | the headline (`h1`/`h2`) | the words are rendered in particles; the DOM node is hidden |
+| `data-particle="box"` + `data-accent="#hex"` | cards / containers / pipeline stages | the element's outline is drawn in particles in that accent colour |
 
-Particles **morph** from the previous formation to the next on each transition, so order
-creates motion. Pair the formation with the slide's idea.
+**The slide's "shape" emerges from its layout.** Four cards → four particle boxes; a row of
+pipeline stages → boxes in a line; a wall/grid of items → a grid of boxes. You don't pick an
+abstract formation any more — you lay out the content and the particles build it.
 
-### Optional camera nudge
-Add `data-cam="x,y,z"` to override the default camera for a slide (rarely needed):
-
-```html
-<section class="slide content" data-formation="grid" data-cam="0,0.2,15">
-```
-
-Higher `z` = further back (more of the field visible). Defaults are tuned per formation.
+Tips:
+- Keep headlines short-ish; particle text reads best at large sizes.
+- Only tag the **big** headline as `text`. Body copy and labels stay crisp DOM (`.reveal`).
+- Any element can be a `box` — cards, the pipeline `.flow`, a single statement panel.
+- A slide with **no** tags still works: particles fall back to a storm/orb behind the text.
+- The camera is fixed (no per-slide camera knobs) so particles line up with the DOM.
 
 ---
 
@@ -184,10 +200,11 @@ Deploy: push the deck branch and enable **GitHub Pages → Deploy from branch (r
 ```
 index.html            # the deck — the only file you edit for content
 assets/css/styles.css # theme tokens + components + chrome
-assets/js/scene.js    # particle engine + formation registry  (don't edit for content)
+assets/js/scene.js    # particle construction engine (DOM → particles)  (don't edit for content)
 assets/js/app.js      # slide controller + navigation          (don't edit for content)
 assets/vendor/        # three.js + gsap
 ```
 
-Adding a brand-new formation? That's an engine change: add a generator + a registry entry
-in `scene.js` (`_registry`), then reference it by name with `data-formation`.
+Want a new kind of particle shape (beyond text/box) or to tweak the shatter/storm timing?
+That's an engine change in `scene.js` — add a sampler and call it from `buildTargets()`, or
+adjust the `transition()` phases.

@@ -73,34 +73,24 @@ function go(index) {
   const prevSlide = slides[current];
   const nextSlide = slides[index];
 
+  // fade the old crisp DOM out as the shapes shatter
   animateOut(prevSlide);
+  setTimeout(() => prevSlide.classList.remove("is-active"), 450);
 
-  // drive the 3D scene from the slide's own declaration
-  applyScene(nextSlide);
   current = index;
   updateChrome();
 
-  // deterministic swap once the out-animation has played
-  setTimeout(() => {
-    prevSlide.classList.remove("is-active");
+  // particles: shatter -> storm -> assemble the next slide's shapes,
+  // then bring in the crisp body copy on top
+  cosmos.transition(nextSlide, gsap, () => {
     nextSlide.classList.add("is-active");
     animateIn(nextSlide);
-    setTimeout(() => (animating = false), 650);
-  }, 360);
+    setTimeout(() => (animating = false), 500);
+  });
 }
 
 function next() { go(current + 1); }
 function prev() { go(current - 1); }
-
-/* Read a slide's particle declaration and drive the engine.
-   data-formation="orb|core|clusters:3|split|ring|grid|stream|burst|…"
-   data-cam="x,y,z"  (optional camera override) */
-function applyScene(slide) {
-  const spec = slide.dataset.formation || "orb";
-  const over = {};
-  if (slide.dataset.cam) over.cam = slide.dataset.cam.split(",").map(Number);
-  cosmos.applyFormation(spec, gsap, over);
-}
 
 function updateChrome() {
   dots.forEach((d, i) => d.classList.toggle("is-active", i === current));
@@ -148,12 +138,13 @@ window.addEventListener("touchend", (e) => {
 
 /* ---- boot ---- */
 function boot() {
-  applyScene(slides[0]);
-  slides[0].classList.add("is-active");
-  animateIn(slides[0]);
   updateChrome();
-  const loader = document.getElementById("loader");
-  loader.classList.add("hidden");
+  document.getElementById("loader").classList.add("hidden");
+  // assemble the first slide out of the storm, then reveal its body copy
+  cosmos.transition(slides[0], gsap, () => {
+    slides[0].classList.add("is-active");
+    animateIn(slides[0]);
+  });
 }
 
 // Boot on DOM-ready (not window.load) so a slow/blocked font never

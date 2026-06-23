@@ -250,6 +250,11 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
 .content .slide-inner { max-width: 1180px; width: min(1180px, 100%); }
 .center .slide-inner { text-align: center; margin-inline: auto; }
 
+/* Elements the particle engine renders. The DOM node stays laid out
+   (so it can be measured + reserves space) but is never painted —
+   the particles ARE its visible form. */
+[data-particle="text"] { opacity: 0 !important; pointer-events: none; }
+
 .lead { display: flex; flex-direction: column; gap: 12px; margin-bottom: clamp(18px, 3vh, 34px); }
 .center .lead { align-items: center; }
 .lead h2 { font-size: clamp(30px, 5vw, 66px); }

@@ -65,14 +65,18 @@
   <!-- ============================================================
        SLIDES — author here. One <section class="slide"> per slide.
 
-       Pick the particle artwork with data-formation:
-         orb · core · core-center · clusters:N · split
-         ring · grid · stream · burst
-       Optional camera nudge:  data-cam="x,y,z"
+       The particle field BUILDS each slide from its DOM:
+         data-particle="text"  → element's words are rendered in particles
+                                  (use on the headline; the node is hidden,
+                                   the particles are its visible form)
+         data-particle="box" data-accent="#hex"
+                               → element's outline is drawn in particles
+                                  (use on cards / containers; the crisp card
+                                   fades in inside the particle outline)
+       On slide change: shapes shatter → storm → reassemble the next slide.
 
-       Layout helpers (add to <section>):  content (left) · center
-       Animate-in classes:  .reveal (text)   .pop (cards/panels)
-       Glowing key words:   <span class="gradient-text">word</span>
+       Layout helpers (on <section>):  content (left) · center
+       Crisp DOM that fades in:  .reveal (text)   .pop (cards/panels)
 
        Full reference + component snippets: see AUTHORING.md
        Dots / counter / nav update automatically from the slide count.
@@ -80,10 +84,11 @@
   <main id="stage">
 
     <!-- ░░ 1 · COVER ░░ -->
-    <section class="slide cover center" data-slide="0" data-formation="orb">
+    <section class="slide cover center" data-slide="0">
       <div class="slide-inner">
         <span class="kicker reveal"><span class="dot"></span> Section · Subtitle</span>
-        <h1 class="reveal">Your <span class="gradient-text">headline</span> here</h1>
+        <!-- data-particle="text" → the engine builds this headline out of particles -->
+        <h1 data-particle="text">Your headline here</h1>
         <p class="sub reveal">A one-line promise or summary for this presentation.</p>
         <div class="presenter reveal"><span class="dot2"></span> <span><b>Presenter Name</b> · Team</span></div>
         <div class="scroll-hint reveal"><span class="mouse"></span> scroll or use arrows</div>
@@ -91,24 +96,25 @@
       <div class="eq-credit">© 2026 Your Org</div>
     </section>
 
-    <!-- ░░ 2 · CONTENT (example: 3 cards over a cluster formation) ░░ -->
-    <section class="slide content" data-slide="1" data-formation="clusters:3">
+    <!-- ░░ 2 · CONTENT (headline + 3 particle-built containers) ░░ -->
+    <section class="slide content" data-slide="1">
       <div class="slide-inner">
         <div class="lead">
           <span class="kicker reveal"><span class="dot"></span> Section label</span>
-          <h2 class="reveal">A clear <span class="gradient-text">point</span> for this slide</h2>
+          <h2 data-particle="text">A clear point for this slide</h2>
           <p class="lede reveal">One or two sentences of context. Keep it tight; the cards carry the detail.</p>
         </div>
+        <!-- data-particle="box" + data-accent → each container is drawn in particles, card fades in inside -->
         <div class="cards c3">
-          <article class="card pop" style="--ic:linear-gradient(135deg,#2b88ff,#4a3fd0);--ac:#2b88ff;">
+          <article class="card pop" data-particle="box" data-accent="#2b88ff" style="--ic:linear-gradient(135deg,#2b88ff,#4a3fd0);--ac:#2b88ff;">
             <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6 4.4 2.3 7.2L12 16.6 5.7 21l2.3-7.2-6-4.4h7.6z"/></svg></div>
             <h3>Card one</h3><p>Short supporting copy for the first idea.</p>
           </article>
-          <article class="card pop" style="--ic:linear-gradient(135deg,#7c6bff,#4a3fd0);--ac:#8b7bff;">
+          <article class="card pop" data-particle="box" data-accent="#8b7bff" style="--ic:linear-gradient(135deg,#7c6bff,#4a3fd0);--ac:#8b7bff;">
             <div class="ic"><svg viewBox="0 0 24 24"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg></div>
             <h3>Card two</h3><p>Short supporting copy for the second idea.</p>
           </article>
-          <article class="card pop" style="--ic:linear-gradient(135deg,#18c8b6,#2b88ff);--ac:#18c8b6;">
+          <article class="card pop" data-particle="box" data-accent="#18c8b6" style="--ic:linear-gradient(135deg,#18c8b6,#2b88ff);--ac:#18c8b6;">
             <div class="ic"><svg viewBox="0 0 24 24"><path d="M9 16.2l-3.5-3.5-1.4 1.4L9 19 20 8l-1.4-1.4z"/></svg></div>
             <h3>Card three</h3><p>Short supporting copy for the third idea.</p>
           </article>
@@ -118,12 +124,12 @@
       <div class="eq-credit">© 2026 Your Org</div>
     </section>
 
-    <!-- ░░ 3 · CLOSING (burst finale) ░░ -->
-    <section class="slide content center" data-slide="2" data-formation="burst">
+    <!-- ░░ 3 · CLOSING ░░ -->
+    <section class="slide content center" data-slide="2">
       <div class="slide-inner">
         <div class="lead">
           <span class="kicker reveal"><span class="dot"></span> Wrap-up</span>
-          <h2 class="reveal">Thank <span class="gradient-text">you</span></h2>
+          <h2 data-particle="text">Thank you</h2>
         </div>
         <p class="cta reveal">Your call to action — <span class="gradient-text">let's talk.</span></p>
       </div>
