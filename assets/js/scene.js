@@ -147,13 +147,14 @@ export class Cosmos {
       uPix: { value: this.renderer.getPixelRatio() },
       uArc: { value: 1.3 },
       uSpin: { value: 0.0 },
+      uSwirl: { value: 2.4 },   // whirlwind: extra rotation that peaks mid-transition
     };
 
     const mat = new THREE.ShaderMaterial({
       transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
       uniforms: this.uniforms,
       vertexShader: `
-        uniform float uTime, uMix, uPix, uArc, uSpin;
+        uniform float uTime, uMix, uPix, uArc, uSpin, uSwirl;
         attribute vec3 aFrom; attribute vec3 aTo;
         attribute vec3 cFrom; attribute vec3 cTo;
         attribute float aRand; attribute float aSize;
@@ -168,11 +169,13 @@ export class Cosmos {
           vec3 dir = vec3(sin(aRand*6.2831), cos(aRand*5.137), sin(aRand*9.42));
           pos += dir * arc * uArc * (0.4 + aRand);
 
-          // idle sway around Y + gentle bob (alive at rest)
-          float a = sin(uTime*0.12)*0.35 + uSpin*uTime;
+          // idle sway around Y + gentle bob (alive at rest),
+          // plus a whirlwind: arc-enveloped spin that peaks mid-transition
+          // and is zero at rest. Higher particles swirl a touch more (vortex).
+          float a = sin(uTime*0.12)*0.35 + uSpin*uTime + arc*uSwirl*(1.0 + 0.15*pos.y);
           float s = sin(a), c = cos(a);
           pos = vec3(pos.x*c - pos.z*s, pos.y, pos.x*s + pos.z*c);
-          pos.y += sin(uTime*0.7 + aRand*6.2831)*0.07;
+          pos.y += sin(uTime*0.7 + aRand*6.2831)*0.07 + arc*0.6*sin(aRand*30.0); // lift + scatter mid-swirl
           pos.x += cos(uTime*0.5 + aRand*6.2831)*0.05;
 
           vec4 mv = modelViewMatrix * vec4(pos,1.0);
@@ -419,35 +422,6 @@ export class Cosmos {
 
   /** List available formation names (handy for tooling/docs). */
   get formationNames() { return Object.keys(this._registry); }
-
-  /* ============================================================
-     Transition curtain — particles rush to the FRONT and fill the
-     screen to obscure the slide while it swaps underneath, then
-     settle (recede) into the next slide's background formation.
-     The content is always real DOM; this is purely a visual wipe.
-     ============================================================ */
-  _formCover() {
-    const { pos, col } = this._alloc(), N = this.N;
-    const dist = 5;                                   // how far in front of the camera
-    const vh = 2 * dist * Math.tan(THREE.MathUtils.degToRad(this.camera.fov / 2)) * 1.4; // overfill
-    const vw = vh * this.camera.aspect;
-    const zc = this.camera.position.z - dist;         // between camera and content
-    const tmp = new THREE.Color();
-    for (let i = 0; i < N; i++) {
-      pos[i * 3] = (Math.random() - 0.5) * vw;
-      pos[i * 3 + 1] = (Math.random() - 0.5) * vh;
-      pos[i * 3 + 2] = zc + (Math.random() - 0.5) * 2.2;
-      const c = Math.random() < 0.62 ? tmp.copy(C.white) : tmp.copy(C.iris).lerp(C.blue, Math.random());
-      this._setCol(col, i, c, 0.06);
-    }
-    return { pos, col };
-  }
-
-  /** Phase 1 of a transition: rush forward into a screen-filling storm. */
-  surge(gsap) {
-    this.gsap = gsap;
-    this._morphTo(this._formCover(), { dur: 0.55, arc: 0.5, ease: "power2.in", spin: 0.0 });
-  }
 
   _camTo(x, y, z) {
     this.camBase = { x, y, z };

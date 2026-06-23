@@ -31,18 +31,15 @@ Each slide declares its particle artwork in HTML:
 Dots, counter, and navigation update automatically from the number of slides.
 Full guide → **[AUTHORING.md](AUTHORING.md)**.
 
-| Transition curtain (particles obscure the swap) | Content slide (crisp DOM + formation) |
+| Whirlwind mid-transition (shapes dancing) | Content slide (crisp DOM + formation) |
 |---|---|
-| ![Curtain](docs/preview/02-curtain.png) | ![Content](docs/preview/03-content.png) |
+| ![Whirlwind](docs/preview/02-whirlwind.png) | ![Content](docs/preview/03-content.png) |
 
 ## What the engine gives you
 
-- **Particle curtain transitions** — on every slide change the field surges to the *front*,
-  sweeps over and obscures the slide while the DOM swaps underneath, then recedes into the
-  next slide's background formation. The content is always real, crisp DOM — the particles
-  are a pure visual wipe.
-- **Morphing particle field** — a custom GLSL shader eases particles between formations
-  (with arc displacement so they visibly fly between shapes) and adds idle drift at rest
+- **Whirlwind transitions** — on each slide change the particle field swirls and dances in
+  the background as it morphs between the slide shapes (arc displacement + an enveloped spin
+  that peaks mid-transition and settles at rest). Content is always crisp DOM on top.
 - **Restrained cosmic theme** — cool white/violet/blue with sparse accent pops
 - **Glowing, radiating key words** + crisp readable text (focal scrim + dark halo)
 - **Framer-style flows** — depth-based reveals, card cascades, per-slide camera moves
