@@ -149,6 +149,7 @@ export class Cosmos {
       uSpin: { value: 0.0 },
       uSwirl: { value: 2.4 },   // whirlwind: extra rotation that peaks mid-transition
       uForward: { value: 6.2 }, // depth surge toward the camera, peaks mid-transition
+      uFade: { value: 1.0 },    // global field brightness — dipped to mask the layer hand-off
     };
 
     const mat = new THREE.ShaderMaterial({
@@ -189,12 +190,13 @@ export class Cosmos {
         }`,
       fragmentShader: `
         varying vec3 vCol;
+        uniform float uFade;
         void main(){
           float d = length(gl_PointCoord - 0.5);
           float a = smoothstep(0.5, 0.0, d);
           // brighter, radiant core
           vec3 col = vCol * (1.15 + 0.5 * (1.0 - d * 2.0));
-          gl_FragColor = vec4(col, a*0.85);
+          gl_FragColor = vec4(col, a*0.85*uFade);
         }`,
     });
 

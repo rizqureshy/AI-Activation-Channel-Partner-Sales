@@ -91,9 +91,19 @@ function go(index) {
     animateIn(nextSlide);
   }, 600);
 
-  // drop the field back behind the content as it recedes
-  setTimeout(() => bgCanvas.classList.remove("front"), 1450);
-  setTimeout(() => (animating = false), 1550);
+  // smooth hand-off: briefly dip the field's brightness, flip the canvas
+  // back behind the content during the dip, then restore — so the layer
+  // swap is invisible instead of an on/off snap
+  setTimeout(() => {
+    gsap.to(cosmos.uniforms.uFade, {
+      value: 0.35, duration: 0.22, ease: "power2.in",
+      onComplete: () => {
+        bgCanvas.classList.remove("front");
+        gsap.to(cosmos.uniforms.uFade, { value: 1, duration: 0.45, ease: "power2.out" });
+      },
+    });
+  }, 1500);
+  setTimeout(() => (animating = false), 1900);
 }
 
 function next() { go(current + 1); }
