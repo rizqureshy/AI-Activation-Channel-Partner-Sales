@@ -6,7 +6,8 @@ import { Cosmos } from "./scene.js";
 
 const gsap = window.gsap;
 
-const cosmos = new Cosmos(document.getElementById("bg-canvas"));
+const bgCanvas = document.getElementById("bg-canvas");
+const cosmos = new Cosmos(bgCanvas);
 cosmos.start();
 
 const slides = Array.from(document.querySelectorAll(".slide"));
@@ -66,41 +67,46 @@ function animateOut(slide) {
   });
 }
 
-/* ---- navigation ---- */
+/* Read a slide's particle declaration and recede into its formation. */
+function settleScene(slide) {
+  const spec = slide.dataset.formation || "orb";
+  const over = {};
+  if (slide.dataset.cam) over.cam = slide.dataset.cam.split(",").map(Number);
+  cosmos.applyFormation(spec, gsap, over);
+}
+
+/* ---- navigation ----
+   Curtain transition: particles surge to the FRONT and obscure the
+   slide, the DOM swaps behind that cover, then particles recede into
+   the next slide's background formation. Content is always real DOM. */
 function go(index) {
   if (index < 0 || index >= total || index === current || animating) return;
   animating = true;
   const prevSlide = slides[current];
   const nextSlide = slides[index];
 
+  // 1) particles rush to the front and sweep over the slide
+  bgCanvas.classList.add("front");
+  cosmos.surge(gsap);
   animateOut(prevSlide);
-
-  // drive the 3D scene from the slide's own declaration
-  applyScene(nextSlide);
   current = index;
   updateChrome();
 
-  // deterministic swap once the out-animation has played
+  // 2) at the peak of the cover, swap the slide underneath + recede
   setTimeout(() => {
     prevSlide.classList.remove("is-active");
     nextSlide.classList.add("is-active");
     animateIn(nextSlide);
-    setTimeout(() => (animating = false), 650);
-  }, 360);
+    settleScene(nextSlide);
+  }, 520);
+
+  // 3) drop the field back behind the content as it thins out
+  setTimeout(() => bgCanvas.classList.remove("front"), 1150);
+  setTimeout(() => (animating = false), 1450);
 }
 
 function next() { go(current + 1); }
 function prev() { go(current - 1); }
-
-/* Read a slide's particle declaration and drive the engine.
-   data-formation="orb|core|clusters:3|split|ring|grid|stream|burst|…"
-   data-cam="x,y,z"  (optional camera override) */
-function applyScene(slide) {
-  const spec = slide.dataset.formation || "orb";
-  const over = {};
-  if (slide.dataset.cam) over.cam = slide.dataset.cam.split(",").map(Number);
-  cosmos.applyFormation(spec, gsap, over);
-}
 
 function updateChrome() {
   dots.forEach((d, i) => d.classList.toggle("is-active", i === current));
@@ -148,12 +154,17 @@ window.addEventListener("touchend", (e) => {
 
 /* ---- boot ---- */
 function boot() {
-  applyScene(slides[0]);
-  slides[0].classList.add("is-active");
-  animateIn(slides[0]);
   updateChrome();
-  const loader = document.getElementById("loader");
-  loader.classList.add("hidden");
+  document.getElementById("loader").classList.add("hidden");
+  // intro: a particle curtain sweeps in, then the first slide is revealed
+  bgCanvas.classList.add("front");
+  cosmos.surge(gsap);
+  setTimeout(() => {
+    slides[0].classList.add("is-active");
+    animateIn(slides[0]);
+    settleScene(slides[0]);
+  }, 520);
+  setTimeout(() => bgCanvas.classList.remove("front"), 1150);
 }
 
 // Boot on DOM-ready (not window.load) so a slow/blocked font never

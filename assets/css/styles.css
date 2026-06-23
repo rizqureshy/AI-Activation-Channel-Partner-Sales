@@ -52,6 +52,11 @@ html, body {
   z-index: 0;
   display: block;
 }
+/* during a transition the particle field jumps in front of the slide
+   to sweep over it (the curtain), then drops back behind */
+#bg-canvas.front {
+  z-index: 35;            /* above slides (5), below nav chrome (40) */
+}
 
 .cosmos-wash {
   position: fixed;

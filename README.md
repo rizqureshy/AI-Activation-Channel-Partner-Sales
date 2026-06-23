@@ -31,12 +31,16 @@ Each slide declares its particle artwork in HTML:
 Dots, counter, and navigation update automatically from the number of slides.
 Full guide → **[AUTHORING.md](AUTHORING.md)**.
 
-| Content slide (clusters) | Closing (burst) |
+| Transition curtain (particles obscure the swap) | Content slide (crisp DOM + formation) |
 |---|---|
-| ![Content](docs/preview/02-content.png) | ![Closing](docs/preview/03-closing.png) |
+| ![Curtain](docs/preview/02-curtain.png) | ![Content](docs/preview/03-content.png) |
 
 ## What the engine gives you
 
+- **Particle curtain transitions** — on every slide change the field surges to the *front*,
+  sweeps over and obscures the slide while the DOM swaps underneath, then recedes into the
+  next slide's background formation. The content is always real, crisp DOM — the particles
+  are a pure visual wipe.
 - **Morphing particle field** — a custom GLSL shader eases particles between formations
   (with arc displacement so they visibly fly between shapes) and adds idle drift at rest
 - **Restrained cosmic theme** — cool white/violet/blue with sparse accent pops
