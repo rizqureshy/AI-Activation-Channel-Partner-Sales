@@ -1,27 +1,29 @@
 # AI Activation — Channel Partner Sales
 
 An interactive, **3D HTML presentation** of the *AI Activation for Channel Partner Sales* deck.
-Real WebGL artwork, Framer-style motion, and a playful "Fun Universe" theme built on the
-Microsoft Fluent fun-color palette.
+A single **morphing particle field** (≈7,000 GPU points) flies between formations as you move
+through the slides — restrained, cosmic, and Framer-style.
 
 ![Cover](docs/preview/01-cover.png)
 
 ## What's inside
 
-Four slides, each with its own piece of **procedurally-generated 3D art** (no flat image
-cut-outs — everything is real geometry rendered with Three.js):
+The whole deck is driven by **one WebGL particle system** that transforms from shape to
+shape. Particles arc and fly between formations on every transition (they visibly "come and
+go"), then breathe and sway at rest:
 
-| # | Slide | 3D artwork |
-|---|-------|-----------|
-| 1 | **A summer of AI Activation** (cover) | A glass "AI" orb — a transmissive crystal shell holding glowing colour lobes, ringed by orbiting beads |
-| 2 | **The quote** (Yamini Rangan, HubSpot) | The orb drifts aside, calm and slowly spinning |
-| 3 | **AI April was a blast** (recap) | Four glowing 3D week badges (✦ sparkle · `</>` code · 📊 chart · 🚀 rocket) beneath glassmorphic content cards |
-| 4 | **Your very own AI August** (reveal) | A 3D treasure chest that **lifts its lid** and fountains colourful spheres — "lift the lid for your own summer of AI" |
+| # | Slide | Particle formation |
+|---|-------|--------------------|
+| 1 | **A summer of AI Activation** (cover) | Particles gather into a glowing **sphere** — the "AI" core |
+| 2 | **The quote** (Yamini Rangan, HubSpot) | They flow into a slow **orbital ring** ("time") drifting beside the quote |
+| 3 | **AI April was a blast** (recap) | The field splits into **four week-constellations** beneath the content cards |
+| 4 | **Your very own AI August** (reveal) | Particles gather into a **treasure chest**, then **erupt** in a celebratory burst |
 
-All four sit inside a shared cosmos: a 3,600-point twinkling starfield, additive nebula
-clouds, floating bokeh spheres, image-based lighting, and pointer-driven camera parallax.
+The palette is deliberately restrained — mostly cool white / violet / blue with sparse
+accent pops (and gold for the treasure). It all sits inside a faint starfield with soft
+nebula and pointer-driven camera parallax.
 
-| Quote | Recap | AI August |
+| Quote (ring) | Recap (clusters) | AI August (burst) |
 |---|---|---|
 | ![Quote](docs/preview/02-quote.png) | ![Recap](docs/preview/03-recap.png) | ![August](docs/preview/04-august.png) |
 
@@ -55,10 +57,10 @@ served as-is.
 
 ## Tech
 
-- **[Three.js](https://threejs.org/) r160** — WebGL rendering, `MeshPhysicalMaterial`
-  glass/transmission, `RoomEnvironment` IBL, custom shader starfield
-- **[GSAP](https://gsap.com/) 3.12** — slide flows and the 3D choreography (elastic
-  reveals, the chest opening, camera moves)
+- **[Three.js](https://threejs.org/) r160** — WebGL rendering; a custom GLSL particle
+  shader handles the morph (eased mix between formations + arc displacement + idle motion)
+- **[GSAP](https://gsap.com/) 3.12** — drives the morph (`uMix`), camera moves, and the
+  depth-based DOM reveals
 - Vanilla JS, CSS, and a single `index.html` — no framework, no bundler
 
 ## Project layout
@@ -67,7 +69,7 @@ served as-is.
 index.html              # markup + slide content + import map
 assets/
   css/styles.css        # theme, glassmorphism, chrome, responsive
-  js/scene.js           # all the 3D: cosmos + per-slide hero artwork
+  js/scene.js           # the morphing particle field + formations + shader
   js/app.js             # slide controller, navigation, GSAP flows
   vendor/               # three.js + gsap (local, offline-friendly)
 docs/preview/           # screenshots used in this README

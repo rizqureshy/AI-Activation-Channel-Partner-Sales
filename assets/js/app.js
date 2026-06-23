@@ -39,21 +39,21 @@ function animateIn(slide) {
   gsap.killTweensOf(items);
   gsap.fromTo(
     items,
-    { y: 42, opacity: 0, filter: "blur(10px)" },
+    { y: 54, z: -120, opacity: 0, rotateX: -28, filter: "blur(10px)", transformPerspective: 1000 },
     {
-      y: 0, opacity: 1, filter: "blur(0px)",
-      duration: 0.95, ease: "power3.out",
-      stagger: 0.09, delay: 0.15,
+      y: 0, z: 0, opacity: 1, rotateX: 0, filter: "blur(0px)",
+      duration: 1.1, ease: "back.out(1.4)",
+      stagger: 0.09, delay: 0.18,
     }
   );
 
-  // special: week cards pop in 3D-ish
+  // week cards cascade in with depth + tilt
   const wks = slide.querySelectorAll(".wk");
   if (wks.length) {
     gsap.fromTo(
       wks,
-      { y: 60, opacity: 0, rotateX: -25, transformPerspective: 800 },
-      { y: 0, opacity: 1, rotateX: 0, duration: 1.0, ease: "back.out(1.4)", stagger: 0.1, delay: 0.35 }
+      { y: 70, z: -200, opacity: 0, rotateX: -35, rotateY: 12, transformPerspective: 900 },
+      { y: 0, z: 0, opacity: 1, rotateX: 0, rotateY: 0, duration: 1.1, ease: "back.out(1.5)", stagger: 0.1, delay: 0.4 }
     );
   }
 }
@@ -61,8 +61,8 @@ function animateIn(slide) {
 function animateOut(slide) {
   const items = slide.querySelectorAll(".reveal");
   return gsap.to(items, {
-    y: -30, opacity: 0, filter: "blur(8px)",
-    duration: 0.4, ease: "power2.in", stagger: 0.03,
+    y: -40, z: -80, opacity: 0, rotateX: 18, filter: "blur(8px)",
+    duration: 0.45, ease: "power2.in", stagger: 0.03,
   });
 }
 

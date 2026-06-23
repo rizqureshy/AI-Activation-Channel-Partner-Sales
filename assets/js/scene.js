@@ -1,27 +1,32 @@
 /* ============================================================
-   scene.js — Real, layered 3D artwork (Three.js)
-   Everything here is generated procedurally: starfield, nebula,
-   a glass "AI" orb, glowing week badges, and an opening
-   treasure chest. No flat image cut-outs — pure geometry.
+   scene.js — Morphing particle field (Three.js)
+
+   A single GPU particle system (~7k points) that flies between
+   formations per slide:
+     0  orb        — a glowing particle sphere (the "AI" core)
+     1  time-ring  — particles settle into a slow orbital ring
+     2  clusters   — they split into four week constellations
+     3  burst      — gather into a chest, then erupt like treasure
+
+   Restrained palette: mostly cool white/violet with sparse
+   accent pops. Morphs are eased + arc-displaced so particles
+   visibly "come and go" between shapes (Framer-style).
    ============================================================ */
 
 import * as THREE from "three";
-import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
-import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 
-/* ---- Microsoft "Fun" palette (as THREE colors) ---- */
-const FUN = {
-  blue:    new THREE.Color("#2b88ff"),
-  indigo:  new THREE.Color("#6b5bff"),
-  purple:  new THREE.Color("#9b4dff"),
-  magenta: new THREE.Color("#e3008c"),
-  pink:    new THREE.Color("#ff4db8"),
-  teal:    new THREE.Color("#18c8b6"),
-  green:   new THREE.Color("#22c55e"),
-  orange:  new THREE.Color("#ff8a3d"),
-  yellow:  new THREE.Color("#ffd23d"),
+const C = {
+  violet: new THREE.Color("#6b5bff"),
+  iris:   new THREE.Color("#8b7bff"),
+  blue:   new THREE.Color("#2b88ff"),
+  teal:   new THREE.Color("#18c8b6"),
+  pink:   new THREE.Color("#e3008c"),
+  gold:   new THREE.Color("#ffcf45"),
+  white:  new THREE.Color("#dfe4ff"),
 };
-const FUN_ARR = Object.values(FUN);
+const ACCENTS = [C.violet, C.blue, C.teal, C.pink];
+const lerp = (a, b, t) => a + (b - a) * t;
+const GA = Math.PI * (3 - Math.sqrt(5)); // golden angle
 
 export class Cosmos {
   constructor(canvas) {
@@ -29,557 +34,322 @@ export class Cosmos {
     this.clock = new THREE.Clock();
     this.pointer = new THREE.Vector2(0, 0);
     this.pointerTarget = new THREE.Vector2(0, 0);
-    this.activeSlide = 0;
     this.reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    this.N = this.reduced ? 2600 : 7200;
 
     this._initRenderer();
     this._initScene();
-    this._buildStarfield();
+    this._buildStars();
     this._buildNebula();
-    this._buildBokeh();
-
-    // Hero groups — one per slide
-    this.heroes = [];
-    this.orb = this._buildOrb();          // slide 0 (cover) + slide 1 (quote)
-    this.badges = this._buildBadges();    // slide 2 (recap)
-    this.chest = this._buildChest();      // slide 3 (august)
-
-    this.heroes = [this.orb, this.orb, this.badges, this.chest];
-    this._placeHeroes();
+    this._buildParticles();
 
     this._bindEvents();
     this.resize();
   }
 
-  /* -------------------------------------------------- core */
   _initRenderer() {
     this.renderer = new THREE.WebGLRenderer({
-      canvas: this.canvas,
-      antialias: true,
-      alpha: true,
-      powerPreference: "high-performance",
+      canvas: this.canvas, antialias: true, alpha: true, powerPreference: "high-performance",
     });
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    this.renderer.toneMappingExposure = 1.05;
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
   }
 
   _initScene() {
     this.scene = new THREE.Scene();
-    this.camera = new THREE.PerspectiveCamera(46, 1, 0.1, 120);
+    this.camera = new THREE.PerspectiveCamera(46, 1, 0.1, 160);
     this.camera.position.set(0, 0, 13);
-
-    // Image-based lighting for premium glass/gloss reflections
-    const pmrem = new THREE.PMREMGenerator(this.renderer);
-    this.scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-
-    // Key + rim lights in fun colors
-    const key = new THREE.DirectionalLight(0xffffff, 2.0);
-    key.position.set(5, 8, 7);
-    this.scene.add(key);
-
-    const rimA = new THREE.PointLight(FUN.purple, 60, 60);
-    rimA.position.set(-9, 3, 4);
-    const rimB = new THREE.PointLight(FUN.teal, 50, 60);
-    rimB.position.set(9, -4, 5);
-    const rimC = new THREE.PointLight(FUN.pink, 40, 60);
-    rimC.position.set(0, 6, -6);
-    this.scene.add(rimA, rimB, rimC);
-    this.scene.add(new THREE.AmbientLight(0x404a7a, 1.2));
+    this.camBase = { x: 0, y: 0, z: 13 };
   }
 
-  /* -------------------------------------------------- layer 1: stars */
-  _buildStarfield() {
-    const N = this.reduced ? 1200 : 3600;
+  /* ---------------- faint background starfield ---------------- */
+  _buildStars() {
+    const N = this.reduced ? 700 : 1500;
     const pos = new Float32Array(N * 3);
-    const col = new Float32Array(N * 3);
-    const sz = new Float32Array(N);
     for (let i = 0; i < N; i++) {
-      // spherical shell distribution
-      const r = 26 + Math.random() * 48;
+      const r = 40 + Math.random() * 60;
       const t = Math.random() * Math.PI * 2;
       const p = Math.acos(2 * Math.random() - 1);
       pos[i * 3] = r * Math.sin(p) * Math.cos(t);
       pos[i * 3 + 1] = r * Math.sin(p) * Math.sin(t);
-      pos[i * 3 + 2] = r * Math.cos(p) - 20;
-      const c = Math.random() < 0.4
-        ? FUN_ARR[(Math.random() * FUN_ARR.length) | 0]
-        : new THREE.Color(0xffffff);
-      col[i * 3] = c.r; col[i * 3 + 1] = c.g; col[i * 3 + 2] = c.b;
-      sz[i] = Math.random() * 2 + 0.4;
+      pos[i * 3 + 2] = r * Math.cos(p) - 30;
     }
     const geo = new THREE.BufferGeometry();
     geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
-    geo.setAttribute("color", new THREE.BufferAttribute(col, 3));
-    geo.setAttribute("aSize", new THREE.BufferAttribute(sz, 1));
-
-    const mat = new THREE.ShaderMaterial({
-      transparent: true,
-      depthWrite: false,
-      blending: THREE.AdditiveBlending,
-      uniforms: { uTime: { value: 0 }, uPix: { value: this.renderer.getPixelRatio() } },
-      vertexColors: true,
-      vertexShader: `
-        attribute float aSize; varying vec3 vCol; uniform float uTime; uniform float uPix;
-        void main(){
-          vCol = color;
-          vec4 mv = modelViewMatrix * vec4(position,1.0);
-          float tw = 0.6 + 0.4*sin(uTime*1.5 + position.x*1.3 + position.y*0.7);
-          gl_PointSize = aSize * tw * (300.0/ -mv.z) * uPix;
-          gl_Position = projectionMatrix * mv;
-        }`,
-      fragmentShader: `
-        varying vec3 vCol;
-        void main(){
-          vec2 d = gl_PointCoord - 0.5;
-          float a = smoothstep(0.5, 0.0, length(d));
-          gl_FragColor = vec4(vCol, a);
-        }`,
+    const mat = new THREE.PointsMaterial({
+      color: 0xcdd4ff, size: 0.7, sizeAttenuation: true,
+      transparent: true, opacity: 0.5, depthWrite: false, blending: THREE.AdditiveBlending,
     });
     this.stars = new THREE.Points(geo, mat);
     this.scene.add(this.stars);
   }
 
-  /* -------------------------------------------------- layer 2: nebula glow */
   _glowTexture(color) {
-    const s = 256;
-    const cv = document.createElement("canvas");
+    const s = 256, cv = document.createElement("canvas");
     cv.width = cv.height = s;
     const ctx = cv.getContext("2d");
     const g = ctx.createRadialGradient(s / 2, s / 2, 0, s / 2, s / 2, s / 2);
     const c = color.getStyle();
-    g.addColorStop(0, c);
-    g.addColorStop(0.25, c);
-    g.addColorStop(1, "rgba(0,0,0,0)");
-    ctx.fillStyle = g;
-    ctx.fillRect(0, 0, s, s);
-    const tex = new THREE.CanvasTexture(cv);
-    tex.colorSpace = THREE.SRGBColorSpace;
-    return tex;
+    g.addColorStop(0, c); g.addColorStop(0.3, c); g.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = g; ctx.fillRect(0, 0, s, s);
+    const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace; return tex;
   }
 
   _buildNebula() {
     this.nebula = new THREE.Group();
-    const defs = [
-      { c: FUN.purple,  x: -14, y: 6,   z: -22, s: 30, o: 0.35 },
-      { c: FUN.magenta, x: 16,  y: 9,   z: -26, s: 26, o: 0.28 },
-      { c: FUN.teal,    x: 12,  y: -10, z: -20, s: 28, o: 0.26 },
-      { c: FUN.blue,    x: -10, y: -8,  z: -24, s: 24, o: 0.24 },
-      { c: FUN.orange,  x: 2,   y: 12,  z: -28, s: 22, o: 0.18 },
-    ];
-    for (const d of defs) {
-      const mat = new THREE.SpriteMaterial({
-        map: this._glowTexture(d.c),
-        blending: THREE.AdditiveBlending,
-        depthWrite: false,
-        opacity: d.o,
-        transparent: true,
-      });
-      const sp = new THREE.Sprite(mat);
-      sp.position.set(d.x, d.y, d.z);
-      sp.scale.set(d.s, d.s, 1);
-      sp.userData.phase = Math.random() * Math.PI * 2;
+    [
+      { c: C.violet, x: -15, y: 7,  z: -34, s: 40, o: 0.13 },
+      { c: C.blue,   x: 16,  y: -6, z: -36, s: 34, o: 0.10 },
+    ].forEach((d) => {
+      const sp = new THREE.Sprite(new THREE.SpriteMaterial({
+        map: this._glowTexture(d.c), blending: THREE.AdditiveBlending,
+        depthWrite: false, opacity: d.o, transparent: true }));
+      sp.position.set(d.x, d.y, d.z); sp.scale.set(d.s, d.s, 1);
+      sp.userData = { baseY: d.y, ph: Math.random() * 6.28 };
       this.nebula.add(sp);
-    }
+    });
     this.scene.add(this.nebula);
   }
 
-  /* -------------------------------------------------- layer 3: floating bokeh */
-  _buildBokeh() {
-    this.bokeh = new THREE.Group();
-    const geo = new THREE.IcosahedronGeometry(1, 2);
-    const N = this.reduced ? 8 : 16;
+  /* ============================================================
+     The morphing particle field
+     ============================================================ */
+  _buildParticles() {
+    const N = this.N;
+    this.aFrom = new Float32Array(N * 3);
+    this.aTo = new Float32Array(N * 3);
+    this.cFrom = new Float32Array(N * 3);
+    this.cTo = new Float32Array(N * 3);
+    const aRand = new Float32Array(N);
+    const aSize = new Float32Array(N);
     for (let i = 0; i < N; i++) {
-      const c = FUN_ARR[(Math.random() * FUN_ARR.length) | 0];
-      const mat = new THREE.MeshPhysicalMaterial({
-        color: c,
-        roughness: 0.12,
-        metalness: 0,
-        clearcoat: 1,
-        clearcoatRoughness: 0.1,
-        emissive: c,
-        emissiveIntensity: 0.45,
-        envMapIntensity: 1.2,
-        transparent: true,
-        opacity: 0.88,
-      });
-      const m = new THREE.Mesh(geo, mat);
-      const r = 7 + Math.random() * 9;
-      const a = Math.random() * Math.PI * 2;
-      m.position.set(Math.cos(a) * r, (Math.random() - 0.5) * 12, -2 - Math.random() * 10);
-      const s = 0.18 + Math.random() * 0.5;
-      m.scale.setScalar(s);
-      m.userData = { baseY: m.position.y, sp: 0.3 + Math.random() * 0.6, ph: Math.random() * 6.28, rot: (Math.random() - 0.5) * 0.4 };
-      this.bokeh.add(m);
+      aRand[i] = Math.random();
+      aSize[i] = 0.5 + Math.random() * 1.3;
     }
-    this.scene.add(this.bokeh);
-  }
 
-  /* -------------------------------------------------- hero: glass AI orb */
-  _buildOrb() {
-    const g = new THREE.Group();
+    // initial formation = orb
+    const t0 = this._formOrb();
+    this.aFrom.set(t0.pos); this.aTo.set(t0.pos);
+    this.cFrom.set(t0.col); this.cTo.set(t0.col);
 
-    // Outer clear glass shell
-    const shell = new THREE.Mesh(
-      new THREE.IcosahedronGeometry(2.05, 6),
-      new THREE.MeshPhysicalMaterial({
-        roughness: 0.02,
-        metalness: 0,
-        transmission: 1.0,
-        thickness: 2.2,
-        ior: 1.42,
-        clearcoat: 1,
-        clearcoatRoughness: 0.05,
-        transparent: true,
-        opacity: 1,
-        envMapIntensity: 1.4,
-      })
-    );
-    g.add(shell);
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute("position", new THREE.BufferAttribute(this.aTo, 3)); // required slot
+    geo.setAttribute("aFrom", new THREE.BufferAttribute(this.aFrom, 3));
+    geo.setAttribute("aTo", new THREE.BufferAttribute(this.aTo, 3));
+    geo.setAttribute("cFrom", new THREE.BufferAttribute(this.cFrom, 3));
+    geo.setAttribute("cTo", new THREE.BufferAttribute(this.cTo, 3));
+    geo.setAttribute("aRand", new THREE.BufferAttribute(aRand, 1));
+    geo.setAttribute("aSize", new THREE.BufferAttribute(aSize, 1));
 
-    // Inner colourful "petals" — overlapping translucent lobes
-    const lobeColors = [FUN.blue, FUN.purple, FUN.magenta, FUN.orange, FUN.green, FUN.teal];
-    const lobes = new THREE.Group();
-    lobeColors.forEach((c, i) => {
-      const m = new THREE.Mesh(
-        new THREE.SphereGeometry(1.05, 48, 48),
-        new THREE.MeshPhysicalMaterial({
-          color: c, emissive: c, emissiveIntensity: 0.55,
-          roughness: 0.3, metalness: 0,
-          transparent: true, opacity: 0.5,
-        })
-      );
-      const a = (i / lobeColors.length) * Math.PI * 2;
-      m.position.set(Math.cos(a) * 0.55, Math.sin(a) * 0.55, Math.sin(a * 1.7) * 0.4);
-      lobes.add(m);
-    });
-    g.add(lobes);
-    g.userData.lobes = lobes;
-
-    // Orbiting beads + a thin ring
-    const beads = new THREE.Group();
-    const bgeo = new THREE.SphereGeometry(0.12, 24, 24);
-    for (let i = 0; i < 11; i++) {
-      const c = FUN_ARR[i % FUN_ARR.length];
-      const m = new THREE.Mesh(bgeo, new THREE.MeshPhysicalMaterial({
-        color: c, emissive: c, emissiveIntensity: 0.9, roughness: 0.2, clearcoat: 1,
-      }));
-      const a = Math.random() * Math.PI * 2;
-      const r = 2.7 + Math.random() * 0.9;
-      const tilt = (Math.random() - 0.5) * 0.9;
-      m.userData = { a, r, tilt, sp: 0.2 + Math.random() * 0.5, sc: 0.7 + Math.random() * 0.9 };
-      m.scale.setScalar(m.userData.sc);
-      beads.add(m);
-    }
-    g.add(beads);
-    g.userData.beads = beads;
-
-    const ring = new THREE.Mesh(
-      new THREE.TorusGeometry(3.0, 0.015, 16, 160),
-      new THREE.MeshBasicMaterial({ color: FUN.indigo, transparent: true, opacity: 0.5 })
-    );
-    ring.rotation.x = Math.PI * 0.46;
-    g.add(ring);
-    g.userData.ring = ring;
-
-    this.scene.add(g);
-    return g;
-  }
-
-  /* -------------------------------------------------- hero: week badges */
-  _iconTexture(kind) {
-    const s = 256;
-    const cv = document.createElement("canvas");
-    cv.width = cv.height = s;
-    const x = cv.getContext("2d");
-    x.fillStyle = "#fff";
-    x.strokeStyle = "#fff";
-    x.lineWidth = 18;
-    x.lineCap = "round";
-    x.lineJoin = "round";
-    const C = s / 2;
-    if (kind === "spark") {
-      // 4-point sparkle
-      const star = (cx, cy, R) => {
-        x.beginPath();
-        for (let i = 0; i < 4; i++) {
-          const a = (i / 4) * Math.PI * 2;
-          x.lineTo(cx + Math.cos(a) * R, cy + Math.sin(a) * R);
-          const a2 = a + Math.PI / 4;
-          x.lineTo(cx + Math.cos(a2) * R * 0.28, cy + Math.sin(a2) * R * 0.28);
-        }
-        x.closePath();
-        x.fill();
-      };
-      star(C, C, 80);
-      star(C + 70, C - 70, 26);
-    } else if (kind === "code") {
-      x.font = "bold 150px 'Space Grotesk', system-ui, sans-serif";
-      x.textAlign = "center";
-      x.textBaseline = "middle";
-      x.fillText("</>", C, C + 6);
-    } else if (kind === "chart") {
-      const bars = [[-70, 60], [-12, 95], [46, 130]];
-      bars.forEach(([bx, h], i) => {
-        const w = 40;
-        x.fillRect(C + bx - w / 2, C + 70 - h, w, h);
-      });
-    } else if (kind === "rocket") {
-      // body
-      x.beginPath();
-      x.moveTo(C, C - 92);
-      x.bezierCurveTo(C + 52, C - 40, C + 46, C + 30, C + 30, C + 56);
-      x.lineTo(C - 30, C + 56);
-      x.bezierCurveTo(C - 46, C + 30, C - 52, C - 40, C, C - 92);
-      x.closePath();
-      x.fill();
-      // window
-      x.fillStyle = "rgba(0,0,0,0.25)";
-      x.beginPath(); x.arc(C, C - 18, 20, 0, 6.28); x.fill();
-      // fins
-      x.fillStyle = "#fff";
-      x.beginPath(); x.moveTo(C - 30, C + 28); x.lineTo(C - 64, C + 70); x.lineTo(C - 30, C + 56); x.closePath(); x.fill();
-      x.beginPath(); x.moveTo(C + 30, C + 28); x.lineTo(C + 64, C + 70); x.lineTo(C + 30, C + 56); x.closePath(); x.fill();
-      // flame
-      x.fillStyle = "rgba(255,255,255,0.85)";
-      x.beginPath(); x.moveTo(C - 16, C + 58); x.quadraticCurveTo(C, C + 110, C + 16, C + 58); x.closePath(); x.fill();
-    }
-    const tex = new THREE.CanvasTexture(cv);
-    tex.colorSpace = THREE.SRGBColorSpace;
-    tex.anisotropy = 4;
-    return tex;
-  }
-
-  _buildBadges() {
-    const g = new THREE.Group();
-    const data = [
-      { c1: FUN.blue,    c2: FUN.indigo,  icon: "spark" },
-      { c1: FUN.magenta, c2: FUN.purple,  icon: "code" },
-      { c1: FUN.teal,    c2: FUN.green,   icon: "chart" },
-      { c1: FUN.orange,  c2: FUN.yellow,  icon: "rocket" },
-    ];
-    const geo = new RoundedBoxGeometry(2.0, 2.0, 0.5, 6, 0.45);
-    const spacing = 2.7;
-    this.badgeMeshes = [];
-    data.forEach((d, i) => {
-      const sub = new THREE.Group();
-      const mat = new THREE.MeshPhysicalMaterial({
-        color: d.c1, emissive: d.c2, emissiveIntensity: 0.4,
-        roughness: 0.18, metalness: 0.1, clearcoat: 1, clearcoatRoughness: 0.1,
-        envMapIntensity: 1.3, transparent: true, opacity: 0.97,
-      });
-      const box = new THREE.Mesh(geo, mat);
-      sub.add(box);
-
-      // icon decal on the front face
-      const icon = new THREE.Mesh(
-        new THREE.PlaneGeometry(1.15, 1.15),
-        new THREE.MeshBasicMaterial({
-          map: this._iconTexture(d.icon), transparent: true,
-          blending: THREE.AdditiveBlending, depthWrite: false,
-        })
-      );
-      icon.position.z = 0.27;
-      sub.add(icon);
-
-      // colored glow behind badge
-      const glow = new THREE.Sprite(new THREE.SpriteMaterial({
-        map: this._glowTexture(d.c1), blending: THREE.AdditiveBlending,
-        depthWrite: false, transparent: true, opacity: 0.5,
-      }));
-      glow.scale.set(5, 5, 1);
-      glow.position.z = -0.6;
-      sub.add(glow);
-
-      sub.position.x = (i - 1.5) * spacing;
-      sub.userData = { baseX: sub.position.x, baseY: 0, ph: i * 0.7 };
-      this.badgeMeshes.push(sub);
-      g.add(sub);
-    });
-    this.scene.add(g);
-    return g;
-  }
-
-  /* -------------------------------------------------- hero: treasure chest */
-  _buildChest() {
-    const g = new THREE.Group();
-
-    const woodMat = new THREE.MeshPhysicalMaterial({
-      color: new THREE.Color("#5b2ea8"), roughness: 0.35, metalness: 0.2,
-      clearcoat: 0.6, emissive: new THREE.Color("#2a1259"), emissiveIntensity: 0.4,
-    });
-    const goldMat = new THREE.MeshPhysicalMaterial({
-      color: new THREE.Color("#ffcf45"), roughness: 0.25, metalness: 1.0,
-      emissive: new THREE.Color("#ff9b1a"), emissiveIntensity: 0.25, envMapIntensity: 1.5,
-    });
-
-    const W = 3.4, H = 1.7, D = 2.3;
-
-    // Base body
-    const body = new THREE.Mesh(new RoundedBoxGeometry(W, H, D, 4, 0.12), woodMat);
-    body.position.y = -H / 2;
-    g.add(body);
-
-    // Gold bands on body
-    const band = (x) => {
-      const b = new THREE.Mesh(new RoundedBoxGeometry(0.22, H + 0.04, D + 0.06, 3, 0.05), goldMat);
-      b.position.set(x, -H / 2, 0);
-      g.add(b);
+    this.uniforms = {
+      uTime: { value: 0 },
+      uMix: { value: 1 },
+      uPix: { value: this.renderer.getPixelRatio() },
+      uArc: { value: 1.3 },
+      uSpin: { value: 0.0 },
     };
-    band(-W / 2 + 0.4); band(W / 2 - 0.4);
-    const midBand = new THREE.Mesh(new RoundedBoxGeometry(W + 0.06, 0.28, D + 0.06, 3, 0.05), goldMat);
-    midBand.position.y = -H / 2;
-    g.add(midBand);
 
-    // Lock
-    const lock = new THREE.Mesh(new RoundedBoxGeometry(0.5, 0.6, 0.18, 4, 0.08), goldMat);
-    lock.position.set(0, -H / 2, D / 2 + 0.04);
-    g.add(lock);
+    const mat = new THREE.ShaderMaterial({
+      transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+      uniforms: this.uniforms,
+      vertexShader: `
+        uniform float uTime, uMix, uPix, uArc, uSpin;
+        attribute vec3 aFrom; attribute vec3 aTo;
+        attribute vec3 cFrom; attribute vec3 cTo;
+        attribute float aRand; attribute float aSize;
+        varying vec3 vCol;
+        void main(){
+          float m = clamp(uMix, 0.0, 1.0);
+          float e = m*m*(3.0-2.0*m);                 // smoothstep ease
+          vec3 pos = mix(aFrom, aTo, e);
 
-    // Lid as a group hinged at the back-top edge
-    const lid = new THREE.Group();
-    lid.position.set(0, 0, -D / 2); // hinge at back, y=0 (top of body)
-    const lidShape = new THREE.Mesh(
-      new THREE.CylinderGeometry(D / 2, D / 2, W, 48, 1, false, 0, Math.PI),
-      woodMat
-    );
-    lidShape.rotation.z = Math.PI / 2;
-    lidShape.position.set(0, 0, D / 2);
-    lid.add(lidShape);
-    // gold trim on lid
-    const lidBandGeo = new THREE.TorusGeometry(D / 2, 0.07, 12, 32, Math.PI);
-    [-W / 2 + 0.4, W / 2 - 0.4].forEach((x) => {
-      const t = new THREE.Mesh(lidBandGeo, goldMat);
-      t.position.set(x, 0, D / 2);
-      t.rotation.y = Math.PI / 2;
-      lid.add(t);
+          // arc displacement mid-flight -> particles "fly" between shapes
+          float arc = sin(e*3.14159265);
+          vec3 dir = vec3(sin(aRand*6.2831), cos(aRand*5.137), sin(aRand*9.42));
+          pos += dir * arc * uArc * (0.4 + aRand);
+
+          // idle sway around Y + gentle bob (alive at rest)
+          float a = sin(uTime*0.12)*0.35 + uSpin*uTime;
+          float s = sin(a), c = cos(a);
+          pos = vec3(pos.x*c - pos.z*s, pos.y, pos.x*s + pos.z*c);
+          pos.y += sin(uTime*0.7 + aRand*6.2831)*0.07;
+          pos.x += cos(uTime*0.5 + aRand*6.2831)*0.05;
+
+          vec4 mv = modelViewMatrix * vec4(pos,1.0);
+          gl_PointSize = aSize * (170.0 / -mv.z) * uPix * (0.7 + 0.3*sin(uTime*2.0 + aRand*30.0));
+          gl_Position = projectionMatrix * mv;
+          vCol = mix(cFrom, cTo, e);
+        }`,
+      fragmentShader: `
+        varying vec3 vCol;
+        void main(){
+          float d = length(gl_PointCoord - 0.5);
+          float a = smoothstep(0.5, 0.0, d);
+          gl_FragColor = vec4(vCol, a*0.7);
+        }`,
     });
-    lid.rotation.x = 0; // closed; opens toward -x rotation
-    g.add(lid);
-    g.userData.lid = lid;
 
-    // Inner glow light + emissive floor (revealed when open)
-    const innerLight = new THREE.PointLight(FUN.yellow, 0, 8);
-    innerLight.position.set(0, 0.1, 0);
-    g.add(innerLight);
-    g.userData.innerLight = innerLight;
+    this.points = new THREE.Points(geo, mat);
+    this.points.frustumCulled = false;
+    this.scene.add(this.points);
+  }
 
-    const treasure = new THREE.Mesh(
-      new THREE.PlaneGeometry(W - 0.4, D - 0.4),
-      new THREE.MeshBasicMaterial({ color: FUN.yellow, transparent: true, opacity: 0 })
-    );
-    treasure.rotation.x = -Math.PI / 2;
-    treasure.position.y = -0.05;
-    g.add(treasure);
-    g.userData.treasure = treasure;
+  /* ---------------- formation generators ---------------- */
+  _alloc() { return { pos: new Float32Array(this.N * 3), col: new Float32Array(this.N * 3) }; }
+  _setCol(col, i, c, jitter = 0.0) {
+    col[i * 3] = c.r * (1 - jitter + Math.random() * jitter * 2);
+    col[i * 3 + 1] = c.g * (1 - jitter + Math.random() * jitter * 2);
+    col[i * 3 + 2] = c.b * (1 - jitter + Math.random() * jitter * 2);
+  }
 
-    // Burst spheres (hidden until opened)
-    const burst = new THREE.Group();
-    const bgeo = new THREE.SphereGeometry(0.16, 20, 20);
-    this.burstParts = [];
-    for (let i = 0; i < 26; i++) {
-      const c = FUN_ARR[(Math.random() * FUN_ARR.length) | 0];
-      const m = new THREE.Mesh(bgeo, new THREE.MeshPhysicalMaterial({
-        color: c, emissive: c, emissiveIntensity: 1.0, roughness: 0.15, clearcoat: 1,
-      }));
-      m.visible = false;
-      m.userData = {
-        vx: (Math.random() - 0.5) * 0.06,
-        vy: 0.10 + Math.random() * 0.12,
-        vz: (Math.random() - 0.5) * 0.06,
-        sc: 0.5 + Math.random() * 1.1,
-        spin: (Math.random() - 0.5) * 0.2,
-      };
-      m.scale.setScalar(m.userData.sc);
-      burst.add(m);
-      this.burstParts.push(m);
+  _formOrb() {
+    const { pos, col } = this._alloc(), N = this.N, R = 3.0;
+    const tmp = new THREE.Color();
+    for (let i = 0; i < N; i++) {
+      const y = 1 - (i / (N - 1)) * 2;
+      const rr = Math.sqrt(Math.max(0, 1 - y * y));
+      const phi = i * GA;
+      const rad = R + (Math.random() - 0.5) * 0.5;
+      const px = Math.cos(phi) * rr * rad;
+      const py = y * rad;
+      const pz = Math.sin(phi) * rr * rad;
+      pos[i * 3] = px; pos[i * 3 + 1] = py + 0.3; pos[i * 3 + 2] = pz;
+      // cool gradient by height; sparse pink
+      const tcol = Math.random() < 0.05 ? C.pink : tmp.copy(C.violet).lerp(C.blue, (y + 1) / 2);
+      this._setCol(col, i, tcol, 0.08);
     }
-    g.add(burst);
-    g.userData.burst = burst;
-    g.userData.bursting = false;
-
-    this.scene.add(g);
-    return g;
+    return { pos, col };
   }
 
-  /* -------------------------------------------------- placement */
-  _placeHeroes() {
-    // default hidden state
-    this.orb.scale.setScalar(0.001);
-    this.badges.scale.setScalar(0.001);
-    this.chest.scale.setScalar(0.001);
-    this.orb.visible = this.badges.visible = this.chest.visible = false;
+  _formRing() {
+    const { pos, col } = this._alloc(), N = this.N, R = 3.2, r = 0.42;
+    const tmp = new THREE.Color();
+    for (let i = 0; i < N; i++) {
+      const u = Math.random() * Math.PI * 2;
+      const v = Math.random() * Math.PI * 2;
+      const x = (R + r * Math.cos(v)) * Math.cos(u);
+      const z = (R + r * Math.cos(v)) * Math.sin(u);
+      const y = r * Math.sin(v);
+      // tilt the ring slightly for an "orbit" read; offset right
+      pos[i * 3] = x + 3.4;
+      pos[i * 3 + 1] = y + x * 0.18 + 0.3;
+      pos[i * 3 + 2] = z;
+      const tcol = Math.random() < 0.06 ? C.teal : tmp.copy(C.iris).lerp(C.blue, Math.random());
+      this._setCol(col, i, tcol, 0.06);
+    }
+    return { pos, col };
   }
 
-  /* -------------------------------------------------- slide focus API */
+  _formClusters() {
+    const { pos, col } = this._alloc(), N = this.N;
+    const cols = [C.blue, C.violet, C.teal, C.gold];
+    const spacing = 3.1;
+    for (let i = 0; i < N; i++) {
+      const g = i % 4;
+      const cx = (g - 1.5) * spacing;
+      // rounded box-ish gaussian cloud
+      const rx = (Math.random() - 0.5) * 1.7;
+      const ry = (Math.random() - 0.5) * 1.7;
+      const rz = (Math.random() - 0.5) * 1.0;
+      pos[i * 3] = cx + rx;
+      pos[i * 3 + 1] = -3.4 + ry;
+      pos[i * 3 + 2] = rz;
+      this._setCol(col, i, cols[g], 0.12);
+    }
+    return { pos, col };
+  }
+
+  _formChest() {
+    const { pos, col } = this._alloc(), N = this.N;
+    const W = 1.9, H = 1.3, D = 1.3;
+    for (let i = 0; i < N; i++) {
+      // points on the surface of a rounded box (the "treasure box")
+      const f = Math.floor(Math.random() * 6);
+      let x = (Math.random() - 0.5) * W, y = (Math.random() - 0.5) * H, z = (Math.random() - 0.5) * D;
+      if (f === 0) y = H / 2; else if (f === 1) y = -H / 2;
+      else if (f === 2) x = W / 2; else if (f === 3) x = -W / 2;
+      else if (f === 4) z = D / 2; else z = -D / 2;
+      pos[i * 3] = x; pos[i * 3 + 1] = y - 2.4; pos[i * 3 + 2] = z;
+      const tcol = Math.random() < 0.35 ? C.gold : C.violet;
+      this._setCol(col, i, tcol, 0.1);
+    }
+    return { pos, col };
+  }
+
+  _formBurst() {
+    const { pos, col } = this._alloc(), N = this.N;
+    for (let i = 0; i < N; i++) {
+      // upward-biased exploding shell — the "treasure" fountain
+      const dirx = (Math.random() - 0.5) * 2;
+      const diry = Math.random();             // bias up
+      const dirz = (Math.random() - 0.5) * 2;
+      const len = Math.sqrt(dirx * dirx + diry * diry + dirz * dirz) || 1;
+      const rad = 1.5 + Math.random() * 5.0;
+      pos[i * 3] = (dirx / len) * rad;
+      pos[i * 3 + 1] = (diry / len) * rad - 1.0;
+      pos[i * 3 + 2] = (dirz / len) * rad;
+      const r = Math.random();
+      const tcol = r < 0.15 ? ACCENTS[(r * 100 | 0) % ACCENTS.length] : (r < 0.6 ? C.gold : C.white);
+      this._setCol(col, i, tcol, 0.1);
+    }
+    return { pos, col };
+  }
+
+  /* ---------------- morph driver ---------------- */
+  _morphTo(form, opts = {}) {
+    const gsap = this.gsap;
+    // bake currently-displayed mix into aFrom so fast skips don't pop
+    const e = (() => { const m = Math.min(Math.max(this.uniforms.uMix.value, 0), 1); return m * m * (3 - 2 * m); })();
+    for (let i = 0; i < this.aFrom.length; i++) {
+      this.aFrom[i] = lerp(this.aFrom[i], this.aTo[i], e);
+      this.cFrom[i] = lerp(this.cFrom[i], this.cTo[i], e);
+    }
+    this.aTo.set(form.pos);
+    this.cTo.set(form.col);
+    const geo = this.points.geometry;
+    geo.attributes.aFrom.needsUpdate = true;
+    geo.attributes.aTo.needsUpdate = true;
+    geo.attributes.cFrom.needsUpdate = true;
+    geo.attributes.cTo.needsUpdate = true;
+
+    this.uniforms.uMix.value = 0;
+    gsap.killTweensOf(this.uniforms.uMix);
+    gsap.killTweensOf(this.uniforms.uArc);
+    this.uniforms.uArc.value = opts.arc ?? 1.4;
+    gsap.to(this.uniforms.uMix, { value: 1, duration: opts.dur ?? 1.7, ease: opts.ease ?? "power3.inOut" });
+    gsap.to(this.uniforms.uSpin, { value: opts.spin ?? 0.0, duration: 1.5, ease: "power2.out" });
+  }
+
+  /* ---------------- per-slide choreography ---------------- */
   setSlide(index, gsap) {
-    this.activeSlide = index;
-    const show = (group, opts) => {
-      group.visible = true;
-      gsap.to(group.scale, { x: opts.s, y: opts.s, z: opts.s, duration: 1.1, ease: "elastic.out(0.7,0.6)" });
-      gsap.to(group.position, { x: opts.x, y: opts.y, z: opts.z || 0, duration: 1.0, ease: "power3.out" });
-    };
-    const hide = (group) => {
-      if (!group.visible) return;
-      gsap.to(group.scale, { x: 0.001, y: 0.001, z: 0.001, duration: 0.6, ease: "power3.in",
-        onComplete: () => { if (group !== this.orb || (this.activeSlide !== 0 && this.activeSlide !== 1)) group.visible = false; } });
-    };
+    this.gsap = gsap;
+    if (this._chestTimer) { this._chestTimer.kill(); this._chestTimer = null; }
 
-    // Camera + hero choreography per slide
     if (index === 0) {
-      show(this.orb, { s: 0.92, x: 0, y: 2.9, z: -1 });
-      hide(this.badges); this._resetChest(gsap); hide(this.chest);
-      this._camTo(gsap, 0, 0.7, 13);
+      this._morphTo(this._formOrb(), { spin: 0.05, arc: 1.5 });
+      this._camTo(0, 0.5, 13);
     } else if (index === 1) {
-      // quote: push orb to the right, calmer
-      show(this.orb, { s: 0.78, x: 4.7, y: 0.3, z: -1 });
-      hide(this.badges); this._resetChest(gsap); hide(this.chest);
-      this._camTo(gsap, -0.6, 0, 12.5);
+      this._morphTo(this._formRing(), { spin: 0.10, arc: 1.2 });
+      this._camTo(-0.6, 0.1, 12.5);
     } else if (index === 2) {
-      show(this.badges, { s: 0.82, x: 0, y: -3.7, z: -0.5 });
-      hide(this.orb); this._resetChest(gsap); hide(this.chest);
-      this._camTo(gsap, 0, 0.4, 13.5);
+      this._morphTo(this._formClusters(), { spin: 0.0, arc: 1.8, dur: 1.9 });
+      this._camTo(0, 0.3, 14.5);
     } else if (index === 3) {
-      show(this.chest, { s: 0.92, x: 0, y: -2.7, z: 0 });
-      hide(this.orb); hide(this.badges);
-      this._openChest(gsap);
-      this._camTo(gsap, 0, -0.1, 12.8);
+      // gather into a chest, then erupt
+      this._morphTo(this._formChest(), { spin: 0.0, arc: 1.2, dur: 1.3 });
+      this._camTo(0, 0.0, 13);
+      this._chestTimer = gsap.delayedCall(1.5, () => {
+        this._morphTo(this._formBurst(), { spin: 0.06, arc: 2.6, dur: 1.6, ease: "power2.out" });
+      });
     }
   }
 
-  _camTo(gsap, x, y, z) {
+  _camTo(x, y, z) {
     this.camBase = { x, y, z };
-    gsap.to(this.camera.position, { x, y, z, duration: 1.3, ease: "power3.inOut" });
+    this.gsap.to(this.camera.position, { x, y, z, duration: 1.4, ease: "power3.inOut" });
   }
 
-  _openChest(gsap) {
-    const c = this.chest;
-    gsap.to(c.userData.lid.rotation, { x: -2.15, duration: 1.2, ease: "back.out(1.6)", delay: 0.35 });
-    gsap.to(c.userData.innerLight, { intensity: 90, duration: 0.9, delay: 0.5 });
-    gsap.to(c.userData.treasure.material, { opacity: 0.9, duration: 0.8, delay: 0.5 });
-    // launch burst
-    gsap.delayedCall(0.6, () => {
-      c.userData.bursting = true;
-      this.burstParts.forEach((p, i) => {
-        p.visible = true;
-        p.position.set((Math.random() - 0.5) * 1.6, 0, (Math.random() - 0.5) * 1.0);
-        p.userData.life = 0;
-      });
-    });
-  }
-
-  _resetChest(gsap) {
-    const c = this.chest;
-    if (!c) return;
-    c.userData.bursting = false;
-    c.userData.lid.rotation.x = 0;
-    c.userData.innerLight.intensity = 0;
-    c.userData.treasure.material.opacity = 0;
-    this.burstParts.forEach((p) => (p.visible = false));
-  }
-
-  /* -------------------------------------------------- events */
+  /* ---------------- events / loop ---------------- */
   _bindEvents() {
     window.addEventListener("resize", () => this.resize());
     window.addEventListener("pointermove", (e) => {
@@ -593,15 +363,11 @@ export class Cosmos {
     this.renderer.setSize(w, h);
     this.camera.aspect = w / h;
     this.camera.updateProjectionMatrix();
+    if (this.uniforms) this.uniforms.uPix.value = this.renderer.getPixelRatio();
   }
 
-  /* -------------------------------------------------- render loop */
   start() {
-    const tick = () => {
-      this._frame();
-      this.renderer.render(this.scene, this.camera);
-      this._raf = requestAnimationFrame(tick);
-    };
+    const tick = () => { this._frame(); this.renderer.render(this.scene, this.camera); this._raf = requestAnimationFrame(tick); };
     tick();
   }
 
@@ -610,80 +376,16 @@ export class Cosmos {
     this.elapsed = (this.elapsed || 0) + dt;
     const t = this.elapsed;
 
-    // pointer easing -> parallax
     this.pointer.x += (this.pointerTarget.x - this.pointer.x) * 0.05;
     this.pointer.y += (this.pointerTarget.y - this.pointer.y) * 0.05;
-    if (this.camBase) {
-      this.camera.position.x = this.camBase.x + this.pointer.x * 0.8;
-      this.camera.position.y = this.camBase.y - this.pointer.y * 0.6;
-    }
-    this.camera.lookAt(0, this.camBase ? this.camBase.y * 0.2 : 0, 0);
+    this.camera.position.x = this.camBase.x + this.pointer.x * 0.8 + Math.sin(t * 0.1) * 0.2;
+    this.camera.position.y = this.camBase.y - this.pointer.y * 0.6 + Math.cos(t * 0.12) * 0.15;
+    this.camera.lookAt(0, this.camBase.y * 0.2, 0);
 
-    // stars + nebula
-    if (this.stars) {
-      this.stars.material.uniforms.uTime.value = t;
-      this.stars.rotation.y = t * 0.012;
-      this.stars.rotation.x = Math.sin(t * 0.05) * 0.04;
-    }
+    if (this.uniforms) this.uniforms.uTime.value = t;
+    if (this.stars) this.stars.rotation.y = t * 0.008;
     if (this.nebula) {
-      this.nebula.children.forEach((s) => {
-        s.material.opacity = (s.userData.baseO ?? s.material.opacity);
-        s.position.y += Math.sin(t * 0.3 + s.userData.phase) * 0.002;
-      });
-      this.nebula.rotation.z = Math.sin(t * 0.03) * 0.05;
-    }
-
-    // bokeh drift
-    if (this.bokeh) {
-      this.bokeh.children.forEach((m) => {
-        m.position.y = m.userData.baseY + Math.sin(t * m.userData.sp + m.userData.ph) * 0.6;
-        m.rotation.x += m.userData.rot * dt;
-        m.rotation.y += m.userData.rot * dt * 0.8;
-      });
-    }
-
-    // orb
-    if (this.orb && this.orb.visible) {
-      this.orb.rotation.y = t * 0.18;
-      this.orb.userData.lobes.rotation.y = -t * 0.25;
-      this.orb.userData.lobes.rotation.x = Math.sin(t * 0.3) * 0.2;
-      this.orb.userData.ring.rotation.z = t * 0.1;
-      this.orb.userData.beads.children.forEach((b) => {
-        b.userData.a += b.userData.sp * dt;
-        const { a, r, tilt } = b.userData;
-        b.position.set(Math.cos(a) * r, Math.sin(a) * tilt * r * 0.4, Math.sin(a) * r);
-      });
-    }
-
-    // badges
-    if (this.badges && this.badges.visible) {
-      this.badgeMeshes.forEach((b) => {
-        b.position.y = b.userData.baseY + Math.sin(t * 0.9 + b.userData.ph) * 0.18;
-        b.rotation.y = Math.sin(t * 0.5 + b.userData.ph) * 0.35;
-        b.rotation.x = Math.cos(t * 0.4 + b.userData.ph) * 0.1;
-      });
-    }
-
-    // chest burst
-    if (this.chest && this.chest.visible) {
-      this.chest.rotation.y = Math.sin(t * 0.3) * 0.12;
-      if (this.chest.userData.bursting) {
-        this.burstParts.forEach((p) => {
-          if (!p.visible) return;
-          p.userData.life += dt;
-          p.userData.vy -= 0.16 * dt; // gravity
-          p.position.x += p.userData.vx;
-          p.position.y += p.userData.vy;
-          p.position.z += p.userData.vz;
-          p.rotation.x += p.userData.spin;
-          p.rotation.y += p.userData.spin;
-          if (p.position.y < -0.2 && p.userData.vy < 0) {
-            // recycle for a continuous gentle fountain
-            p.position.set((Math.random() - 0.5) * 1.6, 0, (Math.random() - 0.5) * 1.0);
-            p.userData.vy = 0.10 + Math.random() * 0.12;
-          }
-        });
-      }
+      this.nebula.children.forEach((s) => { s.position.y = s.userData.baseY + Math.sin(t * 0.25 + s.userData.ph) * 0.4; });
     }
   }
 }
