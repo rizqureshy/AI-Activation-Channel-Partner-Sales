@@ -526,6 +526,30 @@ img.ava { object-fit: cover; object-position: center top; }
 }
 .card.achiever .tag::before { content: "✓"; font-size: 11px; }
 
+/* revolving certificate carousel (celebration slide) */
+.cert-rail {
+  position: relative; width: 100%; overflow: hidden; margin: clamp(12px, 2vh, 22px) 0;
+  -webkit-mask: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+  mask: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+}
+.cert-track { display: flex; gap: clamp(14px, 1.6vw, 22px); width: max-content; animation: certscroll 44s linear infinite; }
+.cert-rail:hover .cert-track { animation-play-state: paused; }
+@keyframes certscroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.cert {
+  flex: none; width: clamp(210px, 21vw, 288px); aspect-ratio: 3 / 2; border-radius: 16px; overflow: hidden;
+  border: 1px solid var(--glass-brd); background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 22px 50px -28px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.18);
+}
+.cert img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
+
+/* single-row holders grid */
+.cards.c6 { grid-template-columns: repeat(6, 1fr); }
+.cards.c6 .card.achiever { padding: 14px 10px 12px; }
+.cards.c6 .card.achiever .ava { width: 54px; height: 54px; margin-bottom: 9px; }
+.cards.c6 .card.achiever .who { font-size: clamp(13px, 1.15vw, 16px); }
+@media (max-width: 920px) { .cards.c6 { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 560px) { .cards.c6 { grid-template-columns: repeat(2, 1fr); } }
+
 /* status pill (research flag) */
 .status {
   display: inline-flex; align-items: center; gap: 8px; align-self: flex-start;
