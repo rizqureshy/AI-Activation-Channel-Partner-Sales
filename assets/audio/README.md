@@ -1,7 +1,7 @@
 # Opening music
 
-The opening track is **`opening.mp3`** — a licensed copy of *Bradbury Lane —
-"Everything's More Beautiful" (Instrumental)*, supplied and licensed by the deck owner.
+The opening track is **`opening.mp3`** — a licensed copy of *Innovation Mountaineer
+(Main Version)*, supplied and licensed by the deck owner.
 
 The player (top-level `<audio id="bgm">` + the sound toggle, bottom-right) loads
 `assets/audio/opening.mp3`, starts it on the first click/keypress (browser autoplay
