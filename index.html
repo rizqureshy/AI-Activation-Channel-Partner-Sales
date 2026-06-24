@@ -36,9 +36,24 @@
   <div class="cosmos-wash"></div>
   <div class="vignette"></div>
 
-  <!-- Opening music. Drop a track you have rights to at assets/audio/opening.mp3
-       (the Star Wars theme itself is copyrighted and not bundled). Starts on the
-       first click/keypress due to browser autoplay rules; toggle with the button. -->
+  <!-- Frosted pre-splash gate. Sits over the live particle field (so the cosmos
+       glows through the frost) and holds the deck until "Get Started" is pressed —
+       that click is the user gesture browsers require to start the music. -->
+  <div id="splash">
+    <div class="splash-card">
+      <span class="splash-kicker"><span class="dot"></span> AI Enablement Session</span>
+      <h1 class="splash-title">AI <span class="gradient-text">Enablement</span> Session</h1>
+      <p class="splash-sub">A practical look at where AI is helping the team today — and what we're building next.</p>
+      <button class="splash-btn" id="get-started">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="8 5 19 12 8 19"/></svg>
+        Get Started
+      </button>
+      <span class="splash-note">Begins with music · best with sound on</span>
+    </div>
+  </div>
+
+  <!-- Opening music (licensed track at assets/audio/opening.mp3). Started by the
+       "Get Started" gesture above; toggle anytime with the sound button. -->
   <audio id="bgm" loop preload="auto" src="assets/audio/opening.mp3"></audio>
   <button class="chrome sound-btn muted" id="sound" aria-label="Toggle music" aria-pressed="false">
     <svg class="i-on" viewBox="0 0 24 24"><path d="M4 9v6h4l5 5V4L8 9H4zm12.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/></svg>

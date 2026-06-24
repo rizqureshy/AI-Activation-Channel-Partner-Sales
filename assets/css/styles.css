@@ -690,6 +690,56 @@ img.ava { object-fit: cover; object-position: center top; }
 #loader .lbl { position: absolute; margin-top: 130px; font-family: var(--font-display); letter-spacing: 0.3em; text-transform: uppercase; font-size: 12px; color: var(--ink-soft); }
 @keyframes spin { to { transform: rotate(360deg); } }
 
+/* ---- frosted pre-splash gate ---- */
+#splash {
+  position: fixed; inset: 0; z-index: 90;
+  display: grid; place-items: center; padding: 24px;
+  background: rgba(5, 3, 15, 0.34);
+  backdrop-filter: blur(26px) saturate(1.25);
+  -webkit-backdrop-filter: blur(26px) saturate(1.25);
+  transition: opacity .9s var(--ease-out), visibility .9s;
+}
+#splash.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+.splash-card {
+  position: relative; text-align: center; max-width: 620px;
+  padding: clamp(34px, 5vw, 60px) clamp(28px, 5vw, 64px);
+  border-radius: 28px;
+  border: 1px solid var(--glass-brd);
+  background: var(--glass);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 40px 120px -40px rgba(2, 1, 12, 0.8), inset 0 1px 0 rgba(255,255,255,0.08);
+  animation: splashRise 1s var(--ease-out) both;
+}
+@keyframes splashRise { from { opacity: 0; transform: translateY(26px) scale(.97); } to { opacity: 1; transform: none; } }
+.splash-kicker {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 11px; letter-spacing: 0.26em; text-transform: uppercase;
+  color: var(--ink-soft); margin-bottom: 18px;
+}
+.splash-kicker .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 12px var(--blue); }
+.splash-title {
+  font-family: var(--font-display); font-weight: 800; line-height: 1.04;
+  font-size: clamp(34px, 6vw, 62px); margin: 0 0 16px;
+}
+.splash-sub {
+  color: var(--ink-dim); font-size: clamp(14px, 1.6vw, 18px); line-height: 1.55;
+  max-width: 460px; margin: 0 auto 30px;
+}
+.splash-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 15px 30px; border-radius: 100px; cursor: pointer;
+  font-family: var(--font-display); font-weight: 700; font-size: clamp(15px, 1.5vw, 17px);
+  color: #fff; letter-spacing: 0.02em;
+  border: 1px solid rgba(255,255,255,0.22);
+  background: linear-gradient(120deg, var(--blue), var(--indigo) 55%, var(--purple));
+  box-shadow: 0 16px 40px -14px var(--indigo), inset 0 1px 0 rgba(255,255,255,0.3);
+  transition: transform .35s var(--ease-out), box-shadow .35s var(--ease-out), filter .3s;
+}
+.splash-btn svg { width: 16px; height: 16px; fill: currentColor; }
+.splash-btn:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 22px 54px -14px var(--indigo), inset 0 1px 0 rgba(255,255,255,0.35); filter: brightness(1.06); }
+.splash-btn:active { transform: translateY(0) scale(.99); }
+.splash-note { display: block; margin-top: 18px; font-size: 12px; letter-spacing: 0.08em; color: var(--ink-soft); }
+
 /* reveal helpers (GSAP targets) */
 .reveal { will-change: transform, opacity; }
 

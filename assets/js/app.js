@@ -14,6 +14,7 @@ const slides = Array.from(document.querySelectorAll(".slide"));
 const total = slides.length;
 let current = 0;
 let animating = false;
+let started = false;   // flipped true when the splash gate is dismissed
 
 /* ---- chrome refs ---- */
 const dotsWrap = document.getElementById("dots");
@@ -74,6 +75,7 @@ function animateOut(slide) {
    the dance coming forward and obscuring) — then the next slide fades
    back in as the field recedes. Pure opacity + motion = no snap. */
 function go(index) {
+  if (!started) return;                  // locked behind the splash gate
   if (index < 0 || index >= total || index === current || animating) return;
   animating = true;
   const prevSlide = slides[current];
@@ -166,15 +168,24 @@ function startAudio() {
   bgm.volume = 0.55;
   bgm.play().then(refreshSound).catch(() => soundBtn.classList.add("muted"));
 }
-// browsers block sound until a user gesture — kick it off on the first one
-window.addEventListener("pointerdown", startAudio, { once: true });
-window.addEventListener("keydown", startAudio, { once: true });
 soundBtn.addEventListener("click", (e) => {
   e.stopPropagation();
   audioStarted = true;
   if (bgm.paused) bgm.play().then(refreshSound).catch(() => {});
   else { bgm.pause(); refreshSound(); }
 });
+
+/* ---- splash gate ---- */
+const splash = document.getElementById("splash");
+const getStarted = document.getElementById("get-started");
+function enterDeck() {
+  if (started) return;
+  started = true;
+  startAudio();                 // this click IS the gesture browsers require
+  splash.classList.add("hidden");
+  animateIn(slides[0]);         // replay the cover intro, crisp now the frost is gone
+}
+getStarted.addEventListener("click", enterDeck);
 
 /* ---- boot ---- */
 function boot() {
