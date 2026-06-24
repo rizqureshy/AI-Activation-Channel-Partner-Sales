@@ -3,15 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover" />
+  <title>AI Enablement Session</title>
+  <meta name="description" content="AI Enablement Session — ACE, AI learning, Yoodli, interactive learning experiences, the GTM-WebApps pipeline, and AI Activation. An interactive 3D particle presentation." />
 
-  <!-- ┌──────────────────────────────────────────────────────────────┐
-       │  TITLE — change per deck                                       │
-       └──────────────────────────────────────────────────────────────┘ -->
-  <title>Particle Deck — Template</title>
-  <meta name="description" content="A reusable 3D particle presentation engine. Duplicate a slide, set data-formation, write your content." />
-
-  <!-- Fonts loaded async so a slow/blocked CDN never render-blocks the deck
-       (system font fallback is defined in CSS) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preload" as="style"
@@ -21,7 +15,6 @@
 
   <link rel="stylesheet" href="assets/css/styles.css" />
 
-  <!-- engine deps, vendored locally (offline-friendly) -->
   <script src="assets/vendor/gsap.min.js"></script>
   <script type="importmap">
   {
@@ -34,9 +27,6 @@
 </head>
 <body>
 
-  <!-- ============================================================
-       ENGINE CHROME — leave as-is. Loader, background, controls.
-       ============================================================ -->
   <div id="loader">
     <div class="orb"></div>
     <div class="lbl">Spinning up the universe…</div>
@@ -48,9 +38,8 @@
 
   <div class="progress"><div class="bar" id="bar"></div></div>
   <header class="chrome brandbar">
-    <!-- BRAND — change the label per deck -->
-    <div class="logo"><span class="spark"></span> Particle Deck</div>
-    <div class="count"><b id="c-now">01</b> / <span id="c-tot">03</span></div>
+    <div class="logo"><span class="spark"></span> AI Enablement</div>
+    <div class="count"><b id="c-now">01</b> / <span id="c-tot">11</span></div>
   </header>
 
   <button class="nav-btn prev" id="prev" aria-label="Previous slide">
@@ -62,72 +51,263 @@
 
   <nav class="chrome dots" id="dots" aria-label="Slide navigation"></nav>
 
-  <!-- ============================================================
-       SLIDES — author here. One <section class="slide"> per slide.
-
-       Pick the particle artwork with data-formation:
-         orb · core · core-center · clusters:N · split
-         ring · grid · stream · burst
-       Optional camera nudge:  data-cam="x,y,z"
-
-       Layout helpers (add to <section>):  content (left) · center
-       Animate-in classes:  .reveal (text)   .pop (cards/panels)
-       Glowing key words:   <span class="gradient-text">word</span>
-
-       Full reference + component snippets: see AUTHORING.md
-       Dots / counter / nav update automatically from the slide count.
-       ============================================================ -->
   <main id="stage">
 
-    <!-- ░░ 1 · COVER ░░ -->
+    <!-- 1 · Welcome -->
     <section class="slide cover center" data-slide="0" data-formation="orb">
       <div class="slide-inner">
-        <span class="kicker reveal"><span class="dot"></span> Section · Subtitle</span>
-        <h1 class="reveal">Your <span class="gradient-text">headline</span> here</h1>
-        <p class="sub reveal">A one-line promise or summary for this presentation.</p>
-        <div class="presenter reveal"><span class="dot2"></span> <span><b>Presenter Name</b> · Team</span></div>
+        <span class="kicker reveal"><span class="dot"></span> Welcome</span>
+        <h1 class="reveal">AI <span class="gradient-text">Enablement</span> Session</h1>
+        <p class="sub reveal">A practical look at where AI is helping the team today — and what we're building next.</p>
         <div class="scroll-hint reveal"><span class="mouse"></span> scroll or use arrows</div>
       </div>
-      <div class="eq-credit">© 2026 Your Org</div>
+      <div class="eq-credit">AI Enablement Session</div>
     </section>
 
-    <!-- ░░ 2 · CONTENT (example: 3 cards over a cluster formation) ░░ -->
-    <section class="slide content" data-slide="1" data-formation="clusters:3">
+    <!-- 2 · ACE Re-Intro -->
+    <section class="slide content" data-slide="1" data-formation="core">
       <div class="slide-inner">
         <div class="lead">
-          <span class="kicker reveal"><span class="dot"></span> Section label</span>
-          <h2 class="reveal">A clear <span class="gradient-text">point</span> for this slide</h2>
-          <p class="lede reveal">One or two sentences of context. Keep it tight; the cards carry the detail.</p>
+          <span class="kicker reveal"><span class="dot"></span> ACE Re-Intro · Rizwan</span>
+          <h2 class="reveal">ACE: our primary <span class="gradient-text">GTM AI Sales Agent</span></h2>
+          <p class="lede reveal">A trusted way for sellers to access governed sales knowledge and prepare better customer conversations.</p>
+        </div>
+        <div class="cards c2">
+          <article class="card pop" style="--ac:#2b88ff;">
+            <span class="tag">What ACE helps with</span>
+            <ul>
+              <li>Customer conversation preparation and account context.</li>
+              <li>Discovery support, objection handling, and product differentiation.</li>
+              <li>Proposals, RFP/RFI support, and quick GTM knowledge access.</li>
+            </ul>
+          </article>
+          <article class="card pop" style="--ac:#8b7bff;">
+            <span class="tag">Why it is different</span>
+            <ul>
+              <li>Built around governed Equinix knowledge, not generic answers.</li>
+              <li>Citations and source grounding help users verify before they use.</li>
+              <li>Designed for sales execution, not just everyday productivity.</li>
+            </ul>
+          </article>
+        </div>
+        <p class="note reveal">ACE is not just faster search. It is a <b>trusted sales resource</b> for customer-ready answers.</p>
+      </div>
+      <div class="eq-credit">AI Enablement Session</div>
+    </section>
+
+    <!-- 3 · ACE Updates and Demo -->
+    <section class="slide content" data-slide="2" data-formation="clusters:3">
+      <div class="slide-inner">
+        <div class="lead">
+          <span class="kicker reveal"><span class="dot"></span> ACE Updates &amp; Demo · Rizwan</span>
+          <h2 class="reveal">ACE update: <span class="gradient-text">deeper knowledge</span>, stronger trust</h2>
+          <p class="lede reveal">Better knowledge access becomes better seller confidence.</p>
         </div>
         <div class="cards c3">
           <article class="card pop" style="--ic:linear-gradient(135deg,#2b88ff,#4a3fd0);--ac:#2b88ff;">
-            <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6 4.4 2.3 7.2L12 16.6 5.7 21l2.3-7.2-6-4.4h7.6z"/></svg></div>
-            <h3>Card one</h3><p>Short supporting copy for the first idea.</p>
+            <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 2c4.4 0 8 1.3 8 3s-3.6 3-8 3-8-1.3-8-3 3.6-3 8-3zM4 8.5C5.6 9.6 8.6 10 12 10s6.4-.4 8-1.5V12c0 1.7-3.6 3-8 3s-8-1.3-8-3V8.5zM4 14.5C5.6 15.6 8.6 16 12 16s6.4-.4 8-1.5V18c0 1.7-3.6 3-8 3s-8-1.3-8-3v-3.5z"/></svg></div>
+            <h3>IBX-KB connected</h3><p>IBX knowledge is now closer to the sales workflow.</p>
           </article>
           <article class="card pop" style="--ic:linear-gradient(135deg,#7c6bff,#4a3fd0);--ac:#8b7bff;">
-            <div class="ic"><svg viewBox="0 0 24 24"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg></div>
-            <h3>Card two</h3><p>Short supporting copy for the second idea.</p>
+            <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6 4.4 2.3 7.2L12 16.6 5.7 21l2.3-7.2-6-4.4h7.6z"/></svg></div>
+            <h3>One guided experience</h3><p>GTM sales knowledge and IBX knowledge surfaced together.</p>
           </article>
           <article class="card pop" style="--ic:linear-gradient(135deg,#18c8b6,#2b88ff);--ac:#18c8b6;">
-            <div class="ic"><svg viewBox="0 0 24 24"><path d="M9 16.2l-3.5-3.5-1.4 1.4L9 19 20 8l-1.4-1.4z"/></svg></div>
-            <h3>Card three</h3><p>Short supporting copy for the third idea.</p>
+            <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 2l8 3v6c0 5-3.4 8.5-8 11-4.6-2.5-8-6-8-11V5l8-3zm-1.2 13.4l5-5-1.4-1.4-3.6 3.6-1.6-1.6-1.4 1.4 3 3z"/></svg></div>
+            <h3>Source grounding</h3><p>Citations make it easy to inspect the evidence behind an answer.</p>
           </article>
         </div>
-        <p class="note reveal">Optional closing line. Use <b>bold</b> or a <span class="gradient-text">glow word</span> for emphasis.</p>
+        <div class="flow reveal">
+          <span class="stage">Ask</span><span class="arrow">›</span>
+          <span class="stage">Inspect</span><span class="arrow">›</span>
+          <span class="stage">Validate</span><span class="arrow">›</span>
+          <span class="stage">Use</span>
+        </div>
+        <p class="note reveal">Keep the trust boundary clear: pricing and sustainability content stay in the right governed domains.</p>
       </div>
-      <div class="eq-credit">© 2026 Your Org</div>
+      <div class="eq-credit">AI Enablement Session</div>
     </section>
 
-    <!-- ░░ 3 · CLOSING (burst finale) ░░ -->
-    <section class="slide content center" data-slide="2" data-formation="burst">
+    <!-- 4 · Certificate Achievers Shoutout -->
+    <section class="slide content" data-slide="3" data-formation="burst">
       <div class="slide-inner">
         <div class="lead">
-          <span class="kicker reveal"><span class="dot"></span> Wrap-up</span>
-          <h2 class="reveal">Thank <span class="gradient-text">you</span></h2>
+          <span class="kicker reveal"><span class="dot"></span> Certificate Achievers · Kelly</span>
+          <h2 class="reveal">Celebrating AI learning <span class="gradient-text">momentum</span></h2>
+          <p class="lede reveal">A quick moment to recognize the people moving from interest to action.</p>
         </div>
-        <p class="cta reveal">Your call to action — <span class="gradient-text">let's talk.</span></p>
+        <div class="cards c2">
+          <article class="card pop" style="--ac:#ffcf45;">
+            <span class="tag">Kelly recognizes</span>
+            <ul>
+              <li>Completed AI learning and certification milestones.</li>
+              <li>Learners still in progress — and the importance of finishing strong.</li>
+              <li>How shared learning builds confidence across the team.</li>
+            </ul>
+          </article>
+          <article class="card pop" style="--ac:#18c8b6;">
+            <span class="tag">Team moment</span>
+            <ul>
+              <li>Celebrate progress and follow-through.</li>
+              <li>Invite achievers to share one practical takeaway.</li>
+              <li>Turn individual learning into team momentum.</li>
+            </ul>
+          </article>
+        </div>
+        <p class="note reveal">Prompt for the group: <b>who can we recognize next, and what learning should we share forward?</b></p>
       </div>
-      <div class="eq-credit">© 2026 Your Org</div>
+      <div class="eq-credit">AI Enablement Session</div>
+    </section>
+
+    <!-- 5 · Eduardo: Key AI Learning Experience -->
+    <section class="slide content" data-slide="4" data-formation="core-center">
+      <div class="slide-inner">
+        <div class="lead">
+          <span class="kicker reveal"><span class="dot"></span> Key AI Learning · Eduardo</span>
+          <h2 class="reveal">What <span class="gradient-text">AI for Everyone</span> changed in practice</h2>
+          <p class="lede reveal">A practical reflection on what landed — a key idea from the course, why it mattered, and how it connects to day-to-day work, team collaboration, and customer conversations.</p>
+        </div>
+        <div class="moves">
+          <div class="move pop"><span class="n">1</span><p><b>One concept</b> that landed.</p></div>
+          <div class="move pop"><span class="n">2</span><p><b>One example</b> from work.</p></div>
+          <div class="move pop"><span class="n">3</span><p><b>One behavior</b> to try.</p></div>
+        </div>
+        <p class="note reveal">Keep it practical: one learning, one example, one behavior the team can use.</p>
+      </div>
+      <div class="eq-credit">AI Enablement Session</div>
+    </section>
+
+    <!-- 6 · Michael: Key AI Learning Experience -->
+    <section class="slide content" data-slide="5" data-formation="core">
+      <div class="slide-inner">
+        <div class="lead">
+          <span class="kicker reveal"><span class="dot"></span> Key AI Learning · Michael</span>
+          <h2 class="reveal">From learning to <span class="gradient-text">practical team application</span></h2>
+          <p class="lede reveal">How AI learning connects to real workflows and better execution.</p>
+        </div>
+        <ul class="bullets reveal">
+          <li>One key learning that stood out.</li>
+          <li>How it connects to real team workflows.</li>
+          <li>Where AI can improve quality, not just speed.</li>
+          <li>One practical behavior — or caution — for the team.</li>
+        </ul>
+        <p class="note reveal">Learning frame: what changes when AI becomes part of the work, not just a tool beside the work?</p>
+      </div>
+      <div class="eq-credit">AI Enablement Session</div>
+    </section>
+
+    <!-- 7 · Yoodli Updates and Milestones -->
+    <section class="slide content" data-slide="6" data-formation="ring">
+      <div class="slide-inner">
+        <div class="lead">
+          <span class="kicker reveal"><span class="dot"></span> Yoodli Updates &amp; Milestones · Kelly / Lorna</span>
+          <h2 class="reveal">Yoodli: practice, feedback, and <span class="gradient-text">coaching at scale</span></h2>
+          <p class="lede reveal">A moment to show progress, adoption, and what the team should expect next.</p>
+        </div>
+        <ul class="bullets reveal">
+          <li>Where Yoodli is today and what progress has been made.</li>
+          <li>Adoption patterns, milestones, and early signals from users.</li>
+          <li>What the team should know, share, or support next.</li>
+        </ul>
+        <p class="note reveal">The bigger story: practice tools help people build confidence before high-stakes conversations.</p>
+      </div>
+      <div class="eq-credit">AI Enablement Session</div>
+    </section>
+
+    <!-- 8 · Interactive Learning Experiences -->
+    <section class="slide content" data-slide="7" data-formation="grid">
+      <div class="slide-inner">
+        <div class="lead">
+          <span class="kicker reveal"><span class="dot"></span> Interactive Learning · Kelly / Rizwan</span>
+          <h2 class="reveal">Inception of <span class="gradient-text">GTM-WebApps</span></h2>
+          <p class="lede reveal">A new path for richer learning experiences that let the field explore, practice, and apply.</p>
+        </div>
+        <div class="cards c3">
+          <article class="card pop" style="--ic:linear-gradient(135deg,#2b88ff,#4a3fd0);--ac:#2b88ff;">
+            <div class="ic"><svg viewBox="0 0 24 24"><path d="M10 2a8 8 0 1 1-5 14.3l-3 3-1.4-1.4 3-3A8 8 0 0 1 10 2zm0 2a6 6 0 1 0 0 12 6 6 0 0 0 0-12z"/></svg></div>
+            <h3>Guided exploration</h3><p>Static content is useful, but complex topics need guided exploration.</p>
+          </article>
+          <article class="card pop" style="--ic:linear-gradient(135deg,#7c6bff,#4a3fd0);--ac:#8b7bff;">
+            <div class="ic"><svg viewBox="0 0 24 24"><path d="M9.4 7.6L4.8 12l4.6 4.4-1.4 1.5L1.9 12l6.1-5.9zM14.6 7.6l1.4-1.5L22.1 12l-6.1 5.9-1.4-1.5L19.2 12z"/></svg></div>
+            <h3>From reading to doing</h3><p>Interactive playbooks help teams move from reading to doing.</p>
+          </article>
+          <article class="card pop" style="--ic:linear-gradient(135deg,#18c8b6,#2b88ff);--ac:#18c8b6;">
+            <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6 4.4 2.3 7.2L12 16.6 5.7 21l2.3-7.2-6-4.4h7.6z"/></svg></div>
+            <h3>Adaptive by design</h3><p>AI-guided experiences adapt to the user, scenario, and learning goal.</p>
+          </article>
+        </div>
+        <p class="note reveal">Anchor examples: <b>Financial Services Playbook Hub</b> · <b>AI Activation Studio</b>. Goal: help GTM Enablement support interactive, custom-built learning experiences for the business.</p>
+      </div>
+      <div class="eq-credit">AI Enablement Session</div>
+    </section>
+
+    <!-- 9 · GTM-WebApps Publishing Pipeline -->
+    <section class="slide content center" data-slide="8" data-formation="stream">
+      <div class="slide-inner">
+        <div class="lead">
+          <span class="kicker reveal"><span class="dot"></span> GTM-WebApps Pipeline · Rizwan</span>
+          <h2 class="reveal">A repeatable path to <span class="gradient-text">publish behind the firewall</span></h2>
+          <p class="lede reveal">The operating model behind GTM-WebApps: intake, validation, hosting, testing, and launch.</p>
+        </div>
+        <div class="flow reveal">
+          <span class="stage">Intake</span><span class="arrow">›</span>
+          <span class="stage">Validate</span><span class="arrow">›</span>
+          <span class="stage">Host</span><span class="arrow">›</span>
+          <span class="stage">UAT</span><span class="arrow">›</span>
+          <span class="stage">Launch</span>
+        </div>
+        <ul class="bullets reveal">
+          <li>Custom learning tools and web experiences shared internally in a governed way.</li>
+          <li>GTM Enablement guides intake, validation, publishing coordination, and updates.</li>
+          <li>The operating model matters as much as the technology: repeatable process, clear ownership, safer distribution.</li>
+        </ul>
+      </div>
+      <div class="eq-credit">AI Enablement Session</div>
+    </section>
+
+    <!-- 10 · AI Activation for GTM / CRO -->
+    <section class="slide content" data-slide="9" data-formation="clusters:3">
+      <div class="slide-inner">
+        <div class="lead">
+          <span class="kicker reveal"><span class="dot"></span> AI Activation for GTM / CRO · Kelly / Rizwan</span>
+          <h2 class="reveal">AI Activation is <span class="gradient-text">open for business</span></h2>
+          <p class="lede reveal">The next phase is practical, team-based activation through the AI Activation Studio — the move from AI awareness to hands-on team activation.</p>
+        </div>
+        <div class="cards c3">
+          <article class="card pop" style="--ac:#2b88ff;">
+            <div class="ava" style="--ic:linear-gradient(135deg,#2b88ff,#4a3fd0);">RA</div>
+            <div class="who">Rahul Arorah</div><p class="role">Leading activation for Tasha's organization.</p>
+          </article>
+          <article class="card pop" style="--ac:#8b7bff;">
+            <div class="ava" style="--ic:linear-gradient(135deg,#7c6bff,#4a3fd0);">EJ</div>
+            <div class="who">Elizabeth Jarjour</div><p class="role">Leading activation for Michael Stokes' organization.</p>
+          </article>
+          <article class="card pop" style="--ac:#18c8b6;">
+            <div class="ava" style="--ic:linear-gradient(135deg,#18c8b6,#2b88ff);">JC</div>
+            <div class="who">Joseph Chan</div><p class="role">Leading the Channel Partner Sales kickoff.</p>
+          </article>
+        </div>
+        <p class="note reveal"><b>What we need next:</b> use cases from the business · team sponsors and willing participants.</p>
+      </div>
+      <div class="eq-credit">AI Enablement Session</div>
+    </section>
+
+    <!-- 11 · Closing Remarks -->
+    <section class="slide content center" data-slide="10" data-formation="burst">
+      <div class="slide-inner">
+        <div class="lead">
+          <span class="kicker reveal"><span class="dot"></span> Closing Remarks · Eamonn / Kelly</span>
+          <h2 class="reveal">Keep experimenting. <span class="gradient-text">Keep sharing.</span></h2>
+          <p class="lede reveal">The value of these sessions comes from practical examples, not just updates.</p>
+        </div>
+        <div class="moves">
+          <div class="move pop"><span class="n">1</span><p><b>Try</b> one practical AI behavior this week.</p></div>
+          <div class="move pop"><span class="n">2</span><p><b>Share</b> what works and what does not.</p></div>
+          <div class="move pop"><span class="n">3</span><p><b>Bring forward</b> team needs and use cases.</p></div>
+        </div>
+        <p class="cta reveal">AI Activation is a team habit — built through practice, examples, and shared momentum. <span class="gradient-text">Thank you for joining.</span></p>
+      </div>
+      <div class="eq-credit">AI Enablement Session</div>
     </section>
 
   </main>
