@@ -251,6 +251,9 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
 .center .slide-inner { text-align: center; margin-inline: auto; }
 
 .lead { display: flex; flex-direction: column; gap: 12px; margin-bottom: clamp(18px, 3vh, 34px); }
+/* reserve room at top-right for the presenter card so headings wrap before it */
+.content:not(.center) .lead { padding-right: clamp(150px, 15vw, 222px); }
+.content.center .lead { padding-inline: clamp(120px, 13vw, 200px); }
 .center .lead { align-items: center; }
 .lead h2 { font-size: clamp(30px, 5vw, 66px); }
 .lead .lede {
@@ -475,16 +478,16 @@ img.ava { object-fit: cover; object-position: center top; }
 }
 .pavatar + .pavatar { margin-left: -8px; }   /* overlap when two presenters */
 
-/* ---- rich glass presenter panel — vertical card, fixed top-right ---- */
+/* ---- rich glass presenter panel — vertical card, over the heading ribbon ---- */
 .byline {
-  position: fixed; top: clamp(64px, 10vh, 100px); right: clamp(16px, 2.4vw, 44px); z-index: 30;
-  width: clamp(126px, 12vw, 162px);
-  display: flex; flex-direction: column; align-items: center; gap: 9px;
-  padding: 16px 16px 14px; border-radius: 24px; text-align: center;
+  position: absolute; top: -14px; right: clamp(-26px, -2.4vw, 4px); z-index: 8;
+  width: clamp(146px, 14vw, 194px);
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  padding: 18px 18px 15px; border-radius: 26px; text-align: center;
   border: 1px solid rgba(255, 255, 255, 0.18);
   background: linear-gradient(160deg, rgba(255,255,255,0.14), rgba(255,255,255,0.04));
   backdrop-filter: blur(22px) saturate(1.3); -webkit-backdrop-filter: blur(22px) saturate(1.3);
-  box-shadow: 0 28px 64px -28px rgba(0,0,0,0.85), inset 0 1px 0 rgba(255,255,255,0.28);
+  box-shadow: 0 30px 70px -28px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.28);
 }
 .byline::before {
   content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
@@ -492,18 +495,18 @@ img.ava { object-fit: cover; object-position: center top; }
 }
 .byline .bp-photos { display: flex; justify-content: center; }
 .byline img.bp {
-  width: clamp(74px, 7.2vw, 96px); height: clamp(74px, 7.2vw, 96px); border-radius: 50%;
+  width: clamp(96px, 9.4vw, 128px); height: clamp(96px, 9.4vw, 128px); border-radius: 50%;
   object-fit: cover; object-position: center top; display: block;
-  border: 2px solid rgba(255,255,255,0.55); box-shadow: 0 8px 20px -8px #000, 0 0 0 1px rgba(0,0,0,0.3);
+  border: 2px solid rgba(255,255,255,0.6); box-shadow: 0 10px 24px -10px #000, 0 0 0 1px rgba(0,0,0,0.3);
 }
-.byline.duo img.bp { width: clamp(64px, 6vw, 80px); height: clamp(64px, 6vw, 80px); }
-.byline.duo img.bp + img.bp { margin-left: -22px; }
+.byline.duo img.bp { width: clamp(78px, 7.4vw, 98px); height: clamp(78px, 7.4vw, 98px); }
+.byline.duo img.bp + img.bp { margin-left: -24px; }
 .byline .bp-label { font-family: var(--font-display); font-size: 9.5px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-soft); }
-.byline .bp-name { font-family: var(--font-display); font-weight: 600; font-size: clamp(13px, 1.3vw, 16px); color: #fff; line-height: 1.15; }
+.byline .bp-name { font-family: var(--font-display); font-weight: 600; font-size: clamp(13px, 1.3vw, 17px); color: #fff; line-height: 1.15; }
 @media (max-width: 1100px) {
-  .byline { width: 104px; padding: 11px; gap: 6px; }
-  .byline img.bp { width: 60px; height: 60px; }
-  .byline.duo img.bp { width: 50px; height: 50px; }
+  .byline { width: 108px; padding: 12px; gap: 7px; right: 0; top: -8px; }
+  .byline img.bp { width: 64px; height: 64px; }
+  .byline.duo img.bp { width: 52px; height: 52px; }
   .byline .bp-label { display: none; }
 }
 
