@@ -548,7 +548,6 @@ img.ava { object-fit: cover; object-position: center top; }
   mask: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
 }
 .cert-track { display: flex; gap: clamp(14px, 1.6vw, 22px); width: max-content; animation: certscroll 44s linear infinite; }
-.cert-rail:hover .cert-track { animation-play-state: paused; }
 @keyframes certscroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 .cert {
   flex: none; width: clamp(210px, 21vw, 288px); aspect-ratio: 3 / 2; border-radius: 16px; overflow: hidden;
