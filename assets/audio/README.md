@@ -1,11 +1,12 @@
 # Opening music
 
-Place an audio file you have the rights to here, named **`opening.mp3`**.
+The opening track is **`opening.mp3`** — a licensed copy of *Bradbury Lane —
+"Everything's More Beautiful" (Instrumental)*, supplied and licensed by the deck owner.
 
-The player (top-level `<audio id="bgm">` + the sound toggle, bottom-right) looks for
+The player (top-level `<audio id="bgm">` + the sound toggle, bottom-right) loads
 `assets/audio/opening.mp3`, starts it on the first click/keypress (browser autoplay
 rules), loops it, and can be muted/unmuted with the button.
 
-⚠️ The Star Wars main theme is copyrighted and is intentionally **not** included in this
-repo. Use your own licensed copy or a royalty-free orchestral track. Optional: add an
-`opening.ogg` next to it and a second `<source>` for wider browser support.
+To swap the track, replace `opening.mp3` with another file you have the rights to.
+Optional: add an `opening.ogg` next to it and a second `<source>` for wider browser
+support.
