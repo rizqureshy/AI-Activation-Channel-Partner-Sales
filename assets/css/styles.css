@@ -53,6 +53,21 @@ html, body {
   display: block;
 }
 
+/* music toggle */
+.sound-btn {
+  position: fixed; bottom: clamp(22px, 4vh, 40px); right: clamp(20px, 3vw, 44px); z-index: 42;
+  width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center;
+  border: 1px solid var(--glass-brd); background: var(--glass); color: var(--ink); cursor: pointer;
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  transition: transform .3s var(--ease-out), background .3s;
+}
+.sound-btn:hover { background: var(--glass-strong); transform: scale(1.08); }
+.sound-btn svg { width: 20px; height: 20px; fill: currentColor; }
+.sound-btn .i-off { display: none; }
+.sound-btn.muted { color: var(--ink-soft); }
+.sound-btn.muted .i-on { display: none; }
+.sound-btn.muted .i-off { display: block; }
+
 .cosmos-wash {
   position: fixed;
   inset: 0;

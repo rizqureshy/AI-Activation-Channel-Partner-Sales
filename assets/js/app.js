@@ -155,6 +155,27 @@ window.addEventListener("touchend", (e) => {
   touchY = touchX = null;
 }, { passive: true });
 
+/* ---- opening music ---- */
+const bgm = document.getElementById("bgm");
+const soundBtn = document.getElementById("sound");
+let audioStarted = false;
+function refreshSound() { soundBtn.classList.toggle("muted", bgm.paused); soundBtn.setAttribute("aria-pressed", String(!bgm.paused)); }
+function startAudio() {
+  if (audioStarted) return;
+  audioStarted = true;
+  bgm.volume = 0.55;
+  bgm.play().then(refreshSound).catch(() => soundBtn.classList.add("muted"));
+}
+// browsers block sound until a user gesture — kick it off on the first one
+window.addEventListener("pointerdown", startAudio, { once: true });
+window.addEventListener("keydown", startAudio, { once: true });
+soundBtn.addEventListener("click", (e) => {
+  e.stopPropagation();
+  audioStarted = true;
+  if (bgm.paused) bgm.play().then(refreshSound).catch(() => {});
+  else { bgm.pause(); refreshSound(); }
+});
+
 /* ---- boot ---- */
 function boot() {
   applyScene(slides[0]);
