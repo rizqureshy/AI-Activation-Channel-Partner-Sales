@@ -251,9 +251,9 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
 .center .slide-inner { text-align: center; margin-inline: auto; }
 
 .lead { display: flex; flex-direction: column; gap: 12px; margin-bottom: clamp(18px, 3vh, 34px); }
-/* reserve room at top-right for the presenter tile(s) so headings wrap before them */
-.content:not(.center) .lead { padding-right: clamp(150px, 15vw, 225px); }
-.content:not(.center) .lead:has(.ptile + .ptile) { padding-right: clamp(260px, 27vw, 380px); }
+/* reserve room at top-left for the presenter tile(s) so headings wrap beside them */
+.content:not(.center) .lead { padding-left: clamp(150px, 15vw, 225px); }
+.content:not(.center) .lead:has(.ptile + .ptile) { padding-left: clamp(260px, 27vw, 380px); }
 .content.center .lead { padding-inline: clamp(120px, 13vw, 200px); }
 .content.center .lead:has(.ptile + .ptile) { padding-inline: clamp(190px, 21vw, 320px); }
 .center .lead { align-items: center; }
@@ -482,7 +482,7 @@ img.ava { object-fit: cover; object-position: center top; }
 
 /* ---- presenter tiles — one glass tile per person, upper-right of the heading ---- */
 .byline {
-  position: absolute; top: -16px; right: clamp(-26px, -2.4vw, 4px); z-index: 8;
+  position: absolute; top: -16px; left: clamp(-26px, -2.4vw, 4px); z-index: 8;
   display: flex; align-items: flex-start; gap: clamp(10px, 1vw, 14px);
 }
 .ptile {
