@@ -413,6 +413,103 @@ export class Cosmos {
     return { pos, col };
   }
 
+  // a rocket lifting off — nose cone, body, fins, window + a warm exhaust plume
+  _formRocket() {
+    const { pos, col } = this._alloc(), N = this.N;
+    const tmp = new THREE.Color();
+    const S = 1.35;
+    const bw = 0.85;                                   // body half-width
+    const apexY = 3.2, noseBaseY = 1.5;               // nose cone
+    const bodyTopY = 1.5, bodyBotY = -1.4;            // body tube
+    const finTopY = -0.2, finBotY = -1.5, finOutX = 1.85, finOutY = -1.95;
+    const winX = 0, winY = 0.7, winR = 0.40;          // window
+    const exTopY = -1.4, exBotY = -3.1;               // exhaust plume
+    const yCenter = 0.05, baseY = 0.3;
+    const tri = (ax, ay, bx, by, cx, cy) => {         // uniform point in a triangle
+      let r1 = Math.random(), r2 = Math.random();
+      if (r1 + r2 > 1) { r1 = 1 - r1; r2 = 1 - r2; }
+      return [ax + (bx - ax) * r1 + (cx - ax) * r2, ay + (by - ay) * r1 + (cy - ay) * r2];
+    };
+    const wBody = 5.4, wNose = 1.8, wFins = 1.2, wWin = 0.5, wEx = 2.2;
+    const wTot = wBody + wNose + wFins + wWin + wEx;
+
+    for (let i = 0; i < N; i++) {
+      const r = Math.random() * wTot;
+      let x, y, part;
+      if (r < wBody) {                                 // body tube
+        part = "body";
+        x = (Math.random() * 2 - 1) * bw;
+        y = bodyBotY + Math.random() * (bodyTopY - bodyBotY);
+      } else if (r < wBody + wNose) {                  // nose cone
+        part = "nose";
+        [x, y] = tri(0, apexY, -bw, noseBaseY, bw, noseBaseY);
+      } else if (r < wBody + wNose + wFins) {          // two fins
+        part = "fin";
+        [x, y] = Math.random() < 0.5
+          ? tri(-bw, finTopY, -bw, finBotY, -finOutX, finOutY)
+          : tri(bw, finTopY, bw, finBotY, finOutX, finOutY);
+      } else if (r < wBody + wNose + wFins + wWin) {   // porthole window
+        part = "win";
+        const u = Math.random() * Math.PI * 2, rr = winR * Math.sqrt(Math.random());
+        x = winX + Math.cos(u) * rr; y = winY + Math.sin(u) * rr;
+      } else {                                         // exhaust plume (tapers down)
+        part = "exhaust";
+        const t = Math.random();
+        y = exTopY - t * (exTopY - exBotY);
+        x = (Math.random() * 2 - 1) * (bw * 0.8 * (1 - t) + 0.05);
+      }
+      const j = part === "exhaust" ? 0.12 : 0.08;
+      x += (Math.random() - 0.5) * 2 * j;
+      y += (Math.random() - 0.5) * 2 * j;
+      pos[i * 3] = x * S;
+      pos[i * 3 + 1] = (y - yCenter) * S + baseY;
+      pos[i * 3 + 2] = (Math.random() - 0.5) * 0.7;
+      let tcol;
+      if (part === "exhaust") { const rr = Math.random(); tcol = rr < 0.32 ? C.white : (rr < 0.72 ? C.gold : C.pink); }
+      else if (part === "win") tcol = Math.random() < 0.5 ? C.teal : C.white;
+      else if (part === "nose") tcol = Math.random() < 0.4 ? C.white : tmp.copy(C.violet).lerp(C.blue, Math.random());
+      else if (part === "fin") tcol = Math.random() < 0.3 ? C.iris : C.blue;
+      else tcol = Math.random() < 0.05 ? C.pink : tmp.copy(C.violet).lerp(C.blue, (y - bodyBotY) / (bodyTopY - bodyBotY));
+      this._setCol(col, i, tcol, 0.08);
+    }
+    return { pos, col };
+  }
+
+  // a power "on" symbol — a ring open at the top with a vertical bar through it
+  _formPower() {
+    const { pos, col } = this._alloc(), N = this.N;
+    const tmp = new THREE.Color();
+    const cy = 0.3, R = 2.5;
+    const gap = (24 * Math.PI) / 180;                 // half-gap at the very top
+    const sweepStart = Math.PI / 2 + gap;             // start just past top
+    const sweep = Math.PI * 2 - 2 * gap;              // full circle minus the gap
+    const barTop = cy + R + 0.55, barBot = cy - 0.15; // vertical bar through the gap
+    const baseY = 0.3;
+    const wRing = 8.0, wBar = 2.3, wTot = wRing + wBar;
+
+    for (let i = 0; i < N; i++) {
+      let x, y, isBar;
+      if (Math.random() * wTot < wRing) {             // ring
+        isBar = false;
+        const a = sweepStart + Math.random() * sweep;
+        x = Math.cos(a) * R; y = cy + Math.sin(a) * R;
+      } else {                                        // bar
+        isBar = true;
+        x = 0; y = barBot + Math.random() * (barTop - barBot);
+      }
+      x += (Math.random() - 0.5) * 0.22;
+      y += (Math.random() - 0.5) * 0.22;
+      pos[i * 3] = x;
+      pos[i * 3 + 1] = y - cy + baseY;
+      pos[i * 3 + 2] = (Math.random() - 0.5) * 0.7;
+      const tcol = isBar
+        ? (Math.random() < 0.5 ? C.white : C.teal)    // the bar glows like an "on" indicator
+        : (Math.random() < 0.05 ? C.pink : tmp.copy(C.violet).lerp(C.blue, Math.random()));
+      this._setCol(col, i, tcol, 0.08);
+    }
+    return { pos, col };
+  }
+
   /* ---------------- morph driver ---------------- */
   _morphTo(form, opts = {}) {
     const gsap = this.gsap;
@@ -457,6 +554,8 @@ export class Cosmos {
       stream:       { make: () => this._formStream(),            cam: [0, 0.1, 13.4],  opts: { spin: 0.0, arc: 1.3, dur: 1.8 } },
       burst:        { make: () => this._formBurst(),             cam: [0, 0.0, 13.0],  opts: { spin: 0.06, arc: 2.6, dur: 1.7, ease: "power2.out" } },
       question:     { make: () => this._formQuestion(),          cam: [0, 0.3, 13.6],  opts: { spin: 0.03, arc: 1.6, dur: 1.9 } },
+      rocket:       { make: () => this._formRocket(),            cam: [0, 0.25, 14.4], opts: { spin: 0.0, arc: 1.7, dur: 1.9 } },
+      power:        { make: () => this._formPower(),             cam: [0, 0.3, 13.8],  opts: { spin: 0.04, arc: 1.5, dur: 1.9 } },
     };
   }
 
