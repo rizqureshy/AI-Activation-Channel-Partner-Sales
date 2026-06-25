@@ -365,6 +365,54 @@ export class Cosmos {
     return { pos, col };
   }
 
+  // a big glowing "?" — particles trace the hook, stem and dot of a question mark
+  _formQuestion() {
+    const { pos, col } = this._alloc(), N = this.N;
+    const tmp = new THREE.Color();
+    const S = 1.55;                          // overall scale
+    const R = 1.55, Cx = 0, Cy = 1.7;        // hook circle
+    const a0 = (205 * Math.PI) / 180;        // hook sweep start (lower-left)
+    const a1 = (-75 * Math.PI) / 180;        // hook sweep end (lower-right), clockwise
+    const hex = Cx + R * Math.cos(a1), hey = Cy + R * Math.sin(a1);  // hook end
+    const tcx = 0.30, tcy = -0.05;           // tail bezier control
+    const sx = 0.0, sy = 0.10;               // stem top (curls back to centre)
+    const stemBottomY = -0.55;
+    const dotY = -1.45, dotR = 0.30;
+    const yCenter = 0.95, baseY = 0.3;       // recentre vertically + slide baseline
+    const bez = (t, p0, p1, p2) => { const u = 1 - t; return u * u * p0 + 2 * u * t * p1 + t * t * p2; };
+    // particle budget per part, ~ proportional to length
+    const wHook = 7.6, wTail = 1.0, wStem = 0.7, wDot = 1.6, wTot = wHook + wTail + wStem + wDot;
+
+    for (let i = 0; i < N; i++) {
+      const r = Math.random() * wTot;
+      let x, y;
+      if (r < wHook) {                        // hook arc
+        const t = Math.random();
+        const a = a0 + (a1 - a0) * t;
+        x = Cx + R * Math.cos(a); y = Cy + R * Math.sin(a);
+      } else if (r < wHook + wTail) {         // tail curling to centre
+        const t = Math.random();
+        x = bez(t, hex, tcx, sx); y = bez(t, hey, tcy, sy);
+      } else if (r < wHook + wTail + wStem) { // short straight stem
+        const t = Math.random();
+        x = sx; y = sy + (stemBottomY - sy) * t;
+      } else {                                // the dot
+        const u = Math.random() * Math.PI * 2;
+        const rr = dotR * Math.sqrt(Math.random());
+        x = Math.cos(u) * rr; y = dotY + Math.sin(u) * rr;
+      }
+      x += (Math.random() - 0.5) * 0.16;      // stroke thickness
+      y += (Math.random() - 0.5) * 0.16;
+      pos[i * 3] = x * S;
+      pos[i * 3 + 1] = (y - yCenter) * S + baseY;
+      pos[i * 3 + 2] = (Math.random() - 0.5) * 0.6;
+      const ny = (y + 1.6) / 4.0;             // cool gradient by height; sparse pink
+      const tcol = Math.random() < 0.05 ? C.pink : tmp.copy(C.violet).lerp(C.blue, Math.min(1, Math.max(0, ny)));
+      this._setCol(col, i, tcol, 0.08);
+    }
+    return { pos, col };
+  }
+
   /* ---------------- morph driver ---------------- */
   _morphTo(form, opts = {}) {
     const gsap = this.gsap;
@@ -408,6 +456,7 @@ export class Cosmos {
       grid:         { make: () => this._formGrid(),              cam: [0, 0.2, 13.8],  opts: { spin: 0.0, arc: 1.4, dur: 1.9 } },
       stream:       { make: () => this._formStream(),            cam: [0, 0.1, 13.4],  opts: { spin: 0.0, arc: 1.3, dur: 1.8 } },
       burst:        { make: () => this._formBurst(),             cam: [0, 0.0, 13.0],  opts: { spin: 0.06, arc: 2.6, dur: 1.7, ease: "power2.out" } },
+      question:     { make: () => this._formQuestion(),          cam: [0, 0.3, 13.6],  opts: { spin: 0.03, arc: 1.6, dur: 1.9 } },
     };
   }
 
