@@ -510,6 +510,63 @@ export class Cosmos {
     return { pos, col };
   }
 
+  // a checkmark — a short down-stroke into a long up-stroke
+  _formCheck() {
+    const { pos, col } = this._alloc(), N = this.N;
+    const tmp = new THREE.Color();
+    const S = 1.9;
+    const A = [-1.7, 0.2], B = [-0.5, -1.2], C2 = [2.0, 1.6];  // start, vertex, end
+    const xMid = 0.15, yMid = 0.2, baseY = 0.3;
+    const len = (p, q) => Math.hypot(q[0] - p[0], q[1] - p[1]);
+    const wAB = len(A, B), wTot = wAB + len(B, C2);
+
+    for (let i = 0; i < N; i++) {
+      const t = Math.random();
+      let x, y;
+      if (Math.random() * wTot < wAB) {               // short stroke A→B
+        x = A[0] + (B[0] - A[0]) * t; y = A[1] + (B[1] - A[1]) * t;
+      } else {                                        // long stroke B→C
+        x = B[0] + (C2[0] - B[0]) * t; y = B[1] + (C2[1] - B[1]) * t;
+      }
+      x += (Math.random() - 0.5) * 0.26;              // stroke thickness
+      y += (Math.random() - 0.5) * 0.26;
+      pos[i * 3] = (x - xMid) * S;
+      pos[i * 3 + 1] = (y - yMid) * S + baseY;
+      pos[i * 3 + 2] = (Math.random() - 0.5) * 0.7;
+      const tcol = Math.random() < 0.12 ? C.white : tmp.copy(C.teal).lerp(C.blue, Math.random() * 0.6);
+      this._setCol(col, i, tcol, 0.08);
+    }
+    return { pos, col };
+  }
+
+  // fireworks — several coloured bursts scattered across the sky
+  _formFireworks() {
+    const { pos, col } = this._alloc(), N = this.N;
+    const bursts = [
+      { x: -4.2, y: 2.4, z: -1.0, r: 2.2, c: C.gold },
+      { x: 3.8, y: 2.9, z: 0.5, r: 2.0, c: C.pink },
+      { x: -1.0, y: 0.4, z: 0.0, r: 2.4, c: C.teal },
+      { x: 4.6, y: -1.2, z: -0.6, r: 1.8, c: C.blue },
+      { x: -3.6, y: -1.6, z: 0.4, r: 1.9, c: C.violet },
+      { x: 1.2, y: 3.2, z: -0.4, r: 1.7, c: C.iris },
+    ];
+    const n = bursts.length;
+    for (let i = 0; i < N; i++) {
+      const b = bursts[i % n];                          // even density per burst
+      const u = Math.random() * Math.PI * 2;
+      const ct = 2 * Math.random() - 1;
+      const st = Math.sqrt(Math.max(0, 1 - ct * ct));
+      const rad = b.r * (0.15 + 0.85 * Math.random());  // spray out to the shell
+      pos[i * 3] = b.x + Math.cos(u) * st * rad;
+      pos[i * 3 + 1] = b.y + ct * rad + 0.2;
+      pos[i * 3 + 2] = b.z + Math.sin(u) * st * rad;
+      const rr = Math.random();
+      const tcol = rr < 0.22 ? C.white : (rr < 0.32 ? C.gold : b.c);  // bright sparks + burst colour
+      this._setCol(col, i, tcol, 0.1);
+    }
+    return { pos, col };
+  }
+
   /* ---------------- morph driver ---------------- */
   _morphTo(form, opts = {}) {
     const gsap = this.gsap;
@@ -556,6 +613,8 @@ export class Cosmos {
       question:     { make: () => this._formQuestion(),          cam: [0, 0.3, 13.6],  opts: { spin: 0.03, arc: 1.6, dur: 1.9 } },
       rocket:       { make: () => this._formRocket(),            cam: [0, 0.25, 14.4], opts: { spin: 0.0, arc: 1.7, dur: 1.9 } },
       power:        { make: () => this._formPower(),             cam: [0, 0.3, 13.8],  opts: { spin: 0.04, arc: 1.5, dur: 1.9 } },
+      check:        { make: () => this._formCheck(),             cam: [0, 0.3, 13.6],  opts: { spin: 0.0, arc: 1.6, dur: 1.9 } },
+      fireworks:    { make: () => this._formFireworks(),         cam: [0, 0.2, 13.4],  opts: { spin: 0.04, arc: 2.4, dur: 1.7, ease: "power2.out" } },
     };
   }
 
