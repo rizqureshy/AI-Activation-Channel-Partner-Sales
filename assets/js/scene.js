@@ -371,8 +371,8 @@ export class Cosmos {
     const tmp = new THREE.Color();
     const S = 1.55;                          // overall scale
     const R = 1.55, Cx = 0, Cy = 1.7;        // hook circle
-    const a0 = (205 * Math.PI) / 180;        // hook sweep start (lower-left)
-    const a1 = (-75 * Math.PI) / 180;        // hook sweep end (lower-right), clockwise
+    const a0 = (158 * Math.PI) / 180;        // hook free tip (upper-left)
+    const a1 = (-60 * Math.PI) / 180;        // hook sweep end (lower-right), clockwise
     const hex = Cx + R * Math.cos(a1), hey = Cy + R * Math.sin(a1);  // hook end
     const tcx = 0.30, tcy = -0.05;           // tail bezier control
     const sx = 0.0, sy = 0.10;               // stem top (curls back to centre)
@@ -403,7 +403,7 @@ export class Cosmos {
       }
       x += (Math.random() - 0.5) * 0.30;      // stroke thickness
       y += (Math.random() - 0.5) * 0.30;
-      pos[i * 3] = -x * S;                     // mirror so the hook faces left
+      pos[i * 3] = x * S;                      // standard "?" — hook opens to the left
       pos[i * 3 + 1] = (y - yCenter) * S + baseY;
       pos[i * 3 + 2] = (Math.random() - 0.5) * 0.9;
       const ny = (y + 1.6) / 4.0;             // cool gradient by height; sparse pink
