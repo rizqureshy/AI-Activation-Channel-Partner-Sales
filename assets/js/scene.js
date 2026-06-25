@@ -401,11 +401,11 @@ export class Cosmos {
         const rr = dotR * Math.sqrt(Math.random());
         x = Math.cos(u) * rr; y = dotY + Math.sin(u) * rr;
       }
-      x += (Math.random() - 0.5) * 0.16;      // stroke thickness
-      y += (Math.random() - 0.5) * 0.16;
-      pos[i * 3] = x * S;
+      x += (Math.random() - 0.5) * 0.30;      // stroke thickness
+      y += (Math.random() - 0.5) * 0.30;
+      pos[i * 3] = -x * S;                     // mirror so the hook faces left
       pos[i * 3 + 1] = (y - yCenter) * S + baseY;
-      pos[i * 3 + 2] = (Math.random() - 0.5) * 0.6;
+      pos[i * 3 + 2] = (Math.random() - 0.5) * 0.9;
       const ny = (y + 1.6) / 4.0;             // cool gradient by height; sparse pink
       const tcol = Math.random() < 0.05 ? C.pink : tmp.copy(C.violet).lerp(C.blue, Math.min(1, Math.max(0, ny)));
       this._setCol(col, i, tcol, 0.08);
