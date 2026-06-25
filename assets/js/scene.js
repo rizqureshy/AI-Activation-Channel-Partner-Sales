@@ -150,13 +150,14 @@ export class Cosmos {
       uSwirl: { value: 2.4 },   // whirlwind: extra rotation that peaks mid-transition
       uForward: { value: 6.2 }, // depth surge toward the camera, peaks mid-transition
       uFade: { value: 1.0 },    // global field brightness — dipped to mask the layer hand-off
+      uLive: { value: 0.0 },    // 1 = live sim drives aTo directly (skip morph/idle motion)
     };
 
     const mat = new THREE.ShaderMaterial({
       transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
       uniforms: this.uniforms,
       vertexShader: `
-        uniform float uTime, uMix, uPix, uArc, uSpin, uSwirl, uForward;
+        uniform float uTime, uMix, uPix, uArc, uSpin, uSwirl, uForward, uLive;
         attribute vec3 aFrom; attribute vec3 aTo;
         attribute vec3 cFrom; attribute vec3 cTo;
         attribute float aRand; attribute float aSize;
@@ -166,22 +167,26 @@ export class Cosmos {
           float e = m*m*(3.0-2.0*m);                 // smoothstep ease
           vec3 pos = mix(aFrom, aTo, e);
 
-          // arc displacement mid-flight -> particles "fly" between shapes
-          float arc = sin(e*3.14159265);
-          vec3 dir = vec3(sin(aRand*6.2831), cos(aRand*5.137), sin(aRand*9.42));
-          pos += dir * arc * uArc * (0.4 + aRand);
+          // live mode: aTo holds CPU-simulated positions — use them verbatim,
+          // skip the morph arc / whirlwind / idle sway so fireworks stay put
+          if (uLive < 0.5) {
+            // arc displacement mid-flight -> particles "fly" between shapes
+            float arc = sin(e*3.14159265);
+            vec3 dir = vec3(sin(aRand*6.2831), cos(aRand*5.137), sin(aRand*9.42));
+            pos += dir * arc * uArc * (0.4 + aRand);
 
-          // idle sway around Y + gentle bob (alive at rest),
-          // plus a whirlwind: arc-enveloped spin that peaks mid-transition
-          // and is zero at rest. Higher particles swirl a touch more (vortex).
-          float a = sin(uTime*0.12)*0.35 + uSpin*uTime + arc*uSwirl*(1.0 + 0.15*pos.y);
-          float s = sin(a), c = cos(a);
-          pos = vec3(pos.x*c - pos.z*s, pos.y, pos.x*s + pos.z*c);
-          pos.y += sin(uTime*0.7 + aRand*6.2831)*0.07 + arc*0.6*sin(aRand*30.0); // lift + scatter mid-swirl
-          pos.x += cos(uTime*0.5 + aRand*6.2831)*0.05;
-          // surge toward the camera mid-transition so the dance comes forward
-          // and obscures the slide, then recedes back (arc = 0 at rest)
-          pos.z += arc * uForward;
+            // idle sway around Y + gentle bob (alive at rest),
+            // plus a whirlwind: arc-enveloped spin that peaks mid-transition
+            // and is zero at rest. Higher particles swirl a touch more (vortex).
+            float a = sin(uTime*0.12)*0.35 + uSpin*uTime + arc*uSwirl*(1.0 + 0.15*pos.y);
+            float s = sin(a), c = cos(a);
+            pos = vec3(pos.x*c - pos.z*s, pos.y, pos.x*s + pos.z*c);
+            pos.y += sin(uTime*0.7 + aRand*6.2831)*0.07 + arc*0.6*sin(aRand*30.0); // lift + scatter mid-swirl
+            pos.x += cos(uTime*0.5 + aRand*6.2831)*0.05;
+            // surge toward the camera mid-transition so the dance comes forward
+            // and obscures the slide, then recedes back (arc = 0 at rest)
+            pos.z += arc * uForward;
+          }
 
           vec4 mv = modelViewMatrix * vec4(pos,1.0);
           gl_PointSize = aSize * (165.0 / -mv.z) * uPix * (0.7 + 0.3*sin(uTime*2.0 + aRand*30.0));
@@ -567,6 +572,89 @@ export class Cosmos {
     return { pos, col };
   }
 
+  /* ---------------- live fireworks simulation ----------------
+     Real fireworks behaviour driven on the CPU: each shell launches a
+     comet from below, bursts into a spreading shell of sparks that arc
+     under gravity and fade, then recycles on its own staggered timer.
+     Only runs while the fireworks slide is active (uLive = 1). */
+  _fwInit() {
+    const N = this.N;
+    const shells = [
+      { bx: -4.2, by: 2.4, bz: -1.0, r: 2.2, col: C.gold,   T: 6.8 },
+      { bx: 3.8,  by: 2.9, bz: 0.6,  r: 2.0, col: C.pink,   T: 7.2 },
+      { bx: -1.0, by: 1.4, bz: 0.0,  r: 2.4, col: C.teal,   T: 6.4 },
+      { bx: 4.6,  by: -0.4,bz: -0.6, r: 1.8, col: C.blue,   T: 7.0 },
+      { bx: -3.6, by: -0.2,bz: 0.5,  r: 1.9, col: C.violet, T: 6.6 },
+      { bx: 1.2,  by: 3.2, bz: -0.4, r: 1.7, col: C.iris,   T: 7.4 },
+      { bx: 0.3,  by: 0.6, bz: 0.3,  r: 2.1, col: C.gold,   T: 6.9 },
+    ];
+    this._fwRise = 0.85; this._fwBurst = 2.8; this._fwG = 1.1;
+    const K = shells.length;
+    // spread the initial phases evenly across each cycle so the sky always
+    // has a few bursts going (no empty beats) and none start mid-launch
+    this.fwShells = shells.map((s, k) => {
+      const phase0 = this._fwRise + (k / K) * (s.T - this._fwRise);
+      return { ...s, t0: s.T - phase0 };
+    });
+
+    const per = Math.ceil(N / K);
+    this.fwDir = new Float32Array(N * 3);
+    this.fwSpeed = new Float32Array(N);
+    this.fwBase = new Float32Array(N * 3);
+    this.fwShell = new Uint8Array(N);
+    this.fwTail = new Float32Array(N);
+    for (let i = 0; i < N; i++) {
+      const k = Math.min(K - 1, Math.floor(i / per));
+      this.fwShell[i] = k;
+      const s = shells[k];
+      const u = Math.random() * Math.PI * 2, ct = 2 * Math.random() - 1, st = Math.sqrt(Math.max(0, 1 - ct * ct));
+      this.fwDir[i * 3] = Math.cos(u) * st;
+      this.fwDir[i * 3 + 1] = ct;
+      this.fwDir[i * 3 + 2] = Math.sin(u) * st * 0.7;        // flatten depth a touch
+      this.fwSpeed[i] = 0.35 + 0.65 * Math.random();
+      this.fwTail[i] = Math.random();
+      const rr = Math.random();
+      const base = rr < 0.7 ? s.col : (rr < 0.92 ? C.white : C.gold);
+      this.fwBase[i * 3] = base.r; this.fwBase[i * 3 + 1] = base.g; this.fwBase[i * 3 + 2] = base.b;
+    }
+  }
+
+  _fwStep(t) {
+    const N = this.N, aTo = this.aTo, cTo = this.cTo;
+    const rise = this._fwRise, burst = this._fwBurst, g = this._fwG;
+    const lt = t - (this.fwT0 || 0);
+    for (let i = 0; i < N; i++) {
+      const s = this.fwShells[this.fwShell[i]];
+      const p = (((lt - s.t0) % s.T) + s.T) % s.T;
+      let x, y, z, b;
+      if (p < rise) {                                        // comet rising from below
+        const u = p / rise, ease = u * (2 - u);
+        const ry = -5.0 + (s.by + 5.0) * ease;
+        x = s.bx + this.fwDir[i * 3] * 0.05;
+        y = ry - this.fwTail[i] * 1.15;                      // stretched into a thin streak
+        z = s.bz + this.fwDir[i * 3 + 2] * 0.05;
+        b = 0.26 * (0.4 + 0.6 * ease) * (1 - this.fwTail[i] * 0.7); // faint, fades down the tail
+      } else if (p < rise + burst) {                         // explosion shell + gravity
+        const q = (p - rise) / burst;
+        const reach = s.r * this.fwSpeed[i] * (1 - Math.exp(-3.2 * q));
+        const lt2 = q * burst;
+        x = s.bx + this.fwDir[i * 3] * reach;
+        y = s.by + this.fwDir[i * 3 + 1] * reach - 0.5 * g * lt2 * lt2;
+        z = s.bz + this.fwDir[i * 3 + 2] * reach;
+        b = Math.pow(1 - q, 1.35) * 1.05;                    // bright flash → ember fade
+      } else {                                               // dark gap before next launch
+        x = s.bx; y = s.by; z = s.bz; b = 0;
+      }
+      aTo[i * 3] = x; aTo[i * 3 + 1] = y; aTo[i * 3 + 2] = z;
+      cTo[i * 3] = this.fwBase[i * 3] * b;
+      cTo[i * 3 + 1] = this.fwBase[i * 3 + 1] * b;
+      cTo[i * 3 + 2] = this.fwBase[i * 3 + 2] * b;
+    }
+    const geo = this.points.geometry;
+    geo.attributes.aTo.needsUpdate = true;
+    geo.attributes.cTo.needsUpdate = true;
+  }
+
   /* ---------------- morph driver ---------------- */
   _morphTo(form, opts = {}) {
     const gsap = this.gsap;
@@ -631,6 +719,24 @@ export class Cosmos {
     this._morphTo(def.make(arg), { ...def.opts, ...over });
     const cam = over.cam || def.cam;
     this._camTo(cam[0], cam[1], cam[2]);
+
+    // live fireworks: morph to the static shape first (whirlwind-in plays),
+    // then switch on the CPU sim once it has arrived
+    if (this._fwTimer) { this._fwTimer.kill(); this._fwTimer = null; }
+    this.live = false;
+    if (this.uniforms) this.uniforms.uLive.value = 0;
+    if (nameRaw === "fireworks" && !this.reduced) {
+      this.liveMode = "fireworks";
+      this._fwInit();
+      const delay = (over.dur ?? def.opts.dur ?? 1.7) + 0.1;
+      this._fwTimer = gsap.delayedCall(delay, () => {
+        this.fwT0 = this.elapsed || 0;
+        this.live = true;
+        this.uniforms.uLive.value = 1;
+      });
+    } else {
+      this.liveMode = null;
+    }
   }
 
   /** List available formation names (handy for tooling/docs). */
@@ -675,6 +781,7 @@ export class Cosmos {
     this.camera.lookAt(0, this.camBase.y * 0.2, 0);
 
     if (this.uniforms) this.uniforms.uTime.value = t;
+    if (this.live && this.liveMode === "fireworks") this._fwStep(t);
     if (this.stars) this.stars.rotation.y = t * 0.008;
     if (this.nebula) {
       this.nebula.children.forEach((s) => { s.position.y = s.userData.baseY + Math.sin(t * 0.25 + s.userData.ph) * 0.4; });
