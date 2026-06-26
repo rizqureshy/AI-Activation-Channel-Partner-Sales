@@ -34,7 +34,7 @@
   --util-bg:   rgba(7, 5, 20, 0.60);
   --footer-bg: rgba(7, 5, 20, 0.70);
   --input-bg:  rgba(255, 255, 255, 0.05);
-  --scrim:     linear-gradient(180deg, rgba(5,3,15,0.62) 0%, rgba(5,3,15,0.42) 30%, rgba(5,3,15,0.50) 100%);
+  --scrim:     linear-gradient(180deg, rgba(5,3,15,0.45) 0%, rgba(5,3,15,0.26) 35%, rgba(5,3,15,0.38) 100%);
 
   --warm: linear-gradient(120deg, var(--orange), var(--pink) 55%, var(--purple));
   --cool: linear-gradient(120deg, var(--blue), var(--indigo) 55%, var(--purple));
@@ -79,8 +79,10 @@ img { max-width: 100%; display: block; }
 }
 
 /* a soft scrim directly behind content so text always reads */
+/* Veils the particle field only — sits BEHIND the page content (negative
+   z-index inside #main's stacking context), never tinting the tiles/text. */
 #main::before {
-  content: ""; position: fixed; inset: 0; z-index: 1; pointer-events: none;
+  content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
   background: var(--scrim);
 }
 
