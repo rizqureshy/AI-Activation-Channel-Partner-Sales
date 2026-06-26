@@ -1,79 +1,68 @@
-# Particle Engine — Presentation Platform
+# CRO AI Activation Community — Website
 
-A reusable **3D particle presentation engine**. One WebGL particle field (~13,000 GPU
-points) morphs between formations as you move through slides, with a restrained cosmic
-theme, glowing key words, Framer-style flows, and full slide controls.
+A warm, community-led website for the **CRO AI Activation Community**, built on the
+project's 3D **particle engine**. One persistent WebGL particle field lives behind every
+page and **morphs into a themed formation** as you move through the site (orb on Home,
+fireworks on Recognition, a rocket on Team Activation, a power symbol on Access Help, and
+so on).
 
-This branch (`particle-engine-template`) is the **platform/template**. Decks are authored
-by writing HTML only — branch off this, fill in content, brand it, ship it.
+> This is not a training portal. Not a static SharePoint page. It's the front door to the
+> community: **The Community Wants You.**
 
-![Template cover](docs/preview/01-cover.png)
-
-## Make a deck
+## Run it
 
 ```bash
-git checkout particle-engine-template
-git checkout -b deck/<your-deck-name>
-# edit index.html — duplicate slides, set data-formation, write content
-python3 -m http.server 8000   # preview at http://localhost:8000
+python3 -m http.server 8000   # then open http://localhost:8000
 ```
 
-Each slide declares its particle artwork in HTML:
+No build step. Three.js + GSAP are vendored locally; fonts load from Google Fonts.
 
-```html
-<section class="slide content" data-formation="clusters:3">
-  <div class="slide-inner"> … your content … </div>
-</section>
-```
+## How it's built
 
-**Formations:** `orb · core · core-center · clusters:N · split · ring · grid · stream · burst`
-
-Dots, counter, and navigation update automatically from the number of slides.
-Full guide → **[AUTHORING.md](AUTHORING.md)**.
-
-| Whirlwind mid-transition (shapes dancing) | Content slide (crisp DOM + formation) |
-|---|---|
-| ![Whirlwind](docs/preview/02-whirlwind.png) | ![Content](docs/preview/03-content.png) |
-
-## What the engine gives you
-
-- **Whirlwind transitions** — on each slide change the particle field swirls and dances as it
-  morphs between the slide shapes, and **surges forward to obscure the slide** mid-transition
-  before receding back behind to reveal the next one (arc displacement + an enveloped spin and
-  depth-surge that peak mid-transition and are zero at rest). Content is always crisp DOM.
-- **Restrained cosmic theme** — cool white/violet/blue with sparse accent pops
-- **Glowing, radiating key words** + crisp readable text (focal scrim + dark halo)
-- **Framer-style flows** — depth-based reveals, card cascades, per-slide camera moves
-- **Full controls** — arrows, ↑/↓, Space, Page keys, Home/End, wheel, touch swipe,
-  on-screen arrows, dot navigator, progress bar, mouse parallax
-- **Zero build, zero runtime network** — Three.js + GSAP vendored locally; deploys as-is to
-  GitHub Pages
-
-## Controls
-
-- **← / →**, **↑ / ↓**, **Space**, **Page Up/Down** — move between slides
-- **Home / End** — first / last slide
-- **Wheel / swipe** — advance · **Mouse move** — parallax
-
-## Tech
-
-- **[Three.js](https://threejs.org/) r160** — WebGL + custom particle shader
-- **[GSAP](https://gsap.com/) 3.12** — morph driver, camera, DOM reveals
-- Vanilla JS/CSS, single `index.html`, no framework or bundler
-
-## Project layout
+It's a **hash-routed single-page site** so the WebGL background never reloads between
+pages — it just morphs.
 
 ```
-index.html              # the deck (content) + import map
-AUTHORING.md            # how to author a deck on this engine
+index.html            # shell: nav, background canvas, #main, footer
 assets/
-  css/styles.css        # theme tokens + glass components + chrome
-  js/scene.js           # particle engine + formation registry
-  js/app.js             # slide controller, navigation, GSAP flows
-  vendor/               # three.js + gsap (local, offline-friendly)
-docs/preview/           # template screenshots
+  css/site.css        # theme tokens, glass components, layout, forms, responsive nav
+  js/site.js          # router + all page content + nav + forms + engine wiring
+  js/scene.js         # the particle engine (formations + live fireworks sim)
+  vendor/             # three.js + gsap (offline-friendly)
 ```
+
+- **`assets/js/site.js`** holds every page as a `ROUTES[...]` entry: `{ title, formation, html() }`.
+  Content is generated from small builders (`block`, `iconCards`, `numCards`, `formHTML`,
+  `ctas`, …) to stay DRY. To edit copy or add a page, edit this one file.
+- On each route change the router renders the page into `#main`, calls
+  `cosmos.applyFormation(formation, gsap)`, and runs an `IntersectionObserver` to reveal
+  sections on scroll.
+
+### Pages
+
+Home · Join the Community · Start Here · Share Your Story · Share Your Work · Submission
+Gallery · Learning Lane · Expert Clinic · Certification Support · AI Activation for Teams ·
+License & Access Help · Leaders Listening Post · Recognition & Leaderboard · Community
+Calendar · Weekly Challenges.
+
+Primary + utility navigation, a footer, and community mechanics (star earnings, contributor
+levels, recognition, leaderboard, calendar) are all included.
+
+### Forms
+
+All forms are **presentational demos** — submitting shows a confirmation toast and resets
+the form. The field sets match the spec; wiring them to Teams / SharePoint / a backend is
+the next step.
+
+## Particle formations used
+
+`orb · burst · question · split · clusters:N · grid · stream · ring · check · rocket ·
+power · core · fireworks (live)`. The fireworks formation runs a live CPU simulation
+(rockets launch, burst, fall under gravity, recycle); everything else is a morph target.
+
+> The interactive presentation deck that this engine was originally built for lives on the
+> `deck/ai-enablement-session` branch.
 
 ---
 
-*Built for the AI Activation sessions. Restrained "fun universe" theme.*
+*Built on the AI Activation particle engine. Restrained "fun universe" theme, made warm.*
