@@ -12,7 +12,7 @@ cosmos.start();
 cosmos.uniforms.uFade.value = 0.62;   // calmer backdrop so content always reads
 
 /* external destinations */
-const TEAMS_URL = "https://teams.microsoft.com/l/channel/19%3Akap0KTNXN6GFcbodSq66xZJp26H4PpruupT7ITAfEgI1%40thread.tacv2/CRO%20AI%20Community%20Channel?groupId=388cd47c-fb14-4cc8-b031-148a6bbe5a78&tenantId=72adb271-2fc7-4afe-a5ee-9de6a59f6bfb";
+const VIVA_URL = "https://engage.cloud.microsoft/main/org/equinix.com/groups/eyJfdHlwZSI6Ikdyb3VwIiwiaWQiOiIyMTA0NzYxMjgxNTExNDI0In0";
 const PORTFOLIO_URL = "https://rizqureshy.github.io/AI-April-Portfolio/";
 const RAW = "https://raw.githubusercontent.com/rizqureshy/AI-April-Portfolio/main/";
 const rawUrl = (path) => RAW + encodeURI(path);
@@ -131,7 +131,7 @@ const PRIMARY = [
 ];
 const UTILITY = [
   ["Weekly Challenges", "#/challenges"], ["Leaderboard", "#/recognition"], ["Community Calendar", "#/calendar"],
-  ["Recognition Wall", "#/recognition"], ["Teams Channel", TEAMS_URL], ["Submit an Idea", "#/listening"],
+  ["Recognition Wall", "#/recognition"], ["Viva Engage", VIVA_URL], ["Submit an Idea", "#/listening"],
   ["Ask a Question", "#/clinic"],
 ];
 
@@ -209,7 +209,7 @@ ROUTES.home = {
     kicker: "Join Us", title: "Joining is open, simple, and friction-free",
     lead: "The community is open to everyone across CRO. Join the main community space, introduce yourself, ask your first question, and start exploring what others are learning and building.",
     inner: ctas([
-      { t: "Join the Teams Community", k: "primary", h: TEAMS_URL, svg: "users" },
+      { t: "Join the Viva Engage Community", k: "primary", h: VIVA_URL, svg: "users" },
       { t: "Download the Onboarding Pack", h: "#/start", svg: "book" },
       { t: "Introduce Yourself", h: "#/story", svg: "share" },
       { t: "Ask Your First Question", h: "#/clinic", svg: "chat" },
@@ -220,7 +220,7 @@ ROUTES.home = {
     kicker: "Start Here", title: "Community Onboarding Pack",
     lead: "Everything a new member needs to get going — a simple starting path from first click to first contribution.",
     inner: numCards([
-      "What this community is for", "How to join the Teams / Slack channels", "Where to ask questions",
+      "What this community is for", "How to join the Viva Engage community", "Where to ask questions",
       "How to share a use case", "How to submit work to the gallery", "How to join weekly activities",
       "How recognition and points work", "Where to get license and access help",
       "Where to find certification guidance", "How to request AI Activation for your team",
@@ -456,7 +456,7 @@ ROUTES.join = {
     kicker: "Join the Community", title: `Welcome — <span class="gradient-text">we saved you a seat</span>`,
     lead: "The community is open to everyone across CRO. Join the main space, introduce yourself, and start exploring. No perfect prompt required. No expert badge needed. Just come in.",
     inner: ctas([
-      { t: "Join the Teams Community", k: "primary", h: TEAMS_URL, svg: "users" },
+      { t: "Join the Viva Engage Community", k: "primary", h: VIVA_URL, svg: "users" },
       { t: "Download the Onboarding Pack", h: "#/start", svg: "book" },
     ]),
   })
@@ -488,7 +488,7 @@ ROUTES.join = {
       "Be kind: assume good intent, celebrate attempts.",
       "Be practical: real examples beat theory.",
       "Be safe: follow Responsible AI guidance and keep customer data protected.",
-    ]) + ctas([{ t: "Introduce Yourself", k: "cool", h: "#/story", svg: "share" }, { t: "Join the Teams Community", k: "primary", h: TEAMS_URL, svg: "users" }]),
+    ]) + ctas([{ t: "Introduce Yourself", k: "cool", h: "#/story", svg: "share" }, { t: "Join the Viva Engage Community", k: "primary", h: VIVA_URL, svg: "users" }]),
   }),
 };
 
@@ -886,7 +886,7 @@ function showToast(msg) {
 document.addEventListener("submit", (e) => {
   if (e.target.matches("form[data-demo]")) {
     e.preventDefault();
-    showToast("Thanks for contributing! 🎉  (Demo — wiring to Teams/SharePoint comes next.)");
+    showToast("Thanks for contributing! 🎉  (Demo — wiring to Viva Engage / SharePoint comes next.)");
     e.target.reset();
   }
 });
