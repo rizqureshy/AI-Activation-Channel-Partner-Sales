@@ -151,6 +151,7 @@ export class Cosmos {
       uForward: { value: 6.2 }, // depth surge toward the camera, peaks mid-transition
       uFade: { value: 1.0 },    // global field brightness — dipped to mask the layer hand-off
       uLive: { value: 0.0 },    // 1 = live sim drives aTo directly (skip morph/idle motion)
+      uLightMode: { value: 0.0 }, // 1 = light theme (darker saturated specks, normal blending)
     };
 
     const mat = new THREE.ShaderMaterial({
@@ -195,13 +196,20 @@ export class Cosmos {
         }`,
       fragmentShader: `
         varying vec3 vCol;
-        uniform float uFade;
+        uniform float uFade, uLightMode;
         void main(){
           float d = length(gl_PointCoord - 0.5);
           float a = smoothstep(0.5, 0.0, d);
-          // brighter, radiant core
-          vec3 col = vCol * (1.15 + 0.5 * (1.0 - d * 2.0));
-          gl_FragColor = vec4(col, a*0.85*uFade);
+          if (uLightMode > 0.5) {
+            // light theme: darker, more saturated specks that read on a pale bg
+            float l = dot(vCol, vec3(0.299, 0.587, 0.114));
+            vec3 c = clamp(mix(vec3(l), vCol, 1.45) * 0.5, 0.0, 1.0);
+            gl_FragColor = vec4(c, a * 0.9);
+          } else {
+            // dark theme: bright, radiant additive core
+            vec3 col = vCol * (1.15 + 0.5 * (1.0 - d * 2.0));
+            gl_FragColor = vec4(col, a * 0.85 * uFade);
+          }
         }`,
     });
 
@@ -737,6 +745,18 @@ export class Cosmos {
     } else {
       this.liveMode = null;
     }
+  }
+
+  /** Switch the field between dark (additive glow) and light (saturated specks). */
+  setTheme(mode) {
+    const light = mode === "light";
+    this.uniforms.uLightMode.value = light ? 1 : 0;
+    const mat = this.points.material;
+    mat.blending = light ? THREE.NormalBlending : THREE.AdditiveBlending;
+    mat.needsUpdate = true;
+    // the white starfield + additive nebula only read on a dark sky
+    if (this.stars) this.stars.visible = !light;
+    if (this.nebula) this.nebula.visible = !light;
   }
 
   /** List available formation names (handy for tooling/docs). */
