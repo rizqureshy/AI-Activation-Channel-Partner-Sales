@@ -4,12 +4,11 @@
    The WebGL field persists across pages and morphs per route.
    ============================================================ */
 
-import { Cosmos } from "./scene.js";
+import { FloatScene } from "./shapes.js";
 const gsap = window.gsap;
 
-const cosmos = new Cosmos(document.getElementById("bg-canvas"));
-cosmos.start();
-cosmos.uniforms.uFade.value = 0.62;   // calmer backdrop so content always reads
+const scene3d = new FloatScene(document.getElementById("bg-canvas"));
+scene3d.start();
 
 /* external destinations */
 const TEAMS_URL = "https://teams.microsoft.com/l/channel/19%3Akap0KTNXN6GFcbodSq66xZJp26H4PpruupT7ITAfEgI1%40thread.tacv2/CRO%20AI%20Community%20Channel?groupId=388cd47c-fb14-4cc8-b031-148a6bbe5a78&tenantId=72adb271-2fc7-4afe-a5ee-9de6a59f6bfb";
@@ -839,7 +838,7 @@ function render() {
   const page = ROUTES[route] || ROUTES.home;
   document.title = page.title + " · CRO AI Activation Community";
   main.innerHTML = `<div class="view">${page.html()}</div>`;
-  cosmos.applyFormation(page.formation, gsap, {});
+  scene3d.reflow();                 // gentle reshuffle of the floating shapes
   window.scrollTo(0, 0);
   setActive(ROUTES[route] ? route : "home");
   observeReveals();
@@ -877,25 +876,8 @@ document.addEventListener("click", (e) => {
   if (b) { e.preventDefault(); showToast(b.getAttribute("data-toast")); }
 });
 
-/* ---- theme: dark ⟷ dawn/dusk (light) ---- */
-const THEME_KEY = "cro-theme";
-const themeBtn = document.getElementById("theme-toggle");
-function applyTheme(mode) {
-  const light = mode === "light";
-  document.body.classList.toggle("light", light);
-  cosmos.setTheme(mode);
-  themeBtn.setAttribute("aria-pressed", String(light));
-  try { localStorage.setItem(THEME_KEY, mode); } catch (e) {}
-}
-let theme = "dark";
-try { theme = localStorage.getItem(THEME_KEY) || "dark"; } catch (e) {}
-themeBtn.addEventListener("click", () => {
-  applyTheme(document.body.classList.contains("light") ? "dark" : "light");
-});
-
 /* boot */
 buildNav();
-applyTheme(theme);
 if (!location.hash) location.replace("#/home");
 render();
 const loader = document.getElementById("loader");

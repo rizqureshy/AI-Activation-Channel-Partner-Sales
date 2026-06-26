@@ -1,13 +1,12 @@
-# CRO AI Activation Community — Website
+# CRO AI Activation Community — Website (bright "shapes" edition)
 
-A warm, community-led website for the **CRO AI Activation Community**, built on the
-project's 3D **particle engine**. One persistent WebGL particle field lives behind every
-page and **morphs into a themed formation** as you move through the site (orb on Home,
-fireworks on Recognition, a rocket on Team Activation, a power symbol on Access Help, and
-so on).
+A clean, bright, community-led website built on a **new floating-3D-shapes engine** —
+glossy, candy-coloured shapes (sphere, cube, cylinder, star, octahedron, torus…) drift,
+bob and rotate over a white page. Inspired by the Cohesion / Larry Framer aesthetic.
 
-> This is not a training portal. Not a static SharePoint page. It's the front door to the
-> community: **The Community Wants You.**
+> This is a deliberate departure from the particle engine. The **particle engine is
+> untouched** — it still powers `main`, the presentation decks, and the previous
+> particle-background version of this site (`site/cro-ai-activation-community`).
 
 ## Run it
 
@@ -19,50 +18,41 @@ No build step. Three.js + GSAP are vendored locally; fonts load from Google Font
 
 ## How it's built
 
-It's a **hash-routed single-page site** so the WebGL background never reloads between
-pages — it just morphs.
+A **hash-routed single-page site** — the 3D background never reloads between pages; the
+shapes just reshuffle.
 
 ```
 index.html            # shell: nav, background canvas, #main, footer
 assets/
-  css/site.css        # theme tokens, glass components, layout, forms, responsive nav
-  js/site.js          # router + all page content + nav + forms + engine wiring
-  js/scene.js         # the particle engine (formations + live fireworks sim)
-  vendor/             # three.js + gsap (offline-friendly)
+  css/site.css        # bright/white theme, soft-shadow cards, pill nav
+  js/shapes.js        # the new engine — floating glossy 3D shapes
+  js/site.js          # router + all page content + nav + forms
+  js/scene.js         # (the older particle engine — present but UNUSED here)
+  vendor/             # three.js (+ RoomEnvironment, RoundedBoxGeometry) + gsap
 ```
 
-- **`assets/js/site.js`** holds every page as a `ROUTES[...]` entry: `{ title, formation, html() }`.
-  Content is generated from small builders (`block`, `iconCards`, `numCards`, `formHTML`,
-  `ctas`, …) to stay DRY. To edit copy or add a page, edit this one file.
-- On each route change the router renders the page into `#main`, calls
-  `cosmos.applyFormation(formation, gsap)`, and runs an `IntersectionObserver` to reveal
-  sections on scroll.
+### The shapes engine (`shapes.js`)
+
+- `MeshPhysicalMaterial` + a `RoomEnvironment` image-based light give the glossy candy
+  look; soft drop-shadow sprites sit beneath each shape and fade as it lifts.
+- Ten shapes are laid out around the frame edges so page content stays clear; each bobs
+  on a sine, spins slowly, and follows the pointer with gentle parallax.
+- `reflow()` is called on every route change for a Framer-style reshuffle (a small
+  position drift + spin burst that settles).
+- Honours `prefers-reduced-motion` (skips the reshuffle).
 
 ### Pages
 
-Home · Join the Community · Start Here · Share Your Story · Share Your Work · Submission
-Gallery · Learning Lane · Expert Clinic · Certification Support · AI Activation for Teams ·
+Home · Join · Start Here · Share Your Story · Share Your Work · Submission Gallery ·
+Learning Lane · Expert Clinic · Certification Support · AI Activation for Teams ·
 License & Access Help · Leaders Listening Post · Recognition & Leaderboard · Community
 Calendar · Weekly Challenges.
 
-Primary + utility navigation, a footer, and community mechanics (star earnings, contributor
-levels, recognition, leaderboard, calendar) are all included.
-
-### Forms
-
-All forms are **presentational demos** — submitting shows a confirmation toast and resets
-the form. The field sets match the spec; wiring them to Teams / SharePoint / a backend is
-the next step.
-
-## Particle formations used
-
-`orb · burst · question · split · clusters:N · grid · stream · ring · check · rocket ·
-power · core · fireworks (live)`. The fireworks formation runs a live CPU simulation
-(rockets launch, burst, fall under gravity, recycle); everything else is a morph target.
-
-> The interactive presentation deck that this engine was originally built for lives on the
-> `deck/ai-enablement-session` branch.
+Content is the same as the particle-background version: real Teams join link, the AI
+April portfolio gallery (self-hosted thumbnails), leadership messages (Martyn, Shane,
+Eamonn), and the six-cert certification map with voices. Forms are presentational demos
+(toast on submit).
 
 ---
 
-*Built on the AI Activation particle engine. Restrained "fun universe" theme, made warm.*
+*Built for the CRO AI Activation Community. Clean, bright, happy — the community wants you.*
