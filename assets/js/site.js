@@ -10,6 +10,12 @@ const gsap = window.gsap;
 const cosmos = new Cosmos(document.getElementById("bg-canvas"));
 cosmos.start();
 
+/* external destinations */
+const TEAMS_URL = "https://teams.microsoft.com/l/channel/19%3Akap0KTNXN6GFcbodSq66xZJp26H4PpruupT7ITAfEgI1%40thread.tacv2/CRO%20AI%20Community%20Channel?groupId=388cd47c-fb14-4cc8-b031-148a6bbe5a78&tenantId=72adb271-2fc7-4afe-a5ee-9de6a59f6bfb";
+const PORTFOLIO_URL = "https://rizqureshy.github.io/AI-April-Portfolio/";
+const RAW = "https://raw.githubusercontent.com/rizqureshy/AI-April-Portfolio/main/";
+const rawUrl = (path) => RAW + encodeURI(path);
+
 /* ---------------- tiny view helpers ---------------- */
 const PATHS = {
   star: "M12 2l2.6 7.4H22l-6 4.4 2.3 7.2L12 16.6 5.7 21l2.3-7.2-6-4.4h7.4z",
@@ -66,7 +72,8 @@ function ctas(arr) {
   return `<div class="cta-row reveal">` + arr.map((c) => {
     const inner = `${c.svg ? ic(c.svg) : ""}${c.t}`;
     if (c.toast) return `<button class="btn ${c.k || "ghost"}" data-toast="${c.toast}">${inner}</button>`;
-    return `<a class="btn ${c.k || "ghost"}" href="${c.h || "#/home"}">${inner}</a>`;
+    const ext = c.h && /^https?:/.test(c.h) ? ` target="_blank" rel="noopener"` : "";
+    return `<a class="btn ${c.k || "ghost"}" href="${c.h || "#/home"}"${ext}>${inner}</a>`;
   }).join("") + `</div>`;
 }
 
@@ -116,7 +123,7 @@ const PRIMARY = [
 ];
 const UTILITY = [
   ["Weekly Challenges", "#/challenges"], ["Leaderboard", "#/recognition"], ["Community Calendar", "#/calendar"],
-  ["Recognition Wall", "#/recognition"], ["Teams / Slack Channels", "#/join"], ["Submit an Idea", "#/listening"],
+  ["Recognition Wall", "#/recognition"], ["Teams Channel", TEAMS_URL], ["Submit an Idea", "#/listening"],
   ["Ask a Question", "#/clinic"],
 ];
 
@@ -124,7 +131,10 @@ function buildNav() {
   document.getElementById("primary-nav").innerHTML =
     PRIMARY.map(([t, h]) => `<a href="${h}">${t}</a>`).join("");
   document.getElementById("utility-bar").innerHTML =
-    `<span class="ulabel">Quick links</span>` + UTILITY.map(([t, h]) => `<a href="${h}">${t}</a>`).join("");
+    `<span class="ulabel">Quick links</span>` + UTILITY.map(([t, h]) => {
+      const ext = /^https?:/.test(h) ? ` target="_blank" rel="noopener"` : "";
+      return `<a href="${h}"${ext}>${t}</a>`;
+    }).join("");
   document.getElementById("site-footer").innerHTML = `
     <div class="footer-inner">
       <div>
@@ -180,8 +190,7 @@ ROUTES.home = {
     kicker: "Join Us", title: "Joining is open, simple, and friction-free",
     lead: "The community is open to everyone across CRO. Join the main community space, introduce yourself, ask your first question, and start exploring what others are learning and building.",
     inner: ctas([
-      { t: "Join the Teams Community", k: "primary", h: "#/join", svg: "users" },
-      { t: "Join the Slack Channel", h: "#/join", svg: "chat" },
+      { t: "Join the Teams Community", k: "primary", h: TEAMS_URL, svg: "users" },
       { t: "Download the Onboarding Pack", h: "#/start", svg: "book" },
       { t: "Introduce Yourself", h: "#/story", svg: "share" },
       { t: "Ask Your First Question", h: "#/clinic", svg: "chat" },
@@ -228,13 +237,9 @@ ROUTES.home = {
   })
 
   + block({
-    kicker: "Leadership Messages", title: "Visible sponsorship from our leaders",
-    lead: "This community matters to leadership — and they show up here.",
-    inner: iconCards([
-      { t: "Welcome note from Eamonn", p: "Why AI activation matters for CRO, and why your participation counts.", icon: "heart" },
-      { t: "Message from Kelly", p: "Where we are heading and how the community fits the strategy.", icon: "chat" },
-      { t: "Message from Martin", p: "A call to action for teams ready to move from interest to action.", icon: "bolt" },
-    ]) + ctas([{ t: "Hear From Our Leaders", h: "#/listening", svg: "bell" }]),
+    kicker: "Leadership Messages", title: "A warm welcome from our leaders",
+    lead: "This community matters to leadership — and they show up here. Fun, warmth, and a place where every question and every role counts.",
+    inner: leaderCards() + ctas([{ t: "Join the Community", k: "primary", h: "#/join", svg: "users" }]),
   })
 
   + block({
@@ -327,27 +332,103 @@ ROUTES.home = {
   }),
 };
 
-/* ---- gallery sample data ---- */
-const GALLERY = [
-  { t: "Account plan in 10 minutes with Copilot", who: "Priya N.", team: "Enterprise Sales · EMEA", tool: "Copilot", sum: "Turned scattered notes and CRM data into a structured account plan draft.", impact: "Saved ~2 hrs / account", tags: ["Account Planning", "Copilot", "Beginner"], stars: 48, comments: 12 },
-  { t: "ACE prompt pack for discovery calls", who: "Marcus L.", team: "GTM · AMER", tool: "ACE", sum: "A reusable set of grounded prompts for pre-call discovery and objection prep.", impact: "Faster, citation-backed prep", tags: ["ACE", "Prompt Library", "Customer Workflow"], stars: 73, comments: 21 },
-  { t: "How I passed my AI Ethics certification", who: "Sara D.", team: "Customer Success · APAC", tool: "Learning", sum: "My study plan, time commitment, and what surprised me on the exam.", impact: "Certified in 3 weeks", tags: ["Certification Story", "Responsible AI"], stars: 65, comments: 18 },
-  { t: "Weekly pipeline summary, automated", who: "Tom R.", team: "Sales Ops · EMEA", tool: "Copilot", sum: "A Copilot workflow that drafts the Monday pipeline summary from the CRM export.", impact: "30 min → 5 min", tags: ["Operations", "Productivity", "Advanced"], stars: 39, comments: 9 },
-  { t: "Yoodli rehearsal before a QBR", who: "Lena K.", team: "Marketing · AMER", tool: "Yoodli", sum: "Practiced my QBR opener and cut filler words in half.", impact: "More confident delivery", tags: ["Yoodli", "Learning Reflection", "Beginner"], stars: 31, comments: 7 },
-  { t: "Team activation: 12 sellers in 2 weeks", who: "Diego F.", team: "GTM · LATAM", tool: "Activation", sum: "Ran discovery, mapped 3 workflows, and activated the team with practical reps.", impact: "12 active users", tags: ["Team Activation", "Advanced"], stars: 88, comments: 26 },
+/* ---- gallery: real work from the AI April sprint (GTM AI Canvas portfolio) ---- */
+const SHOTS = [
+  { t: "AI Art", author: "Rizwan Qureshy", cat: "AI Art", img: "assets/art/Rizwan Qureshy AI Art.jpg" },
+  { t: "AI Art", author: "Kelly Grover", cat: "AI Art", img: "assets/art/Kelly Grover AI Art.jpg" },
+  { t: "AI Art", author: "Eamonn Ward", cat: "AI Art", img: "assets/art/Eamonn Ward AI Art.jpg" },
+  { t: "AI Art", author: "Lorna Joiner", cat: "AI Art", img: "assets/art/Lorna Joiner AI Art.jpg" },
+  { t: "AI Art", author: "Dalia Osorio", cat: "AI Art", img: "assets/art/Dalia Osorio AI Art.jpg" },
+  { t: "AI Art", author: "Calley Hood", cat: "AI Art", img: "assets/art/Calley Hood AI Art.png" },
+  { t: "Veronica's AI Dashboard", author: "Veronica John", cat: "Dashboard", img: "assets/dashboards/AI Dashboard - Veronica.png" },
+  { t: "Partner Enablement Dashboard", author: "Team", cat: "Dashboard", img: "assets/dashboards/Partner Enablement Dashboard.jpg" },
+  { t: "AI CRO Strategy Plan", author: "Rizwan Qureshy", cat: "AI Deck", img: "assets/decks/thumbs/AI CRO Strategy Plan - Rizwan Qureshy.png" },
+  { t: "AI for GTM Enablement Services", author: "Kelly Grover", cat: "AI Deck", img: "assets/decks/thumbs/AI for GTM Enablement Services - Kelly Grover.png" },
+  { t: "AI Strategy Deck", author: "Eamonn Ward", cat: "AI Deck", img: "assets/decks/thumbs/AI Strategy - Eamonn Deck.png" },
+  { t: "ACE Animation Concept", author: "Team", cat: "Animation", img: "assets/animations/Animation Pic - ACE.png" },
+  { t: "AI Coding", author: "Team", cat: "Course", img: "assets/courses/AI Coding.png" },
+  { t: "Transform Workflows with Gen AI", author: "Team", cat: "Course", img: "assets/courses/Transform Business Workflows with Gen AI - Course Pic.png" },
 ];
-function galleryCard(g) {
+const APPS = [
+  { t: "Artemis II — Dark Side of the Moon", author: "Rizwan Qureshy", url: "https://artemis-ii-rizqureshy.replit.app/" },
+  { t: "AI Essentials Course", author: "Calley Hood", url: "https://aiessentialscourse.netlify.app/" },
+  { t: "Order Taker — Partner Simulator", author: "Michael Bourgeois", url: "https://partner-simulator.netlify.app/" },
+  { t: "Challenger Sales Coaching", author: "Team", url: "https://id-preview--e21af167-a47d-42ba-a00f-070b0144e10a.lovable.app/" },
+  { t: "Team Energy & Focus Dashboard", author: "Calley Hood", url: "https://idbycalley.github.io/Live-Team-Dashboard/" },
+  { t: "Build-a-Band: Guitar & Piano", author: "Ashley Mims", url: "https://aprilaibuildaband.netlify.app/" },
+  { t: "Pulse Pad Beat Studio", author: "Michael Bourgeois", url: "https://reliable-cassata-1d012c.netlify.app/" },
+  { t: "Magic Guitar", author: "Calley Hood", url: "https://strong-daffodil-a46c5c.netlify.app/" },
+];
+function shotCard(s) {
   return `<article class="card gcard reveal">
-    <span class="tag">${g.tool}</span>
-    <h3>${g.t}</h3>
-    <div class="gmeta">${g.who} · ${g.team}</div>
-    <p>${g.sum}</p>
-    <div class="pills" style="margin-top:12px">${g.tags.map((t) => `<span class="pill">${t}</span>`).join("")}</div>
-    <div class="gstats"><span>★ <b>${g.stars}</b></span><span>💬 ${g.comments}</span><span class="muted">${g.impact}</span></div>
-    <div class="gactions"><a class="btn cool sm" href="#/gallery">${ic("bolt")}Try this</a><a class="btn ghost sm" href="#/clinic">Ask the contributor</a></div>
+    <div class="gthumb"><img loading="lazy" src="${rawUrl(s.img)}" alt="${s.t} — ${s.author}"></div>
+    <span class="tag">${s.cat}</span>
+    <h3>${s.t}</h3>
+    <div class="gmeta">${s.author}</div>
+    <div class="gactions"><a class="btn cool sm" href="${PORTFOLIO_URL}" target="_blank" rel="noopener">${ic("grid")}Open in 3D Gallery</a></div>
   </article>`;
 }
-const galleryPreview = () => `<div class="grid c3">` + GALLERY.slice(0, 3).map(galleryCard).join("") + `</div>`;
+function appCard(a) {
+  return `<article class="card gcard reveal">
+    <span class="tag">App &amp; Tool</span>
+    <h3>${a.t}</h3>
+    <div class="gmeta">${a.author}</div>
+    <div class="gactions"><a class="btn cool sm" href="${a.url}" target="_blank" rel="noopener">${ic("bolt")}Launch app</a></div>
+  </article>`;
+}
+const galleryPreview = () => `<div class="grid c3">` + SHOTS.slice(0, 3).map(shotCard).join("") + `</div>`;
+
+/* ---- leadership messages ---- */
+const LEADERS = [
+  {
+    name: "Martyn Langley", role: "CRO AI Activation Community Sponsor", img: "assets/img/leaders/martyn.jpg",
+    msg: "AI shouldn't feel like a test you're afraid to fail — it should feel like play. Bring your curiosity, your half-finished ideas, and yes, your &ldquo;silly&rdquo; questions. There are none. This is where we experiment out loud, learn from each other, and have real fun building what's next. You belong here, exactly as you are.",
+  },
+  {
+    name: "Shane Paladin", role: "CRO AI Activation Community Sponsor", img: "assets/img/leaders/shane.jpg",
+    msg: "The exciting thing about this new world of AI is that everyone gets to be a beginner again — together. Share what you tried, even when it broke. Ask the expert. Help the next person. Every role, every team, every voice makes us stronger. You're not a spectator here; you are what makes this community come alive.",
+  },
+  {
+    name: "Eamonn Ward", role: "CRO AI Activation Community Sponsor", img: "assets/img/leaders/eamonn-ward.jpg",
+    msg: "This is your space. Whether you're writing your first prompt or activating your whole team, there's room for you — and your story matters. Don't wait until you feel &ldquo;ready.&rdquo; Jump in, connect, and let's discover what AI can do for our customers and for each other. Warmth over fear, progress over perfection, community over going it alone.",
+  },
+];
+const leaderCards = () => `<div class="grid c3">` + LEADERS.map((l) => `
+  <article class="card leader reveal">
+    <img class="lphoto" loading="lazy" src="${l.img}" alt="${l.name}">
+    <div class="lwho"><h3>${l.name}</h3><span>${l.role}</span></div>
+    <p class="lmsg">${l.msg}</p>
+  </article>`).join("") + `</div>`;
+
+/* ---- certification map + voices (6 people, 6 certs from the AI Enablement session) ---- */
+const CERTS = [
+  { img: "assets/img/certs/eduardo-deeplearning.jpg", issuer: "DeepLearning.AI", title: "AI For Everyone", who: "Eduardo", level: "Beginner" },
+  { img: "assets/img/certs/microsoft-ai-business.webp", issuer: "Microsoft", title: "AI Business Professional", who: "Elena", level: "Beginner" },
+  { img: "assets/img/certs/justin-databricks.png", issuer: "Databricks", title: "AI Agent Fundamentals", who: "Justin", level: "Intermediate" },
+  { img: "assets/img/certs/michael-utaustin.webp", issuer: "UT Austin", title: "Generative AI for Business Applications", who: "Michael", level: "Intermediate" },
+  { img: "assets/img/certs/shiran-kmi.webp", issuer: "KM Institute", title: "Certified AI Manager", who: "Shiran", level: "Intermediate" },
+  { img: "assets/img/certs/rizwan-ieee-aiethics.webp", issuer: "IEEE", title: "CertifAIEd — AI Ethics Professional", who: "Rizwan", level: "Advanced" },
+];
+const CERTFOLKS = [
+  { name: "Eduardo", photo: "assets/img/presenters/eduardo.jpg", cert: "DeepLearning.AI · AI For Everyone", quote: "Start broad. This gave me the language to talk about AI with any team — no code required. If you're wondering where to begin, begin here." },
+  { name: "Elena", photo: "assets/img/presenters/elena.jpg", cert: "Microsoft · AI Business Professional", quote: "Practical and role-focused. I prepped in short evening sessions over a few weeks — totally doable alongside the day job." },
+  { name: "Justin", photo: "assets/img/presenters/justin.jpg", cert: "Databricks · AI Agent Fundamentals", quote: "I wanted to understand agents beyond the hype. The hands-on labs made it click. Build one small agent and you're hooked." },
+  { name: "Michael", photo: "assets/img/presenters/michael.jpg", cert: "UT Austin · Generative AI for Business", quote: "This connected AI to real business decisions. My advice: pick a real problem from your week and learn against that." },
+  { name: "Shiran", photo: "assets/img/presenters/shiran.jpg", cert: "KM Institute · Certified AI Manager", quote: "It reframed AI as a management discipline, not just a tool — perfect if you're leading people through change." },
+  { name: "Rizwan", photo: "assets/img/presenters/rizwan.png", cert: "IEEE · CertifAIEd AI Ethics", quote: "Ethics turned out to be the most human part of AI. What surprised me was how much it applies to everyday decisions, not just policy." },
+];
+const certMap = () => `<div class="grid c3">` + CERTS.map((c) => `
+  <article class="card certcard reveal">
+    <div class="cthumb"><img loading="lazy" src="${c.img}" alt="${c.issuer} — ${c.title}"></div>
+    <span class="tag">${c.issuer} · ${c.level}</span>
+    <h3>${c.title}</h3>
+    <div class="gmeta">Earned by ${c.who}</div>
+  </article>`).join("") + `</div>`;
+const certVoices = () => `<div class="grid c3">` + CERTFOLKS.map((p) => `
+  <article class="card folk reveal">
+    <div class="fhead"><img class="favatar" loading="lazy" src="${p.photo}" alt="${p.name}"><div><h3>${p.name}</h3><span>${p.cert}</span></div></div>
+    <p class="fquote">&ldquo;${p.quote}&rdquo;</p>
+  </article>`).join("") + `</div>`;
 
 /* ---- Join ---- */
 ROUTES.join = {
@@ -356,8 +437,7 @@ ROUTES.join = {
     kicker: "Join the Community", title: `Welcome — <span class="gradient-text">we saved you a seat</span>`,
     lead: "The community is open to everyone across CRO. Join the main space, introduce yourself, and start exploring. No perfect prompt required. No expert badge needed. Just come in.",
     inner: ctas([
-      { t: "Join the Teams Community", k: "primary", h: "#/join", svg: "users", toast: "Opening the Teams community space…" },
-      { t: "Join the Slack Channel", h: "#/join", svg: "chat", toast: "Opening Slack…" },
+      { t: "Join the Teams Community", k: "primary", h: TEAMS_URL, svg: "users" },
       { t: "Download the Onboarding Pack", h: "#/start", svg: "book" },
     ]),
   })
@@ -389,7 +469,7 @@ ROUTES.join = {
       "Be kind: assume good intent, celebrate attempts.",
       "Be practical: real examples beat theory.",
       "Be safe: follow Responsible AI guidance and keep customer data protected.",
-    ]) + ctas([{ t: "Introduce Yourself", k: "cool", h: "#/story", svg: "share" }, { t: "Join the Community Now", k: "primary", h: "#/join", toast: "Welcome aboard! Opening the community…", svg: "users" }]),
+    ]) + ctas([{ t: "Introduce Yourself", k: "cool", h: "#/story", svg: "share" }, { t: "Join the Teams Community", k: "primary", h: TEAMS_URL, svg: "users" }]),
   }),
 };
 
@@ -475,11 +555,13 @@ ROUTES.gallery = {
   title: "Submission Gallery", formation: "grid",
   html: () => block({
     kicker: "Submission Gallery", title: "Real work from real people",
-    lead: "Browse what teammates across CRO are building. Filter by function, tool, or type — then try it yourself or ask the contributor.",
-    inner: pills(["Function", "Region", "Tool", "Use case type", "Certification story", "Team activation", "Customer workflow", "Productivity workflow", "Prompt library", "Demo", "Beginner friendly", "Advanced example"]),
+    lead: "A living showcase from the community's AI April sprint — apps, AI art, dashboards, strategy decks, animations, and courses. Explore it as a 3D living canvas, or browse the highlights below.",
+    inner: ctas([{ t: "Open the 3D Portfolio Gallery", k: "primary", h: PORTFOLIO_URL, svg: "grid" }, { t: "Submit Your Work", k: "cool", h: "#/share", svg: "share" }])
+      + pills(["AI Art", "Dashboards", "AI Decks", "Apps & Tools", "Animations", "Courses", "Customer workflow", "Productivity", "Beginner friendly", "Advanced"]),
   })
-  + block({ inner: `<div class="grid c3">` + GALLERY.map(galleryCard).join("") + `</div>` })
-  + block({ title: "Have something to add?", lead: "The gallery grows when you contribute. Add your prompt, workflow, demo, or story.", inner: ctas([{ t: "Submit to the Gallery", k: "primary", h: "#/share", svg: "share" }]) }),
+  + block({ kicker: "Highlights", title: "Art, dashboards, decks &amp; more", inner: `<div class="grid c3">` + SHOTS.map(shotCard).join("") + `</div>` })
+  + block({ kicker: "Apps & Tools", title: "Things you can launch right now", lead: "Real working apps the community built with AI — open them and try.", inner: `<div class="grid c3">` + APPS.map(appCard).join("") + `</div>` })
+  + block({ panel: true, title: "Have something to add?", lead: "The gallery grows when you contribute. Add your prompt, workflow, demo, app, or story.", inner: ctas([{ t: "Submit to the Gallery", k: "primary", h: "#/share", svg: "share" }, { t: "Open the 3D Gallery", h: PORTFOLIO_URL, svg: "grid" }]) }),
 };
 
 /* ---- Learning Lane ---- */
@@ -541,15 +623,14 @@ ROUTES.certification = {
     ]),
   })
   + block({
-    kicker: "Featured stories", panel: true, title: "From people who've done it",
-    inner: iconCards([
-      { t: "“Why I chose this certification”", icon: "shield" },
-      { t: "“How I prepared”", icon: "book" },
-      { t: "“What surprised me”", icon: "bulb" },
-      { t: "“How I am applying it in my role”", icon: "bolt" },
-      { t: "“What I would tell someone starting now”", icon: "heart" },
-      { t: "Certification Achievers Wall", icon: "trophy", link: "#/recognition" },
-    ]),
+    kicker: "Certification Map", title: "Six certs our community has earned",
+    lead: "A starting map across levels — from a broad first step to advanced AI ethics. Each one was earned by a teammate you can ask.",
+    inner: certMap(),
+  })
+  + block({
+    kicker: "Voices of the certified", panel: true, title: "From people who've done it",
+    lead: "Why they chose it, how they prepared, and what they'd tell someone starting now.",
+    inner: certVoices() + ctas([{ t: "See the Certification Achievers Wall", h: "#/recognition", svg: "trophy" }]),
   })
   + block({
     title: "Request certification counseling",
