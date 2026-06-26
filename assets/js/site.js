@@ -93,7 +93,7 @@ function hero({ eyebrow, h1, sub, manifesto, cta }) {
   const subHTML = !sub ? ""
     : (Array.isArray(sub) ? sub : [sub]).map((p) => `<p class="sub reveal">${p}</p>`).join("");
   const card = manifesto
-    ? `<div class="manifesto reveal">` +
+    ? `<div class="manifesto">` +
         manifesto.map((w, i) => `<p class="mline${i === manifesto.length - 1 ? " mlast" : ""}">${w}</p>`).join("") +
       `</div>`
     : "";
@@ -173,7 +173,7 @@ const ROUTES = {};
 
 /* ---- Home ---- */
 ROUTES.home = {
-  title: "Home", formation: "orb",
+  title: "Home", formation: "split",
   html: () => hero({
     eyebrow: "✦ The front door to the CRO AI Activation Community",
     h1: `The CRO AI Activation Community <span class="gradient-text">Wants You</span>`,

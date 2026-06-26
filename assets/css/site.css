@@ -258,27 +258,36 @@ body.light .hero h1, body.light .hero .sub, body.light .hero .emotional {
 
 /* ---- frosted "matters" manifesto card ---- */
 .manifesto {
-  max-width: 580px; margin: clamp(28px, 4vh, 44px) auto 8px;
-  padding: clamp(24px, 3.4vw, 38px) clamp(26px, 4vw, 46px);
-  text-align: center; border-radius: 26px;
+  max-width: 740px; margin: clamp(30px, 4.5vh, 54px) auto 8px;
+  padding: clamp(30px, 4vw, 50px) clamp(30px, 5vw, 62px);
+  text-align: center; border-radius: 30px;
   border: 1px solid var(--brd); background: var(--surface);
-  backdrop-filter: blur(26px) saturate(1.25); -webkit-backdrop-filter: blur(26px) saturate(1.25);
+  backdrop-filter: blur(28px) saturate(1.3); -webkit-backdrop-filter: blur(28px) saturate(1.3);
   box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,0.14);
+  /* comes forward on every page load / route change */
+  animation: comeForward 1s var(--ease-out) both;
+  will-change: transform, opacity, filter;
 }
 .manifesto .mline {
   font-family: var(--font-display); font-weight: 600; color: var(--ink);
-  font-size: clamp(17px, 2vw, 24px); line-height: 1.55;
+  font-size: clamp(20px, 2.5vw, 30px); line-height: 1.5;
 }
 .manifesto .mline .g {
   background: var(--warm); -webkit-background-clip: text; background-clip: text;
   color: transparent; -webkit-text-fill-color: transparent; font-weight: 700;
 }
 .manifesto .mlast {
-  margin-top: 12px; font-weight: 800; letter-spacing: -0.01em;
-  font-size: clamp(28px, 3.8vw, 46px); line-height: 1.1;
+  margin-top: 14px; font-weight: 800; letter-spacing: -0.01em;
+  font-size: clamp(34px, 5vw, 60px); line-height: 1.08;
   background: linear-gradient(120deg, var(--orange), var(--pink) 55%, var(--purple));
   -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
 }
+@keyframes comeForward {
+  0%   { opacity: 0; transform: perspective(1100px) translateZ(-340px) scale(0.82); filter: blur(8px); }
+  55%  { opacity: 1; filter: blur(0); }
+  100% { opacity: 1; transform: perspective(1100px) translateZ(0) scale(1); filter: blur(0); }
+}
+@media (prefers-reduced-motion: reduce) { .manifesto { animation: none; } }
 
 /* ============================================================
    Card grids
