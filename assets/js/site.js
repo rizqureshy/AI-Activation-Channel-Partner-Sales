@@ -89,19 +89,19 @@ function block({ kicker, title, lead, inner = "", panel, warm }) {
     `</section>`;
 }
 
-function hero({ eyebrow, h1, sub, floatWords, cta }) {
+function hero({ eyebrow, h1, sub, manifesto, cta }) {
   const subHTML = !sub ? ""
     : (Array.isArray(sub) ? sub : [sub]).map((p) => `<p class="sub reveal">${p}</p>`).join("");
-  const words = floatWords
-    ? `<div class="matters reveal" aria-label="${floatWords.join(" ")}">` +
-        floatWords.map((w, i) => `<span class="mword m${i % 6}" style="--i:${i}" aria-hidden="true">${w}</span>`).join("") +
+  const card = manifesto
+    ? `<div class="manifesto reveal">` +
+        manifesto.map((w, i) => `<p class="mline${i === manifesto.length - 1 ? " mlast" : ""}">${w}</p>`).join("") +
       `</div>`
     : "";
   return `<section class="hero">
     ${eyebrow ? `<span class="eyebrow reveal">${eyebrow}</span>` : ""}
     <h1 class="reveal">${h1}</h1>
     ${subHTML}
-    ${words}
+    ${card}
     ${cta ? ctas(cta) : ""}
   </section>`;
 }
@@ -182,7 +182,14 @@ ROUTES.home = {
       "Join the CRO AI Activation Community to learn, share, showcase, ask questions, experiment with AI — and above all, <b>have fun</b>.",
       "This is a bright and burning space for ideas, experiments, challenges, stories, competitions, shoutouts, and real AI capability building across the business.",
     ],
-    floatWords: ["Your AI Story Matters.", "Your AI Questions Matter.", "Your AI Experiments Matter.", "Your AI Work Matters.", "Your Fun Matters.", "You Matter."],
+    manifesto: [
+      `Your <span class="g">AI Story</span> Matters.`,
+      `Your <span class="g">AI Questions</span> Matter.`,
+      `Your <span class="g">AI Experiments</span> Matter.`,
+      `Your <span class="g">AI Work</span> Matters.`,
+      `Your <span class="g">Fun</span> Matters.`,
+      `You Matter.`,
+    ],
     cta: [
       { t: "Join the Community", k: "primary", h: "#/join", svg: "users" },
       { t: "Share Your First Story", k: "cool", h: "#/story", svg: "share" },

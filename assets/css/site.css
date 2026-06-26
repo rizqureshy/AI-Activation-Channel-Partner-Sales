@@ -256,38 +256,28 @@ body.light .hero h1, body.light .hero .sub, body.light .hero .emotional {
   text-shadow: 0 1px 12px rgba(255,255,255,0.95), 0 0 30px rgba(255,255,255,0.75);
 }
 
-/* ---- floating 3D "matters" words ---- */
-.matters {
-  position: relative; margin: clamp(28px, 4vh, 44px) auto 8px; max-width: 720px;
-  display: flex; flex-wrap: wrap; justify-content: center; align-items: center;
-  gap: 6px 18px; perspective: 1000px;
+/* ---- frosted "matters" manifesto card ---- */
+.manifesto {
+  max-width: 580px; margin: clamp(28px, 4vh, 44px) auto 8px;
+  padding: clamp(24px, 3.4vw, 38px) clamp(26px, 4vw, 46px);
+  text-align: center; border-radius: 26px;
+  border: 1px solid var(--brd); background: var(--surface);
+  backdrop-filter: blur(26px) saturate(1.25); -webkit-backdrop-filter: blur(26px) saturate(1.25);
+  box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,0.14);
 }
-.mword {
-  display: inline-block; font-family: var(--font-display); font-weight: 800;
-  font-size: clamp(16px, 2.5vw, 30px); line-height: 1; letter-spacing: -0.01em;
-  padding: 4px 6px; white-space: nowrap; transform-style: preserve-3d;
-  background: var(--g, var(--warm)); -webkit-background-clip: text; background-clip: text;
-  color: transparent; -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 8px 16px rgba(30,20,70,0.32));
-  animation: floatword calc(4.4s + var(--i) * 0.55s) ease-in-out calc(var(--i) * -0.8s) infinite alternate;
-  will-change: transform;
+.manifesto .mline {
+  font-family: var(--font-display); font-weight: 600; color: var(--ink);
+  font-size: clamp(17px, 2vw, 24px); line-height: 1.55;
 }
-.mword.m0 { --g: linear-gradient(120deg,#ff8a3d,#ff4db8); --t: -6deg; }
-.mword.m1 { --g: linear-gradient(120deg,#2b88ff,#6b5bff); --t:  5deg; }
-.mword.m2 { --g: linear-gradient(120deg,#18c8b6,#2b88ff); --t: -4deg; }
-.mword.m3 { --g: linear-gradient(120deg,#9b4dff,#6b5bff); --t:  6deg; }
-.mword.m4 { --g: linear-gradient(120deg,#ffd23d,#ff8a3d); --t: -5deg; }
-.mword.m5 {
-  --g: linear-gradient(120deg,#ff4db8,#9b4dff 60%,#2b88ff); --t: 0deg;
-  flex-basis: 100%; text-align: center; margin-top: 8px;
-  font-size: clamp(28px, 5vw, 56px); filter: drop-shadow(0 12px 26px rgba(155,77,255,0.4));
+.manifesto .mline .g {
+  background: var(--warm); -webkit-background-clip: text; background-clip: text;
+  color: transparent; -webkit-text-fill-color: transparent; font-weight: 700;
 }
-@keyframes floatword {
-  0%   { transform: rotate(var(--t)) translate3d(0, 5px, -24px); }
-  100% { transform: rotate(calc(var(--t) * -0.6)) translate3d(0, -7px, 34px); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .mword { animation: none; transform: rotate(var(--t)); }
+.manifesto .mlast {
+  margin-top: 12px; font-weight: 800; letter-spacing: -0.01em;
+  font-size: clamp(28px, 3.8vw, 46px); line-height: 1.1;
+  background: linear-gradient(120deg, var(--orange), var(--pink) 55%, var(--purple));
+  -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
 }
 
 /* ============================================================
