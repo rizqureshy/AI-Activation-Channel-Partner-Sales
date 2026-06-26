@@ -89,14 +89,20 @@ function block({ kicker, title, lead, inner = "", panel, warm }) {
     `</section>`;
 }
 
-function hero({ eyebrow, h1, sub, manifesto, cta }) {
+function rotatorCard({ top, prefix, items }) {
+  const seq = items.concat(items[0]);   // duplicate first for a seamless loop
+  return `<div class="manifesto oneline">
+    <p class="mtop">${top}</p>
+    <p class="mrot">${prefix}&nbsp;<span class="rot" aria-label="${items.join(", ")}"><span class="rot-track">` +
+      seq.map((w, i) => `<span class="ri ri${i % items.length}" aria-hidden="true">${w}</span>`).join("") +
+    `</span></span></p>
+  </div>`;
+}
+
+function hero({ eyebrow, h1, sub, rotator, cta }) {
   const subHTML = !sub ? ""
     : (Array.isArray(sub) ? sub : [sub]).map((p) => `<p class="sub reveal">${p}</p>`).join("");
-  const card = manifesto
-    ? `<div class="manifesto">` +
-        manifesto.map((w, i) => `<p class="mline${i === manifesto.length - 1 ? " mlast" : ""}">${w}</p>`).join("") +
-      `</div>`
-    : "";
+  const card = rotator ? rotatorCard(rotator) : "";
   return `<section class="hero">
     ${eyebrow ? `<span class="eyebrow reveal">${eyebrow}</span>` : ""}
     <h1 class="reveal">${h1}</h1>
@@ -176,20 +182,17 @@ ROUTES.home = {
   title: "Home", formation: "split",
   html: () => hero({
     eyebrow: "✦ The front door to the CRO AI Activation Community",
-    h1: `The CRO AI Activation Community <span class="gradient-text">Wants You</span>`,
+    h1: `Welcome to CRO <span class="gradient-text">AI Activation</span> Community`,
     sub: [
       "AI Activation is not just about learning tools. It is about creating <b>energy, confidence, creativity, and momentum</b> across CRO.",
       "Join the CRO AI Activation Community to learn, share, showcase, ask questions, experiment with AI — and above all, <b>have fun</b>.",
       "This is a bright and burning space for ideas, experiments, challenges, stories, competitions, shoutouts, and real AI capability building across the business.",
     ],
-    manifesto: [
-      `Your <span class="g">AI Story</span> Matters.`,
-      `Your <span class="g">AI Questions</span> Matter.`,
-      `Your <span class="g">AI Experiments</span> Matter.`,
-      `Your <span class="g">AI Work</span> Matters.`,
-      `Your <span class="g">Fun</span> Matters.`,
-      `You Matter.`,
-    ],
+    rotator: {
+      top: "You Matter.",
+      prefix: "Your",
+      items: ["AI Story Matters.", "AI Questions Matter.", "AI Experiments Matter.", "AI Work Matters.", "AI Fun Matters."],
+    },
     cta: [
       { t: "Join the Community", k: "primary", h: "#/join", svg: "users" },
       { t: "Share Your First Story", k: "cool", h: "#/story", svg: "share" },

@@ -268,26 +268,50 @@ body.light .hero h1, body.light .hero .sub, body.light .hero .emotional {
   animation: comeForward 1s var(--ease-out) both;
   will-change: transform, opacity, filter;
 }
-.manifesto .mline {
-  font-family: var(--font-display); font-weight: 600; color: var(--ink);
-  font-size: clamp(20px, 2.5vw, 30px); line-height: 1.5;
-}
-.manifesto .mline .g {
-  background: var(--warm); -webkit-background-clip: text; background-clip: text;
-  color: transparent; -webkit-text-fill-color: transparent; font-weight: 700;
-}
-.manifesto .mlast {
-  margin-top: 14px; font-weight: 800; letter-spacing: -0.01em;
-  font-size: clamp(34px, 5vw, 60px); line-height: 1.08;
+/* single-line block: "You Matter." on top, rotating line below */
+.manifesto.oneline { padding: clamp(26px, 3.4vw, 42px) clamp(28px, 4vw, 56px); }
+.manifesto .mtop {
+  font-family: var(--font-display); font-weight: 800; letter-spacing: -0.01em; line-height: 1.05;
+  font-size: clamp(34px, 5vw, 60px); margin-bottom: 12px;
   background: linear-gradient(120deg, var(--orange), var(--pink) 55%, var(--purple));
   -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
+}
+.manifesto .mrot {
+  font-family: var(--font-display); font-weight: 600; color: var(--ink);
+  font-size: clamp(20px, 2.6vw, 32px); line-height: 1.25;
+  display: flex; justify-content: center; align-items: baseline; gap: .3ch; white-space: nowrap;
+}
+.manifesto .rot { display: inline-block; height: 1.25em; overflow: hidden; vertical-align: bottom; }
+.manifesto .rot-track {
+  display: flex; flex-direction: column;
+  animation: rotwords 12s cubic-bezier(0.7,0,0.3,1) infinite;
+}
+.manifesto .ri {
+  display: block; height: 1.25em; line-height: 1.25em; white-space: nowrap; font-weight: 800;
+  -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
+}
+.manifesto .ri0 { background-image: linear-gradient(120deg,#ff8a3d,#ff4db8); }
+.manifesto .ri1 { background-image: linear-gradient(120deg,#2b88ff,#6b5bff); }
+.manifesto .ri2 { background-image: linear-gradient(120deg,#18c8b6,#2b88ff); }
+.manifesto .ri3 { background-image: linear-gradient(120deg,#9b4dff,#6b5bff); }
+.manifesto .ri4 { background-image: linear-gradient(120deg,#ffd23d,#ff8a3d); }
+@keyframes rotwords {
+  0%, 15%   { transform: translateY(0); }
+  20%, 35%  { transform: translateY(-1.25em); }
+  40%, 55%  { transform: translateY(-2.5em); }
+  60%, 75%  { transform: translateY(-3.75em); }
+  80%, 95%  { transform: translateY(-5em); }
+  100%      { transform: translateY(-6.25em); }
 }
 @keyframes comeForward {
   0%   { opacity: 0; transform: perspective(1100px) translateZ(-340px) scale(0.82); filter: blur(8px); }
   55%  { opacity: 1; filter: blur(0); }
   100% { opacity: 1; transform: perspective(1100px) translateZ(0) scale(1); filter: blur(0); }
 }
-@media (prefers-reduced-motion: reduce) { .manifesto { animation: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .manifesto { animation: none; }
+  .manifesto .rot-track { animation: none; }
+}
 
 /* ============================================================
    Card grids
