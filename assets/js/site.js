@@ -334,20 +334,20 @@ ROUTES.home = {
 
 /* ---- gallery: real work from the AI April sprint (GTM AI Canvas portfolio) ---- */
 const SHOTS = [
-  { t: "AI Art", author: "Rizwan Qureshy", cat: "AI Art", img: "assets/art/Rizwan Qureshy AI Art.jpg" },
-  { t: "AI Art", author: "Kelly Grover", cat: "AI Art", img: "assets/art/Kelly Grover AI Art.jpg" },
-  { t: "AI Art", author: "Eamonn Ward", cat: "AI Art", img: "assets/art/Eamonn Ward AI Art.jpg" },
-  { t: "AI Art", author: "Lorna Joiner", cat: "AI Art", img: "assets/art/Lorna Joiner AI Art.jpg" },
-  { t: "AI Art", author: "Dalia Osorio", cat: "AI Art", img: "assets/art/Dalia Osorio AI Art.jpg" },
-  { t: "AI Art", author: "Calley Hood", cat: "AI Art", img: "assets/art/Calley Hood AI Art.png" },
-  { t: "Veronica's AI Dashboard", author: "Veronica John", cat: "Dashboard", img: "assets/dashboards/AI Dashboard - Veronica.png" },
-  { t: "Partner Enablement Dashboard", author: "Team", cat: "Dashboard", img: "assets/dashboards/Partner Enablement Dashboard.jpg" },
-  { t: "AI CRO Strategy Plan", author: "Rizwan Qureshy", cat: "AI Deck", img: "assets/decks/thumbs/AI CRO Strategy Plan - Rizwan Qureshy.png" },
-  { t: "AI for GTM Enablement Services", author: "Kelly Grover", cat: "AI Deck", img: "assets/decks/thumbs/AI for GTM Enablement Services - Kelly Grover.png" },
-  { t: "AI Strategy Deck", author: "Eamonn Ward", cat: "AI Deck", img: "assets/decks/thumbs/AI Strategy - Eamonn Deck.png" },
-  { t: "ACE Animation Concept", author: "Team", cat: "Animation", img: "assets/animations/Animation Pic - ACE.png" },
-  { t: "AI Coding", author: "Team", cat: "Course", img: "assets/courses/AI Coding.png" },
-  { t: "Transform Workflows with Gen AI", author: "Team", cat: "Course", img: "assets/courses/Transform Business Workflows with Gen AI - Course Pic.png" },
+  { t: "AI Art", author: "Rizwan Qureshy", cat: "AI Art", img: "assets/img/gallery/art-rizwan.jpg" },
+  { t: "AI Art", author: "Kelly Grover", cat: "AI Art", img: "assets/img/gallery/art-kelly.jpg" },
+  { t: "AI Art", author: "Eamonn Ward", cat: "AI Art", img: "assets/img/gallery/art-eamonn.jpg" },
+  { t: "AI Art", author: "Lorna Joiner", cat: "AI Art", img: "assets/img/gallery/art-lorna.jpg" },
+  { t: "AI Art", author: "Dalia Osorio", cat: "AI Art", img: "assets/img/gallery/art-dalia.jpg" },
+  { t: "AI Art", author: "Calley Hood", cat: "AI Art", img: "assets/img/gallery/art-calley.png" },
+  { t: "Veronica's AI Dashboard", author: "Veronica John", cat: "Dashboard", img: "assets/img/gallery/dash-veronica.png" },
+  { t: "Partner Enablement Dashboard", author: "Team", cat: "Dashboard", img: "assets/img/gallery/dash-partner.jpg" },
+  { t: "AI CRO Strategy Plan", author: "Rizwan Qureshy", cat: "AI Deck", img: "assets/img/gallery/deck-cro-strategy.png" },
+  { t: "AI for GTM Enablement Services", author: "Kelly Grover", cat: "AI Deck", img: "assets/img/gallery/deck-gtm-enablement.png" },
+  { t: "AI Strategy Deck", author: "Eamonn Ward", cat: "AI Deck", img: "assets/img/gallery/deck-eamonn-strategy.png" },
+  { t: "ACE Animation Concept", author: "Team", cat: "Animation", img: "assets/img/gallery/anim-ace.png" },
+  { t: "AI Coding", author: "Team", cat: "Course", img: "assets/img/gallery/course-ai-coding.png" },
+  { t: "Transform Workflows with Gen AI", author: "Team", cat: "Course", img: "assets/img/gallery/course-transform.png" },
 ];
 const APPS = [
   { t: "Artemis II — Dark Side of the Moon", author: "Rizwan Qureshy", url: "https://artemis-ii-rizqureshy.replit.app/" },
@@ -361,7 +361,7 @@ const APPS = [
 ];
 function shotCard(s) {
   return `<article class="card gcard reveal">
-    <div class="gthumb"><img loading="lazy" src="${rawUrl(s.img)}" alt="${s.t} — ${s.author}"></div>
+    <div class="gthumb"><img loading="lazy" src="${s.img}" alt="${s.t} — ${s.author}"></div>
     <span class="tag">${s.cat}</span>
     <h3>${s.t}</h3>
     <div class="gmeta">${s.author}</div>
