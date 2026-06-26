@@ -89,12 +89,19 @@ function block({ kicker, title, lead, inner = "", panel, warm }) {
     `</section>`;
 }
 
-function hero({ eyebrow, h1, sub, emotional, cta }) {
+function hero({ eyebrow, h1, sub, floatWords, cta }) {
+  const subHTML = !sub ? ""
+    : (Array.isArray(sub) ? sub : [sub]).map((p) => `<p class="sub reveal">${p}</p>`).join("");
+  const words = floatWords
+    ? `<div class="matters reveal" aria-label="${floatWords.join(" ")}">` +
+        floatWords.map((w, i) => `<span class="mword m${i % 6}" style="--i:${i}" aria-hidden="true">${w}</span>`).join("") +
+      `</div>`
+    : "";
   return `<section class="hero">
     ${eyebrow ? `<span class="eyebrow reveal">${eyebrow}</span>` : ""}
     <h1 class="reveal">${h1}</h1>
-    ${sub ? `<p class="sub reveal">${sub}</p>` : ""}
-    ${emotional ? `<div class="emotional reveal">${emotional.map((l) => `<span>${l}</span>`).join("")}</div>` : ""}
+    ${subHTML}
+    ${words}
     ${cta ? ctas(cta) : ""}
   </section>`;
 }
@@ -169,9 +176,13 @@ ROUTES.home = {
   title: "Home", formation: "orb",
   html: () => hero({
     eyebrow: "✦ The front door to the CRO AI Activation Community",
-    h1: `The Community <span class="gradient-text">Wants You</span>`,
-    sub: "Join the CRO AI Activation Community to learn, share, showcase, ask questions, experiment with AI, and have some fun while building real capability across the business.",
-    emotional: ["Your Story Matters.", "Your Questions Matter.", "Your Work Matters.", "You Matter."],
+    h1: `The CRO AI Activation Community <span class="gradient-text">Wants You</span>`,
+    sub: [
+      "AI Activation is not just about learning tools. It is about creating <b>energy, confidence, creativity, and momentum</b> across CRO.",
+      "Join the CRO AI Activation Community to learn, share, showcase, ask questions, experiment with AI — and above all, <b>have fun</b>.",
+      "This is a bright and burning space for ideas, experiments, challenges, stories, competitions, shoutouts, and real AI capability building across the business.",
+    ],
+    floatWords: ["Your AI Story Matters.", "Your AI Questions Matter.", "Your AI Experiments Matter.", "Your AI Work Matters.", "Your Fun Matters.", "You Matter."],
     cta: [
       { t: "Join the Community", k: "primary", h: "#/join", svg: "users" },
       { t: "Share Your First Story", k: "cool", h: "#/story", svg: "share" },
