@@ -514,14 +514,38 @@ body.light .mb-caption { text-shadow: 0 1px 10px rgba(255,255,255,0.9); }
   border: 1px solid var(--glass-brd); background: rgba(255,255,255,0.04); }
 .gthumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .45s var(--ease-out); }
 .gcard:hover .gthumb img { transform: scale(1.05); }
-/* video card thumbnail (no still image — a gradient banner + play badge) */
-.vthumb { display: grid; place-items: center; aspect-ratio: 16 / 10; border-radius: 12px; margin-bottom: 12px;
+/* video card thumbnail (YouTube still or gradient banner) + play badge */
+.vthumb { position: relative; display: grid; place-items: center; width: 100%; aspect-ratio: 16 / 9;
+  border-radius: 12px; margin-bottom: 12px; overflow: hidden; cursor: pointer; padding: 0;
   border: 1px solid var(--brd); background: linear-gradient(130deg, var(--indigo), var(--purple) 55%, var(--magenta));
-  transition: filter .3s; }
-.vthumb:hover { filter: brightness(1.08); }
-.vplay { width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center;
-  background: rgba(255,255,255,0.92); box-shadow: 0 10px 26px -10px rgba(0,0,0,0.6); }
+  transition: filter .3s, transform .3s; }
+.vthumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.vthumb:hover { filter: brightness(1.06); transform: translateY(-2px); }
+.vthumb.noimg { aspect-ratio: 16 / 10; }
+.vplay { position: relative; z-index: 1; width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center;
+  background: rgba(255,255,255,0.94); box-shadow: 0 10px 26px -10px rgba(0,0,0,0.7); transition: transform .3s; }
+.vthumb:hover .vplay { transform: scale(1.08); }
 .vplay svg { width: 22px; height: 22px; fill: #1a1330; margin-left: 3px; }
+.vlen { position: absolute; z-index: 1; right: 8px; bottom: 8px; font-size: 11px; font-weight: 600;
+  padding: 3px 8px; border-radius: 999px; color: #fff; background: rgba(8,6,22,0.72); backdrop-filter: blur(4px); }
+.vcard .gmeta { font-size: 12px; color: var(--ink-soft); margin-top: 4px; }
+/* level chips */
+.card .tag.lv-basic { color: #57e0c8; }
+.card .tag.lv-inter { color: #ffcf45; }
+.card .tag.lv-adv   { color: #ff7ab8; }
+
+/* ---- inline video player (modal) ---- */
+.player { position: fixed; inset: 0; z-index: 400; display: none; place-items: center;
+  background: rgba(6,5,16,0.82); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); padding: 24px; }
+.player.open { display: grid; animation: playerIn .25s var(--ease-out); }
+@keyframes playerIn { from { opacity: 0; } to { opacity: 1; } }
+.player-box { width: min(1040px, 94vw); aspect-ratio: 16 / 9; border-radius: 16px; overflow: hidden;
+  box-shadow: 0 40px 120px -30px rgba(0,0,0,.9), 0 0 0 1px rgba(255,255,255,.08); background: #000; }
+.player-frame, .player-frame iframe, .player-frame video { width: 100%; height: 100%; border: 0; display: block; }
+.player-close { position: fixed; top: 18px; right: 22px; z-index: 401; width: 44px; height: 44px; border-radius: 50%;
+  font-size: 26px; line-height: 1; color: #fff; cursor: pointer; border: 1px solid rgba(255,255,255,.18);
+  background: rgba(255,255,255,.08); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); transition: background .2s; }
+.player-close:hover { background: rgba(255,255,255,.18); }
 
 /* leadership message cards */
 .leader { display: flex; flex-direction: column; }

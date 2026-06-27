@@ -238,6 +238,31 @@ function appCard(a) {
 const galleryPreview = () => `<div class="grid c3">` + SHOTS.slice(0, 3).map(shotCard).join("") + `</div>`;
 
 /* ---- Skill Up, Speed Up: AI video gallery (community AI films) ---- */
+/* curated AI learning videos — play inline (embedded), grouped by track + level */
+const LEARN_TRACKS = ["Prompt Engineering", "Beyond the Basics", "LLMs & RAG", "AI Agents"];
+const TRACK_TAGLINE = {
+  "Prompt Engineering": "Write prompts that actually work.",
+  "Beyond the Basics": "Understand what's really happening under the hood.",
+  "LLMs & RAG": "How models think — and how to ground them in your own data.",
+  "AI Agents": "When AI starts taking actions, not just answering.",
+};
+const LEARN = [
+  // Prompt Engineering
+  { yt: "jC4v5AS4RIM", t: "The Perfect ChatGPT Prompt Formula", author: "Jeff Su", track: "Prompt Engineering", level: "Basic", len: "8 min" },
+  { yt: "_ZvnD73m40o", t: "Prompt Engineering Tutorial — Master ChatGPT & LLMs", author: "freeCodeCamp · Ania Kubów", track: "Prompt Engineering", level: "Beginner → Intermediate", len: "41 min" },
+  // Beyond the Basics
+  { yt: "wjZofJX0v4M", t: "But what is a GPT? Visual intro to Transformers", author: "3Blue1Brown", track: "Beyond the Basics", level: "Intermediate", len: "27 min" },
+  { yt: "zjkBMFhNj_g", t: "Intro to Large Language Models (1-hour talk)", author: "Andrej Karpathy", track: "Beyond the Basics", level: "Intermediate", len: "1 hr" },
+  { yt: "eMlx5fFNoYc", t: "Attention in Transformers, Visually Explained", author: "3Blue1Brown", track: "Beyond the Basics", level: "Advanced", len: "26 min" },
+  // LLMs & RAG
+  { yt: "T-D1OfcDW1M", t: "What is Retrieval-Augmented Generation (RAG)?", author: "IBM Technology", track: "LLMs & RAG", level: "Basic", len: "7 min" },
+  { yt: "sVcwVQRHIc8", t: "Learn RAG From Scratch (Python + LangChain)", author: "freeCodeCamp", track: "LLMs & RAG", level: "Advanced", len: "2.5 hr" },
+  { yt: "7xTGNNLPyMI", t: "Deep Dive into LLMs like ChatGPT", author: "Andrej Karpathy", track: "LLMs & RAG", level: "Advanced", len: "3.5 hr" },
+  // AI Agents
+  { yt: "F8NKVhkZZWI", t: "What are AI Agents?", author: "IBM Technology", track: "AI Agents", level: "Basic", len: "12 min" },
+];
+
+/* community-made AI films (play inline too) */
 const VIDEOS = [
   { t: "AI Super Hero", author: "Community", file: "assets/animations/AI Super Hero.mp4", tag: "AI Film" },
   { t: "Beyond the Chalkboard", author: "Community", file: "assets/animations/Beyond_the_Chalkboard.mp4", tag: "AI Film" },
@@ -246,13 +271,27 @@ const VIDEOS = [
   { t: "Folding Worries", author: "Community", file: "assets/animations/Folding_Worries.mp4", tag: "AI Film" },
   { t: "AI Eamonn", author: "Eamonn Ward", file: "assets/animations/AI Eamonn.mp4", tag: "AI Avatar" },
 ];
+const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+const LEVEL_CLASS = { "Basic": "lv-basic", "Beginner → Intermediate": "lv-inter", "Intermediate": "lv-inter", "Advanced": "lv-adv" };
+
+function learnCard(v) {
+  return `<article class="card vcard reveal">
+    <button class="vthumb" data-video="${v.yt}" aria-label="Play ${v.t}">
+      <img src="https://i.ytimg.com/vi/${v.yt}/hqdefault.jpg" alt="" loading="lazy" onerror="this.style.display='none'">
+      <span class="vplay">${ic("play")}</span>
+      <span class="vlen">${v.len}</span>
+    </button>
+    <span class="tag ${LEVEL_CLASS[v.level] || ""}">${v.level}</span>
+    <h3>${v.t}</h3>
+    <div class="gmeta">${v.author}</div>
+  </article>`;
+}
 function videoCard(v) {
-  return `<article class="card gcard reveal">
-    <a class="vthumb" href="${rawUrl(v.file)}" target="_blank" rel="noopener" aria-label="Watch ${v.t}"><span class="vplay">${ic("play")}</span></a>
+  return `<article class="card vcard reveal">
+    <button class="vthumb noimg" data-file="${rawUrl(v.file)}" aria-label="Play ${v.t}"><span class="vplay">${ic("play")}</span></button>
     <span class="tag">${v.tag}</span>
     <h3>${v.t}</h3>
     <div class="gmeta">${v.author}</div>
-    <div class="gactions"><a class="btn cool sm" href="${rawUrl(v.file)}" target="_blank" rel="noopener">${ic("play")}Watch</a></div>
   </article>`;
 }
 const videosPreview = () => `<div class="grid c3">` + VIDEOS.slice(0, 3).map(videoCard).join("") + `</div>`;
@@ -355,17 +394,27 @@ ROUTES.gallery = {
   + block({ panel: true, title: "Have something to add?", lead: "The gallery grows when you contribute. Share your prompt, workflow, demo, app, or story in the community.", inner: ctas([{ t: "Share in Viva Engage", k: "primary", h: VIVA_URL, svg: "share" }, { t: "Open the 3D Gallery", h: PORTFOLIO_URL, svg: "grid" }]) }),
 };
 
-/* ---- Skill Up, Speed Up (AI video gallery) ---- */
+/* ---- Skill Up, Speed Up (curated AI learning videos, embedded playback) ---- */
 ROUTES.videos = {
-  title: "Skill Up, Speed Up", formation: "burst",
-  html: () => block({
-    kicker: "Skill Up, Speed Up", title: `Learn fast with <span class="gradient-text">short AI videos</span>`,
-    lead: "Bite-size AI videos, demos, and creative experiments from across the community. Watch, get inspired, and try something new today.",
+  title: "Skill Up, Speed Up", formation: "play",
+  html: () => hero({
+    eyebrow: "✦ Skill Up, Speed Up",
+    h1: `Learn AI, <span class="gradient-text">fast</span>`,
+    lead: "A curated path from your first prompt to building agents — basic, intermediate, and advanced. Click any video and it plays right here, no leaving the page.",
+    cta: [{ t: "Start with Prompt Engineering", k: "primary", scroll: slug("Prompt Engineering"), svg: "play" }],
+  })
+  + LEARN_TRACKS.map((tr) => block({
+      id: slug(tr), kicker: tr, title: TRACK_TAGLINE[tr],
+      inner: `<div class="grid c3">` + LEARN.filter((v) => v.track === tr).map(learnCard).join("") + `</div>`,
+    })).join("")
+  + block({
+    kicker: "Made by our community", title: "AI films from the community",
+    lead: "Short creative films, music videos, and avatars our community made with AI. They play here too.",
     inner: `<div class="grid c3">` + VIDEOS.map(videoCard).join("") + `</div>`,
   })
   + block({
-    panel: true, title: "More videos coming every week",
-    lead: "We're building a library of 5-minute AI tips, Copilot walkthroughs, ACE demos, and community show-and-tells. Got a video to add? Share it in the community.",
+    panel: true, title: "Got a video to add?",
+    lead: "Found a great AI explainer, or made one yourself? Share it with the community and we'll add it to the library.",
     inner: ctas([{ t: "Share a Video in Viva Engage", k: "primary", h: VIVA_URL, svg: "play" }, { t: "Browse the Community Gallery", h: "#/gallery", svg: "grid" }]),
   }),
 };
@@ -510,7 +559,7 @@ ROUTES.calendar = {
       ["Monthly", "Leadership “What We Heard” update", "Leadership", "Leaders"],
       ["Monthly", "Community Showcase & awards", "Showcase", "Showcase"],
     ].map((e) => `<div class="cevent reveal"><span class="when">${e[0]}</span><div class="what"><h3>${e[1]}</h3><p>${e[2]}</p></div><span class="kind">${e[3]}</span></div>`).join("") + `</div>`
-      + ctas([{ t: "View Upcoming Events", k: "primary", toast: "Opening the full calendar…", svg: "calendar" }, { t: "Visit the AI Clinic", k: "cool", h: "#/clinic", svg: "chat" }]),
+      + ctas([{ t: "View Upcoming Events", k: "primary", toast: "Opening the full calendar…", svg: "calendar" }]),
   }),
 };
 
@@ -592,7 +641,42 @@ document.addEventListener("click", (e) => {
     slot.closest(".slots").querySelectorAll(".slot.sel").forEach((s2) => s2.classList.remove("sel"));
     slot.classList.add("sel");
   }
+  const yt = e.target.closest("[data-video]");
+  if (yt) {
+    e.preventDefault();
+    openPlayer(`<iframe src="https://www.youtube.com/embed/${yt.getAttribute("data-video")}?autoplay=1&rel=0&modestbranding=1" title="Video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`);
+  }
+  const vf = e.target.closest("[data-file]");
+  if (vf) {
+    e.preventDefault();
+    openPlayer(`<video src="${vf.getAttribute("data-file")}" controls autoplay playsinline></video>`);
+  }
 });
+
+/* ---- inline video player (embedded; never redirects off the page) ---- */
+const player = document.getElementById("player");
+const playerFrame = document.getElementById("player-frame");
+let bgmWasPlaying = false;
+function openPlayer(html) {
+  if (!player) return;
+  playerFrame.innerHTML = html;
+  player.classList.add("open");
+  player.setAttribute("aria-hidden", "false");
+  if (bgm && !bgm.paused) { bgmWasPlaying = true; bgm.pause(); soundBtn && soundBtn.classList.add("muted"); }
+}
+function closePlayer() {
+  if (!player) return;
+  playerFrame.innerHTML = "";              // unloading the iframe/video stops playback
+  player.classList.remove("open");
+  player.setAttribute("aria-hidden", "true");
+  if (bgmWasPlaying && bgm) { bgm.play().then(() => soundBtn && soundBtn.classList.remove("muted")).catch(() => {}); }
+  bgmWasPlaying = false;
+}
+if (player) {
+  document.getElementById("player-close").addEventListener("click", closePlayer);
+  player.addEventListener("click", (e) => { if (e.target === player) closePlayer(); });
+  window.addEventListener("keydown", (e) => { if (e.key === "Escape" && player.classList.contains("open")) closePlayer(); });
+}
 
 /* ---- AI Clinic booking: build a calendar invite + notify the host ---- */
 function icsEscape(s) { return String(s).replace(/[\\,;]/g, (m) => "\\" + m).replace(/\r?\n/g, "\\n"); }

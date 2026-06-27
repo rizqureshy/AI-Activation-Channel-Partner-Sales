@@ -79,6 +79,12 @@
 
   <footer class="site-footer" id="site-footer"></footer>
 
+  <!-- inline video player (embedded playback; never leaves the page) -->
+  <div id="player" class="player" aria-hidden="true">
+    <button class="player-close" id="player-close" aria-label="Close player" title="Close">&times;</button>
+    <div class="player-box"><div class="player-frame" id="player-frame"></div></div>
+  </div>
+
   <!-- toast for demo form submissions -->
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 

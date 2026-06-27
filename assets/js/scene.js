@@ -633,6 +633,43 @@ export class Cosmos {
     return { pos, col };
   }
 
+  // a play icon — a filled triangle inside a ring (hovers + slowly rotates)
+  _formPlay() {
+    const { pos, col } = this._alloc(), N = this.N;
+    const tmp = new THREE.Color();
+    const baseY = 0.3;
+    const R = 2.5;                              // ring radius
+    // right-pointing triangle, recentred on its centroid
+    const A = [-1.0, 1.35], B = [-1.0, -1.35], C2 = [1.75, 0];
+    const cx = (A[0] + B[0] + C2[0]) / 3;
+    const wRing = 4.0, wTri = 6.0, wTot = wRing + wTri;
+
+    for (let i = 0; i < N; i++) {
+      let x, y, onTri;
+      if (Math.random() * wTot < wRing) {        // the surrounding ring
+        onTri = false;
+        const a = Math.random() * Math.PI * 2;
+        x = Math.cos(a) * R; y = Math.sin(a) * R;
+        x += (Math.random() - 0.5) * 0.22;
+        y += (Math.random() - 0.5) * 0.22;
+      } else {                                    // the filled play triangle
+        onTri = true;
+        let r1 = Math.random(), r2 = Math.random();
+        if (r1 + r2 > 1) { r1 = 1 - r1; r2 = 1 - r2; }
+        x = A[0] + r1 * (B[0] - A[0]) + r2 * (C2[0] - A[0]) - cx;
+        y = A[1] + r1 * (B[1] - A[1]) + r2 * (C2[1] - A[1]);
+      }
+      pos[i * 3] = x;
+      pos[i * 3 + 1] = y + baseY;
+      pos[i * 3 + 2] = (Math.random() - 0.5) * (onTri ? 0.8 : 0.5);   // a little body so it reads while turning
+      const tcol = onTri
+        ? (Math.random() < 0.1 ? C.white : tmp.copy(C.gold).lerp(C.pink, Math.random()))  // warm "play" triangle
+        : (Math.random() < 0.06 ? C.teal : tmp.copy(C.violet).lerp(C.blue, Math.random())); // cool ring
+      this._setCol(col, i, tcol, 0.07);
+    }
+    return { pos, col };
+  }
+
   // fireworks — several coloured bursts scattered across the sky
   _formFireworks() {
     const { pos, col } = this._alloc(), N = this.N;
@@ -794,6 +831,8 @@ export class Cosmos {
       check:        { make: () => this._formCheck(),             cam: [0, 0.3, 13.6],  opts: { spin: 0.0, arc: 1.6, dur: 1.9 } },
       medical:      { make: () => this._formMedical(),           cam: [0, 0.3, 13.2],  opts: { spin: 0.10, arc: 1.4, dur: 1.9 },
                                                                  drift: { ax: 2.8, ay: 1.4, az: 0.6, sx: 0.07, sy: 0.05, sz: 0.04 } },
+      play:         { make: () => this._formPlay(),              cam: [0, 0.3, 13.2],  opts: { spin: 0.08, arc: 1.4, dur: 1.9 },
+                                                                 drift: { ax: 1.1, ay: 1.5, az: 0.5, sx: 0.05, sy: 0.045, sz: 0.05 } },
       fireworks:    { make: () => this._formFireworks(),         cam: [0, 0.2, 13.4],  opts: { spin: 0.04, arc: 2.4, dur: 1.7, ease: "power2.out" } },
     };
   }
