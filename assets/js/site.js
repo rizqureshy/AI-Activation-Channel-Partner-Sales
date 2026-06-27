@@ -180,7 +180,7 @@ ROUTES.home = {
     morph: ["Your AI Story matters.", "Your AI Questions matter.", "Your AI Experiments matter.", "Your AI Work matters.", "Your AI Fun matters.", "You matter."],
     cta: [
       { t: "Join the Community", k: "primary", h: "#/join", svg: "users" },
-      { t: "Explore the Gallery", k: "cool", h: "#/gallery", svg: "grid" },
+      { t: "Community Projects Gallery", k: "cool", h: "#/gallery", svg: "grid" },
     ],
   })
 
