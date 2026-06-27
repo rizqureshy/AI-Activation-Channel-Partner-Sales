@@ -632,6 +632,7 @@ function render() {
   document.title = page.title + " · CRO AI Activation Community";
   main.innerHTML = `<div class="view">${page.html()}</div>`;
   cosmos.applyFormation(page.formation, gsap, {});
+  if (smoke && document.body.classList.contains("smoke-on")) smoke.burst();   // ink churns + resettles
   window.scrollTo(0, 0);
   setActive(ROUTES[route] ? route : "home");
   observeReveals();

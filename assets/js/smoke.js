@@ -23,6 +23,7 @@ const FRAG = `#version 300 es
 precision highp float;
 uniform vec2  uRes;
 uniform float uTime;
+uniform float uBurst;     // 0..1 — temporarily churns the cloud on page change
 out vec4 fragColor;
 
 float hash(vec2 p){
@@ -58,19 +59,21 @@ void main(){
   c.x *= asp;                                  // aspect-correct, centred
   float t = uTime * 0.03;
 
-  // slow domain warp drives the big rolling motion of the cloud
+  // slow domain warp drives the big rolling motion of the cloud; on a page
+  // change uBurst swells the warp so the mass churns and rearranges itself.
   vec2 p = c * 1.55;
-  vec2 warp = vec2(fbm(p * 0.6 + vec2(0.0, t)), fbm(p * 0.6 + vec2(4.3, -t) + 5.0));
+  float wamp = 1.0 + uBurst * 2.2;
+  vec2 warp = wamp * vec2(fbm(p * 0.6 + vec2(0.0, t)), fbm(p * 0.6 + vec2(4.3, -t) + 5.0));
 
-  // a big billowing mass + a wide falloff so it stays a cloud in clear water
+  // a big, thick billowing mass + a wide falloff so it stays a cloud in clear water
   float billow = turb(p * 1.3 + warp * 1.5 + vec2(t * 0.5, -t));
-  float rad = length(c * vec2(0.82, 1.0));
-  float fall = smoothstep(1.35, 0.05, rad);
-  float d = smoothstep(0.34, 0.82, billow) * fall;
+  float rad = length(c * vec2(0.8, 0.98));
+  float fall = smoothstep(1.45, 0.05, rad);
+  float d = smoothstep(0.28, 0.72, billow) * fall;
 
   // finer tendrils feathering off the edges of the mass
   float fine = turb(p * 3.6 + warp * 2.4 - vec2(t * 1.3, t));
-  d += 0.30 * smoothstep(0.6, 0.95, fine) * fall * smoothstep(0.02, 0.45, d + 0.2);
+  d += 0.34 * smoothstep(0.55, 0.92, fine) * fall * smoothstep(0.02, 0.4, d + 0.22);
   d = clamp(d, 0.0, 1.0);
 
   // which dye colours bloom where (a few bright liquids, cool-leaning like the ref)
@@ -100,7 +103,9 @@ export class Smoke {
     this.canvas = canvas;
     this.gl = canvas.getContext("webgl2", { antialias: false, alpha: false, powerPreference: "low-power" });
     this._raf = null;
-    this._t0 = null;
+    this._last = null;
+    this._flow = 0;                          // accumulated flow time (advances fast during a burst)
+    this._burst = 0;                         // 0..1 churn envelope, kicked on page change
     this._scale = 0.8;                       // render a bit below native res (perf), still keeps tendrils
     if (!this.gl) { this.ok = false; return; }
     this.ok = this._build();
@@ -136,6 +141,7 @@ export class Smoke {
     this.vao = gl.createVertexArray();        // empty VAO; verts come from the shader
     this.uRes = gl.getUniformLocation(prog, "uRes");
     this.uTime = gl.getUniformLocation(prog, "uTime");
+    this.uBurst = gl.getUniformLocation(prog, "uBurst");
     return true;
   }
 
@@ -149,17 +155,26 @@ export class Smoke {
     }
   }
 
+  /** Kick a quick churn: the cloud morphs/rearranges, then settles. */
+  burst() { this._burst = 1; }
+
   start() {
     if (!this.ok || this._raf) return;
     const gl = this.gl;
     const tick = (now) => {
-      if (this._t0 == null) this._t0 = now;
-      const t = (now - this._t0) / 1000;
+      const dt = this._last == null ? 0.016 : Math.min(0.05, (now - this._last) / 1000);
+      this._last = now;
+      // burst decays back to 0 over ~1.5s; while high it speeds the flow so the
+      // cloud rapidly advances through noise space (rearranges), then settles.
+      this._burst = Math.max(0, this._burst - dt / 1.5);
+      const speed = 1.0 + this._burst * this._burst * 11.0;
+      this._flow += dt * speed;
       gl.viewport(0, 0, this.canvas.width, this.canvas.height);
       gl.useProgram(this.prog);
       gl.bindVertexArray(this.vao);
       gl.uniform2f(this.uRes, this.canvas.width, this.canvas.height);
-      gl.uniform1f(this.uTime, t);
+      gl.uniform1f(this.uTime, this._flow);
+      gl.uniform1f(this.uBurst, this._burst);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
       this._raf = requestAnimationFrame(tick);
     };
@@ -168,5 +183,6 @@ export class Smoke {
 
   stop() {
     if (this._raf) { cancelAnimationFrame(this._raf); this._raf = null; }
+    this._last = null;
   }
 }
