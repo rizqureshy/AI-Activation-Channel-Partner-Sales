@@ -169,8 +169,8 @@ ROUTES.home = {
     h1: `CRO <span class="gradient-text">AI Activation</span> Community`,
     pane: `<h2 class="reveal" style="font-size:clamp(19px,2.3vw,27px);margin-bottom:10px">A place for <span class="gradient-cool">practical AI</span>, real examples, and real people</h2>
       <p class="lead reveal" style="margin:0 auto">Everyone across CRO, together around AI learning, practical use cases, team activation, experiments, and success stories — building <b>energy, confidence, creativity, and momentum</b>, and having fun along the way.</p>
-      <p class="micro reveal">You don't need to be an expert. Just curiosity, willingness to learn, and something to share.</p>`,
-    morph: ["Your AI Story Matters.", "Your AI Questions Matter.", "Your AI Experiments Matter.", "Your AI Work Matters.", "Your AI Fun Matters.", "You Matter."],
+      <p class="matters-line reveal">Your <span class="g">AI story</span>, <span class="g">questions</span>, <span class="g">experiments</span>, <span class="g">work</span> &amp; <span class="g">fun</span> — they all matter.</p>
+      <p class="you-line reveal">You matter.</p>`,
     cta: [
       { t: "Join the Community", k: "primary", h: "#/join", svg: "users" },
       { t: "Explore the Community Gallery", k: "cool", h: "#/gallery", svg: "grid" },
@@ -589,6 +589,25 @@ try { theme = localStorage.getItem(THEME_KEY) || "dark"; } catch (e) {}
 themeBtn.addEventListener("click", () => {
   applyTheme(document.body.classList.contains("light") ? "dark" : "light");
 });
+
+/* ---- background music (50% volume) ---- */
+const bgm = document.getElementById("bgm");
+const soundBtn = document.getElementById("sound");
+if (bgm && soundBtn) {
+  bgm.volume = 0.5;
+  let audioStarted = false;
+  const refreshSound = () => { soundBtn.classList.toggle("muted", bgm.paused); soundBtn.setAttribute("aria-pressed", String(!bgm.paused)); };
+  const startAudio = () => { if (audioStarted) return; audioStarted = true; bgm.play().then(refreshSound).catch(() => soundBtn.classList.add("muted")); };
+  // browsers block sound until a user gesture — kick it off on the first one
+  window.addEventListener("pointerdown", startAudio, { once: true });
+  window.addEventListener("keydown", startAudio, { once: true });
+  soundBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    audioStarted = true;
+    if (bgm.paused) bgm.play().then(refreshSound).catch(() => {});
+    else { bgm.pause(); refreshSound(); }
+  });
+}
 
 /* boot */
 buildNav();
