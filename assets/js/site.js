@@ -5,6 +5,7 @@
    ============================================================ */
 
 import { Cosmos } from "./scene.js";
+import { Smoke } from "./smoke.js";
 const gsap = window.gsap;
 
 const cosmos = new Cosmos(document.getElementById("bg-canvas"));
@@ -788,12 +789,23 @@ function submitBooking(form) {
   sel.classList.remove("sel");
 }
 
-/* ---- theme: dark ⟷ dawn/dusk (light) ---- */
+/* ---- theme: dark (particles) ⟷ light (ink-in-water smoke) ---- */
 const THEME_KEY = "cro-theme";
 const themeBtn = document.getElementById("theme-toggle");
+let smoke = null;   // lazily created on first switch to light
 function applyTheme(mode) {
   const light = mode === "light";
   document.body.classList.toggle("light", light);
+  if (light) {
+    // hand the sky over to the smoke engine; park the particle field
+    if (!smoke) smoke = new Smoke(document.getElementById("smoke-canvas"));
+    if (smoke.ok) { smoke.start(); document.body.classList.add("smoke-on"); cosmos.pause(); }
+    else { cosmos.resume(); }     // no WebGL2 → keep particles (light-tuned) as a fallback
+  } else {
+    if (smoke) smoke.stop();
+    document.body.classList.remove("smoke-on");
+    cosmos.resume();
+  }
   cosmos.setTheme(mode);
   themeBtn.setAttribute("aria-pressed", String(light));
   try { localStorage.setItem(THEME_KEY, mode); } catch (e) {}

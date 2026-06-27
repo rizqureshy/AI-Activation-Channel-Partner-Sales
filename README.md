@@ -27,9 +27,23 @@ index.html            # shell: nav, background canvas, #main, footer
 assets/
   css/site.css        # theme tokens, glass components, layout, forms, responsive nav
   js/site.js          # router + all page content + nav + forms + engine wiring
-  js/scene.js         # the particle engine (formations + live fireworks sim)
+  js/scene.js         # particle engine — DARK theme (formations + live fireworks sim)
+  js/smoke.js         # ink-in-water "smoke" engine — LIGHT theme (WebGL2 fbm shader)
   vendor/             # three.js + gsap (offline-friendly)
 ```
+
+### Two background engines
+
+This branch runs **two** background engines and swaps between them by theme:
+
+- **Dark theme → the particle engine** (`scene.js`) — the morphing WebGL field.
+- **Light theme → the smoke engine** (`smoke.js`) — a full-screen WebGL2 fragment
+  shader using domain-warped fbm to paint slowly flowing clouds of bright liquid
+  colour, like dye blooming in clear water.
+
+`applyTheme()` in `site.js` does the hand-off: switching to light lazily starts the
+smoke engine and pauses the particle field; switching back resumes the particles.
+If WebGL2 is unavailable, light theme falls back to the light-tuned particle field.
 
 - **`assets/js/site.js`** holds every page as a `ROUTES[...]` entry: `{ title, formation, html() }`.
   Content is generated from small builders (`block`, `iconCards`, `numCards`, `formHTML`,

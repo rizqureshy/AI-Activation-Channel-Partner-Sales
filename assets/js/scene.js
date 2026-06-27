@@ -1109,9 +1109,16 @@ export class Cosmos {
   }
 
   start() {
+    if (this._raf) return;
     const tick = () => { this._frame(); this.renderer.render(this.scene, this.camera); this._raf = requestAnimationFrame(tick); };
     tick();
   }
+
+  /** Stop rendering (e.g. when the smoke engine takes over in light theme). */
+  pause() { if (this._raf) { cancelAnimationFrame(this._raf); this._raf = null; } }
+
+  /** Resume rendering; reset the clock so dt doesn't jump after a long pause. */
+  resume() { if (!this._raf) { this.clock.getDelta(); this.start(); } }
 
   _frame() {
     const dt = Math.min(this.clock.getDelta(), 0.05);

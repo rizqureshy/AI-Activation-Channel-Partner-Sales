@@ -78,6 +78,17 @@ img { max-width: 100%; display: block; }
   background: radial-gradient(120% 90% at 50% 30%, transparent 50%, rgba(3,1,12,0.6) 100%);
 }
 
+/* ink-in-water smoke background (light theme). Oversized + blurred so the
+   diffusion stays soft and the blur never reveals a hard canvas edge. */
+#smoke-canvas {
+  position: fixed; left: -2vw; top: -2vh; width: 104vw; height: 104vh;
+  z-index: 0; display: none; filter: blur(7px) saturate(1.06);
+}
+body.smoke-on #smoke-canvas { display: block; }
+body.smoke-on #bg-canvas { display: none; }
+/* the smoke is the whole sky in this mode — drop the particle-tuned overlays */
+body.smoke-on .cosmos-wash, body.smoke-on .vignette { display: none; }
+
 /* a soft scrim directly behind content so text always reads */
 /* Veils the particle field only — sits BEHIND the page content (negative
    z-index inside #main's stacking context), never tinting the tiles/text. */
