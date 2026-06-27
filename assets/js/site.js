@@ -350,7 +350,7 @@ const certVoices = () => `<div class="grid c3">` + CERTFOLKS.map((p) => `
 
 /* ---- Join ---- */
 ROUTES.join = {
-  title: "Join the Community", formation: "burst",
+  title: "Join the Community", formation: "heart",
   html: () => hero({
     eyebrow: "✦ Join the Community",
     h1: `You <span class="gradient-text">belong</span> here`,
@@ -607,7 +607,7 @@ ROUTES.recognition = {
 
 /* ---- Community Calendar ---- */
 ROUTES.calendar = {
-  title: "AI Events Calendar", formation: "clusters:4",
+  title: "AI Events Calendar", formation: "calendar",
   html: () => block({
     kicker: "AI Events Calendar", title: "The community rhythm",
     lead: "AI clinics, office hours, demo days, leadership messages, and showcase events — all in one place.",

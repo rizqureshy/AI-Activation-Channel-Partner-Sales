@@ -633,6 +633,82 @@ export class Cosmos {
     return { pos, col };
   }
 
+  // a heart — for "you belong here" (filled + glowing outline, warm, gently hovers)
+  _formHeart() {
+    const { pos, col } = this._alloc(), N = this.N;
+    const tmp = new THREE.Color();
+    const S = 0.16, baseY = 0.3, cyRaw = -2.5;     // scale + vertical recenter
+    for (let i = 0; i < N; i++) {
+      const t = Math.random() * Math.PI * 2;
+      let hx = 16 * Math.pow(Math.sin(t), 3);
+      let hy = 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
+      const outline = Math.random() < 0.34;
+      if (!outline) {                               // fill toward the centre for a solid heart
+        const r = Math.sqrt(Math.random());
+        hx *= r; hy = cyRaw + (hy - cyRaw) * r;
+      }
+      let x = hx * S, y = (hy - cyRaw) * S + baseY;
+      if (outline) { x += (Math.random() - 0.5) * 0.18; y += (Math.random() - 0.5) * 0.18; }
+      pos[i * 3] = x;
+      pos[i * 3 + 1] = y;
+      pos[i * 3 + 2] = (Math.random() - 0.5) * 0.7;
+      const tcol = Math.random() < 0.10 ? C.white
+        : (Math.random() < 0.12 ? C.gold : tmp.copy(C.pink).lerp(C.gold, Math.random() * 0.6));
+      this._setCol(col, i, tcol, outline ? 0.05 : 0.10);
+    }
+    return { pos, col };
+  }
+
+  // a calendar page — card outline, binder tabs, header band, grid of day dots
+  // with a few highlighted "event" days. For the AI Events Calendar.
+  _formCalendar() {
+    const { pos, col } = this._alloc(), N = this.N;
+    const tmp = new THREE.Color();
+    const baseY = 0.3;
+    const W = 2.5, H = 2.05;                         // half-width / half-height of the card
+    const top = H, bot = -H, left = -W, right = W;
+    const headerY = H - 0.55;                        // header band spans headerY..top
+    const cols = 6, rows = 4;
+    const gx0 = left + 0.4, gx1 = right - 0.4;
+    const gy0 = headerY - 0.45, gy1 = bot + 0.4;
+    const EVENTS = new Set(["1,0", "4,0", "2,1", "5,2", "0,2", "3,3"]);  // highlighted days
+    const wOut = 3, wHead = 1.6, wTab = 0.5, wDay = 5.2, wTot = wOut + wHead + wTab + wDay;
+
+    for (let i = 0; i < N; i++) {
+      let x, y, kind;
+      const pick = Math.random() * wTot;
+      if (pick < wOut) {                              // card outline (rectangle)
+        kind = "frame";
+        if (Math.random() < 0.5) { x = left + Math.random() * (2 * W); y = Math.random() < 0.5 ? top : bot; }
+        else { x = Math.random() < 0.5 ? left : right; y = bot + Math.random() * (2 * H); }
+        x += (Math.random() - 0.5) * 0.14; y += (Math.random() - 0.5) * 0.14;
+      } else if (pick < wOut + wHead) {               // header band
+        kind = "head";
+        x = left + Math.random() * (2 * W); y = headerY + Math.random() * (top - headerY);
+      } else if (pick < wOut + wHead + wTab) {        // two binder tabs above the top edge
+        kind = "tab";
+        x = (Math.random() < 0.5 ? -1.1 : 1.1) + (Math.random() - 0.5) * 0.14;
+        y = top + Math.random() * 0.5;
+      } else {                                         // day dots
+        const c = Math.floor(Math.random() * cols), r = Math.floor(Math.random() * rows);
+        const gx = gx0 + c * (gx1 - gx0) / (cols - 1);
+        const gy = gy0 - r * (gy0 - gy1) / (rows - 1);
+        x = gx + (Math.random() - 0.5) * 0.16; y = gy + (Math.random() - 0.5) * 0.16;
+        kind = EVENTS.has(c + "," + r) ? "event" : "day";
+      }
+      pos[i * 3] = x;
+      pos[i * 3 + 1] = y + baseY;
+      pos[i * 3 + 2] = (Math.random() - 0.5) * 0.6;
+      let tcol;
+      if (kind === "event") tcol = Math.random() < 0.4 ? C.gold : tmp.copy(C.pink).lerp(C.gold, Math.random());
+      else if (kind === "head") tcol = Math.random() < 0.5 ? C.white : tmp.copy(C.iris).lerp(C.blue, Math.random());
+      else if (kind === "day") tcol = tmp.copy(C.violet).lerp(C.blue, Math.random());
+      else tcol = Math.random() < 0.1 ? C.teal : tmp.copy(C.iris).lerp(C.blue, Math.random());
+      this._setCol(col, i, tcol, 0.07);
+    }
+    return { pos, col };
+  }
+
   // a play icon — a filled triangle inside a ring (hovers + slowly rotates)
   _formPlay() {
     const { pos, col } = this._alloc(), N = this.N;
@@ -833,6 +909,10 @@ export class Cosmos {
                                                                  drift: { ax: 2.8, ay: 1.4, az: 0.6, sx: 0.07, sy: 0.05, sz: 0.04 } },
       play:         { make: () => this._formPlay(),              cam: [0, 0.3, 13.2],  opts: { spin: 0.08, arc: 1.4, dur: 1.9 },
                                                                  drift: { ax: 1.1, ay: 1.5, az: 0.5, sx: 0.05, sy: 0.045, sz: 0.05 } },
+      heart:        { make: () => this._formHeart(),             cam: [0, 0.3, 12.8],  opts: { spin: 0.0, arc: 1.6, dur: 1.9 },
+                                                                 drift: { ax: 0.6, ay: 1.0, az: 0.4, sx: 0.05, sy: 0.07, sz: 0.05 } },
+      calendar:     { make: () => this._formCalendar(),          cam: [0, 0.3, 13.6],  opts: { spin: 0.0, arc: 1.5, dur: 1.9 },
+                                                                 drift: { ax: 0.9, ay: 0.9, az: 0.4, sx: 0.05, sy: 0.06, sz: 0.04 } },
       fireworks:    { make: () => this._formFireworks(),         cam: [0, 0.2, 13.4],  opts: { spin: 0.04, arc: 2.4, dur: 1.7, ease: "power2.out" } },
     };
   }
