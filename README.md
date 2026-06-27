@@ -38,15 +38,14 @@ assets/
   `cosmos.applyFormation(formation, gsap)`, and runs an `IntersectionObserver` to reveal
   sections on scroll.
 
-### Pages
+### Pages (simplified navigation)
 
-Home · Join the Community · Start Here · Share Your Story · Share Your Work · Submission
-Gallery · Learning Lane · Expert Clinic · Certification Support · AI Activation for Teams ·
-License & Access Help · Leaders Listening Post · Recognition & Leaderboard · Community
-Calendar · Weekly Challenges.
+Home · Join the Community · Community Champions · AI Events Calendar · AI Clinic ·
+Community Gallery · Skill Up, Speed Up (AI video gallery) · Learning Lanes ·
+AI Activation for Teams.
 
-Primary + utility navigation, a footer, and community mechanics (star earnings, contributor
-levels, recognition, leaderboard, calendar) are all included.
+A single primary nav (no separate quick-links bar), a footer, and community mechanics
+(star earnings, contributor levels, champions/leaderboard) are included.
 
 ### Forms
 

@@ -130,46 +130,33 @@ const formHTML = (fields, submit) =>
    Navigation
    ============================================================ */
 const PRIMARY = [
-  ["Home", "#/home"], ["Join the Community", "#/join"], ["Share Your Work", "#/share"],
-  ["Submission Gallery", "#/gallery"], ["Learning Lane", "#/learning"], ["Expert Clinic", "#/clinic"],
-  ["Certification Support", "#/certification"], ["AI Activation for Teams", "#/teams"],
-  ["License & Access Help", "#/access"], ["Leaders Listening Post", "#/listening"],
-];
-const UTILITY = [
-  ["Weekly Challenges", "#/challenges"], ["Leaderboard", "#/recognition"], ["Community Calendar", "#/calendar"],
-  ["Recognition Wall", "#/recognition"], ["Viva Engage", VIVA_URL], ["Submit an Idea", "#/listening"],
-  ["Ask a Question", "#/clinic"],
+  ["Home", "#/home"], ["Join the Community", "#/join"], ["Community Champions", "#/recognition"],
+  ["AI Events Calendar", "#/calendar"], ["AI Clinic", "#/clinic"], ["Community Gallery", "#/gallery"],
+  ["Skill Up, Speed Up", "#/videos"], ["Learning Lanes", "#/learning"], ["AI Activation for Teams", "#/teams"],
 ];
 
 function buildNav() {
   document.getElementById("primary-nav").innerHTML =
     PRIMARY.map(([t, h]) => `<a href="${h}">${t}</a>`).join("");
-  document.getElementById("utility-bar").innerHTML =
-    `<span class="ulabel">Quick links</span>` + UTILITY.map(([t, h]) => {
-      const ext = /^https?:/.test(h) ? ` target="_blank" rel="noopener"` : "";
-      return `<a href="${h}"${ext}>${t}</a>`;
-    }).join("");
   document.getElementById("site-footer").innerHTML = `
     <div class="footer-inner">
       <div>
         <h4>CRO AI Activation Community</h4>
         <p class="muted" style="font-size:14px;line-height:1.6;max-width:34ch">Built by the people who participate in it. Come in, share something, learn something, build something.</p>
-        <div class="cta-row" style="margin-top:16px"><a class="btn primary sm" href="#/join">${ic("users")}Join the Community</a></div>
+        <div class="cta-row" style="margin-top:16px"><a class="btn primary sm" href="${VIVA_URL}" target="_blank" rel="noopener">${ic("users")}Join the Community</a></div>
       </div>
       <div>
-        <h4>Participate</h4>
-        <a href="#/share">Share Your Work</a><a href="#/gallery">Submission Gallery</a>
-        <a href="#/story">Share Your Story</a><a href="#/challenges">Weekly Challenges</a>
-        <a href="#/recognition">Leaderboard &amp; Recognition</a>
+        <h4>Take part</h4>
+        <a href="#/join">Join the Community</a><a href="#/recognition">Community Champions</a>
+        <a href="#/gallery">Community Gallery</a><a href="#/calendar">AI Events Calendar</a>
       </div>
       <div>
-        <h4>Get support</h4>
-        <a href="#/learning">Learning Lane</a><a href="#/clinic">Expert Clinic</a>
-        <a href="#/certification">Certification Support</a><a href="#/teams">AI Activation for Teams</a>
-        <a href="#/access">License &amp; Access Help</a><a href="#/listening">Leaders Listening Post</a>
+        <h4>Learn &amp; get help</h4>
+        <a href="#/learning">Learning Lanes</a><a href="#/videos">Skill Up, Speed Up</a>
+        <a href="#/clinic">AI Clinic</a><a href="#/teams">AI Activation for Teams</a>
       </div>
     </div>
-    <div class="footer-bottom">Your Story Matters · Your Questions Matter · Your Work Matters · You Matter</div>`;
+    <div class="footer-bottom">Your AI Story Matters · Your AI Questions Matter · Your AI Work Matters · You Matter</div>`;
 }
 
 /* ============================================================
@@ -195,67 +182,26 @@ ROUTES.home = {
     },
     cta: [
       { t: "Join the Community", k: "primary", h: "#/join", svg: "users" },
-      { t: "Share Your First Story", k: "cool", h: "#/story", svg: "share" },
-      { t: "Explore What Others Are Building", k: "ghost", h: "#/gallery", svg: "grid" },
+      { t: "Explore the Community Gallery", k: "cool", h: "#/gallery", svg: "grid" },
+      { t: "Skill Up, Speed Up", k: "ghost", h: "#/videos", svg: "play" },
     ],
   })
 
   + block({
     kicker: "Welcome to the Community", panel: true,
     title: `A place for <span class="gradient-cool">practical AI</span>, real examples, and real people`,
-    lead: "Welcome to the CRO AI Activation Community — a space for everyone across CRO to come together around AI learning, practical use cases, team activation, certifications, experiments, and success stories.",
-    inner: `<p class="lead reveal" style="margin-top:14px">Whether you are just starting, trying to use Copilot more effectively, completing a certification, building a workflow, experimenting with ACE, or helping your team activate AI — this community is for you.</p>
+    lead: "Welcome to the CRO AI Activation Community — a space for everyone across CRO to come together around AI learning, practical use cases, team activation, experiments, and success stories.",
+    inner: `<p class="lead reveal" style="margin-top:14px">Whether you are just starting, trying to use Copilot more effectively, building a workflow, experimenting with ACE, or helping your team activate AI — this community is for you.</p>
       <p class="micro reveal">You do not need to be an expert to participate. You just need curiosity, willingness to learn, and something to share.</p>`,
   })
 
   + block({
     kicker: "Join Us", title: "Joining is open, simple, and friction-free",
-    lead: "The community is open to everyone across CRO. Join the main community space, introduce yourself, ask your first question, and start exploring what others are learning and building.",
+    lead: "The community lives in Viva Engage. Jump in, introduce yourself, ask your first question, and start exploring what others are learning and building.",
     inner: ctas([
       { t: "Join the Viva Engage Community", k: "primary", h: VIVA_URL, svg: "users" },
-      { t: "Download the Onboarding Pack", h: "#/start", svg: "book" },
-      { t: "Introduce Yourself", h: "#/story", svg: "share" },
-      { t: "Ask Your First Question", h: "#/clinic", svg: "chat" },
+      { t: "Ask the AI Clinic", h: "#/clinic", svg: "chat" },
     ]) + `<p class="micro reveal">No perfect prompt required. No expert badge needed. Just come in.</p>`,
-  })
-
-  + block({
-    kicker: "Start Here", title: "Community Onboarding Pack",
-    lead: "Everything a new member needs to get going — a simple starting path from first click to first contribution.",
-    inner: numCards([
-      "What this community is for", "How to join the Viva Engage community", "Where to ask questions",
-      "How to share a use case", "How to submit work to the gallery", "How to join weekly activities",
-      "How recognition and points work", "Where to get license and access help",
-      "Where to find certification guidance", "How to request AI Activation for your team",
-    ]) + ctas([{ t: "Open the Onboarding Pack", k: "cool", h: "#/start", svg: "book" }]),
-  })
-
-  + block({
-    kicker: "Welcome Chat", panel: true, warm: true,
-    title: "Start With Your Story",
-    lead: "Introduce yourself to the community by sharing one short story. Sharing is key — the community grows when people show what they tried, what worked, what failed, and what they learned.",
-    inner: bullets([
-      "What are you curious about with AI?", "What have you tried so far?",
-      "What is one workflow you wish AI could help with?", "What is one thing you want to learn?",
-      "What certification or skill are you working toward?", "What is one practical AI win you have seen?",
-    ]) + ctas([{ t: "Share Your Story", k: "primary", h: "#/story", svg: "share" }]),
-  })
-
-  + block({
-    kicker: "Share a Submission", title: "Share what you are building, learning, or trying",
-    lead: "Active participation is the whole point. Sharing is a normal, celebrated behavior here.",
-    inner: pills(["AI use case", "Prompt that worked", "Copilot workflow", "ACE success story", "Certification experience", "Team activation story", "Customer prep example", "Productivity hack", "Learning reflection", "Question for the community", "Challenge entry", "Demo or short video"])
-      + ctas([{ t: "Submit Your Work", k: "cool", h: "#/share", svg: "share" }]),
-  })
-
-  + block({
-    kicker: "What's Happening This Week", title: "Weekly challenges &amp; activities",
-    lead: "A light, recurring rhythm that makes participation fun and easy to join any week.",
-    inner: iconCards([
-      { t: "Prompt of the Week", p: "Share the single prompt that saved you the most time this week.", icon: "bolt" },
-      { t: "Use-Case Sprint", p: "Turn one real task into an AI workflow and post what happened.", icon: "grid" },
-      { t: "Demo Friday", p: "Record a 60-second demo of something you tried — rough is welcome.", icon: "play" },
-    ]) + ctas([{ t: "See Weekly Challenges", h: "#/challenges", svg: "trophy" }, { t: "View the Calendar", h: "#/calendar", svg: "calendar" }]),
   })
 
   + block({
@@ -265,21 +211,27 @@ ROUTES.home = {
   })
 
   + block({
-    kicker: "Leadership Shoutouts", panel: true,
-    title: "Recognition loops that celebrate participation",
-    lead: "The best stories, prompts, questions, and experiments get highlighted — by leaders, every week.",
-    inner: pills(["Best community story", "Most practical use case", "Best prompt shared", "Best team activation story", "Certification achievers", "Most helpful contributor", "Best question asked", "Best learning reflection", "Strongest experiment", "Most creative use of AI"])
-      + ctas([{ t: "Nominate Someone for a Shoutout", k: "cool", h: "#/recognition", svg: "trophy" }]),
+    kicker: "Community Champions", panel: true,
+    title: "Recognition that celebrates participation",
+    lead: "The best stories, prompts, questions, and experiments get celebrated — and our most active members become Community Champions.",
+    inner: pills(["Best community story", "Most practical use case", "Best prompt shared", "Best team activation story", "Most helpful contributor", "Best question asked", "Best learning reflection", "Strongest experiment", "Most creative use of AI"])
+      + ctas([{ t: "See the Community Champions", k: "cool", h: "#/recognition", svg: "trophy" }]),
   })
 
   + block({
-    kicker: "Submission Gallery", title: "Real work from real people",
+    kicker: "Community Gallery", title: "Real work from real people",
     lead: "See what teammates across CRO are building, learning, and trying — then try it yourself.",
-    inner: galleryPreview() + ctas([{ t: "Explore the Gallery", k: "primary", h: "#/gallery", svg: "grid" }]),
+    inner: galleryPreview() + ctas([{ t: "Explore the Community Gallery", k: "primary", h: "#/gallery", svg: "grid" }]),
   })
 
   + block({
-    kicker: "Learning Lane", title: "Guided paths, not a course catalog",
+    kicker: "Skill Up, Speed Up", title: "Short AI videos to learn fast",
+    lead: "Bite-size AI videos and creative experiments from the community — watch, get inspired, and try something new.",
+    inner: videosPreview() + ctas([{ t: "Open the Video Gallery", k: "cool", h: "#/videos", svg: "play" }]),
+  })
+
+  + block({
+    kicker: "Learning Lanes", title: "Guided paths, not a course catalog",
     lead: "Pick a lane and learn in small, practical steps with examples from the community.",
     inner: iconCards([
       { t: "AI Basics for CRO", p: "Start from zero with confidence.", icon: "bulb", link: "#/learning" },
@@ -289,20 +241,10 @@ ROUTES.home = {
   })
 
   + block({
-    kicker: "Expert Clinic", title: "Bring your questions — get practical help",
-    lead: "A recurring support space to improve prompts, workflows, use cases, certifications, and team activation.",
-    inner: pills(["Prompt Clinic", "Copilot Clinic", "ACE Clinic", "Certification Clinic", "Use Case Clinic", "Team Activation Clinic", "Responsible AI Clinic", "Demo Review Clinic"])
+    kicker: "AI Clinic", title: "Bring your questions — get practical help",
+    lead: "A recurring support space to improve prompts, workflows, use cases, and team activation.",
+    inner: pills(["Prompt Clinic", "Copilot Clinic", "ACE Clinic", "Use Case Clinic", "Team Activation Clinic", "Responsible AI Clinic", "Demo Review Clinic"])
       + ctas([{ t: "Book a Clinic Slot", k: "primary", h: "#/clinic", svg: "chat" }, { t: "Drop a Question", h: "#/clinic" }]),
-  })
-
-  + block({
-    kicker: "Certification Support", title: "A serious pillar of the community",
-    lead: "Understand your options, follow a pathway, learn from peers, and get counseling on where to start.",
-    inner: iconCards([
-      { t: "Certification map", p: "See what is available and what fits your role.", icon: "shield", link: "#/certification" },
-      { t: "Pathways by level", p: "Beginner, intermediate, and advanced routes.", icon: "book", link: "#/certification" },
-      { t: "Peer mentors & stories", p: "Learn from people who have done it.", icon: "users", link: "#/certification" },
-    ]) + ctas([{ t: "Request Certification Guidance", k: "cool", h: "#/certification", svg: "shield" }]),
   })
 
   + block({
@@ -313,41 +255,18 @@ ROUTES.home = {
   })
 
   + block({
-    kicker: "License & Access Help", title: "Need license or access?",
-    lead: "Not sure whether you have access to Copilot, ACE, Claude models in Copilot, Yoodli, or other AI tools? Start here.",
-    inner: ctas([{ t: "Get Access Help", k: "cool", h: "#/access", svg: "key" }]),
-  })
-
-  + block({
-    kicker: "Leaders Listening Post", title: "A real feedback loop to leadership",
-    lead: "Share ideas, blockers, questions, and feedback directly into a leadership-visible channel — and read the monthly “What We Heard” update.",
-    inner: ctas([{ t: "Submit Feedback to the Listening Post", k: "primary", h: "#/listening", svg: "bell" }]),
-  })
-
-  + block({
-    kicker: "Leaderboard & Recognition", title: "Participation, made visible",
-    lead: "Earn stars for meaningful participation, level up from Explorer to Community Luminary, and get recognized.",
-    inner: numCards([
-      { t: "Earn stars", p: "Points for joining, asking, sharing, helping, presenting, mentoring, and activating teams." },
-      { t: "Level up", p: "Explorer → Contributor → Builder → Guide → Champion → Community Luminary." },
-      { t: "Get recognized", p: "Weekly shoutouts, monthly badges, and leader-selected spotlights." },
-    ]) + ctas([{ t: "See How to Earn Stars", k: "cool", h: "#/recognition", svg: "star" }]),
-  })
-
-  + block({
-    kicker: "Community Calendar", title: "The community rhythm",
-    lead: "Weekly challenges, expert clinics, office hours, certification sessions, demo days, and showcase events.",
+    kicker: "AI Events Calendar", title: "The community rhythm",
+    lead: "Clinics, office hours, demo days, leadership messages, and showcase events — all in one place.",
     inner: ctas([{ t: "View Upcoming Events", h: "#/calendar", svg: "calendar" }]),
   })
 
   + block({
     panel: true, warm: true,
-    title: "Come In. Share Something. Learn Something. Build Something.",
-    lead: "The CRO AI Activation Community is built by the people who participate in it. Your question may help someone else. Your story may inspire a team. Your experiment may become a new workflow. Your certification journey may guide the next person. This community wants you in it.",
+    title: "Come In. Learn Something. Build Something.",
+    lead: "The CRO AI Activation Community is built by the people who participate in it. Your question may help someone else. Your experiment may become a new workflow. This community wants you in it.",
     inner: ctas([
       { t: "Join the Community", k: "primary", h: "#/join", svg: "users" },
-      { t: "Share Your Story", k: "cool", h: "#/story", svg: "share" },
-      { t: "Submit Your Work", h: "#/share", svg: "grid" },
+      { t: "Explore the Gallery", k: "cool", h: "#/gallery", svg: "grid" },
       { t: "Ask a Question", h: "#/clinic", svg: "chat" },
       { t: "Activate AI for Your Team", h: "#/teams", svg: "rocket" },
     ]),
@@ -399,6 +318,26 @@ function appCard(a) {
   </article>`;
 }
 const galleryPreview = () => `<div class="grid c3">` + SHOTS.slice(0, 3).map(shotCard).join("") + `</div>`;
+
+/* ---- Skill Up, Speed Up: AI video gallery (community AI films) ---- */
+const VIDEOS = [
+  { t: "AI Super Hero", author: "Community", file: "assets/animations/AI Super Hero.mp4", tag: "AI Film" },
+  { t: "Beyond the Chalkboard", author: "Community", file: "assets/animations/Beyond_the_Chalkboard.mp4", tag: "AI Film" },
+  { t: "Did It My Way", author: "Rizwan Qureshy", file: "assets/animations/Did it my Way - Rizwan Qureshy.mp4", tag: "AI Music Film" },
+  { t: "Number 1 and Nothing Less", author: "Rizwan Qureshy", file: "assets/animations/Number 1 and Nothing Less - Rizwan Qureshy.mp4", tag: "AI Music Film" },
+  { t: "Folding Worries", author: "Community", file: "assets/animations/Folding_Worries.mp4", tag: "AI Film" },
+  { t: "AI Eamonn", author: "Eamonn Ward", file: "assets/animations/AI Eamonn.mp4", tag: "AI Avatar" },
+];
+function videoCard(v) {
+  return `<article class="card gcard reveal">
+    <a class="vthumb" href="${rawUrl(v.file)}" target="_blank" rel="noopener" aria-label="Watch ${v.t}"><span class="vplay">${ic("play")}</span></a>
+    <span class="tag">${v.tag}</span>
+    <h3>${v.t}</h3>
+    <div class="gmeta">${v.author}</div>
+    <div class="gactions"><a class="btn cool sm" href="${rawUrl(v.file)}" target="_blank" rel="noopener">${ic("play")}Watch</a></div>
+  </article>`;
+}
+const videosPreview = () => `<div class="grid c3">` + VIDEOS.slice(0, 3).map(videoCard).join("") + `</div>`;
 
 /* ---- leadership messages ---- */
 const LEADERS = [
@@ -460,7 +399,7 @@ ROUTES.join = {
     lead: "The community is open to everyone across CRO. Join the main space, introduce yourself, and start exploring. No perfect prompt required. No expert badge needed. Just come in.",
     inner: ctas([
       { t: "Join the Viva Engage Community", k: "primary", h: VIVA_URL, svg: "users" },
-      { t: "Download the Onboarding Pack", h: "#/start", svg: "book" },
+      { t: "Ask the AI Clinic", h: "#/clinic", svg: "chat" },
     ]),
   })
   + block({
@@ -491,106 +430,44 @@ ROUTES.join = {
       "Be kind: assume good intent, celebrate attempts.",
       "Be practical: real examples beat theory.",
       "Be safe: follow Responsible AI guidance and keep customer data protected.",
-    ]) + ctas([{ t: "Introduce Yourself", k: "cool", h: "#/story", svg: "share" }, { t: "Join the Viva Engage Community", k: "primary", h: VIVA_URL, svg: "users" }]),
-  }),
-};
-
-/* ---- Start Here ---- */
-ROUTES.start = {
-  title: "Start Here", formation: "question",
-  html: () => block({
-    kicker: "Start Here", title: `A 5-minute <span class="gradient-cool">community walkthrough</span>`,
-    lead: "New here? This is the quickest way to orient yourself and complete your first community action.",
-    inner: olist([
-      "<b>What to do first</b> — say hello in the Welcome Chat and tell us one thing you are curious about.",
-      "<b>Where to ask questions</b> — the Expert Clinic and the Q&amp;A channel are always open.",
-      "<b>Where to learn</b> — pick a Learning Lane that matches your role and time.",
-      "<b>Where to share</b> — post a prompt, a workflow, or a story to the gallery.",
-      "<b>Where to get help</b> — license &amp; access help, certification counseling, and clinics.",
-      "<b>How stars &amp; recognition work</b> — earn stars for participation and level up over time.",
-    ]),
-  })
-  + block({
-    kicker: "Onboarding Pack", panel: true, title: "What's inside the pack",
-    inner: numCards([
-      "What this community is for", "How to join the channels", "Where to ask questions",
-      "How to share a use case", "How to submit to the gallery", "How to join weekly activities",
-      "How recognition and points work", "Where to get license &amp; access help",
-      "Where to find certification guidance", "How to request team activation",
-    ]) + ctas([{ t: "Open the Onboarding Pack", k: "primary", toast: "Onboarding Pack opening…", svg: "book" }]),
-  })
-  + block({
-    title: "Complete your first community action",
-    lead: "Pick one. That's all it takes to be part of this.",
-    inner: ctas([
-      { t: "Say Hello", k: "primary", h: "#/story", svg: "share" },
-      { t: "Ask a Question", k: "cool", h: "#/clinic", svg: "chat" },
-      { t: "Explore the Gallery", h: "#/gallery", svg: "grid" },
-    ]),
-  }),
-};
-
-/* ---- Share Your Story ---- */
-ROUTES.story = {
-  title: "Share Your Story", formation: "split",
-  html: () => block({
-    kicker: "Share Your Story", title: `Your story <span class="gradient-text">matters</span>`,
-    lead: "Storytelling is a key behavior in this community. Share what you tried, what worked, what failed, and what you learned.",
-    inner: `<div class="split"><div>` + bullets([
-      "What are you curious about with AI?", "What have you tried so far?",
-      "What is one workflow you wish AI could help with?", "What is one thing you want to learn?",
-      "What certification or skill are you working toward?", "What is one practical AI win you have seen?",
-    ]) + `</div><div class="panel">` + formHTML([
-      { l: "Your name", t: "text" }, { l: "Team / Function", t: "text" }, { l: "Region", t: "text" },
-      { l: "Story type", t: "select", opts: ["First-use story", "AI learning reflection", "Certification completion", "Team activation story", "A win to celebrate", "Something that failed (and what I learned)"] },
-      { l: "Your story", t: "textarea", ph: "Keep it short and real…" },
-    ], "Share Your Story") + `</div></div>`,
-  }),
-};
-
-/* ---- Share Your Work (submission) ---- */
-ROUTES.share = {
-  title: "Share Your Work", formation: "clusters:3",
-  html: () => block({
-    kicker: "Share a Submission", title: "Share what you are building, learning, or trying",
-    lead: "Pick a submission type and tell the community what happened. Sharing here is normal, welcomed, and rewarded with stars.",
-    inner: pills(["AI use case", "Prompt that worked", "Copilot workflow", "ACE success story", "Certification experience", "Team activation story", "Customer prep example", "Productivity hack", "Learning reflection", "Question for the community", "Challenge entry", "Demo or short video"]),
-  })
-  + block({
-    panel: true, title: "Submit your work",
-    inner: formHTML([
-      { l: "Name", t: "text" }, { l: "Team / Function", t: "text" }, { l: "Region", t: "text" },
-      { l: "Submission type", t: "select", opts: ["AI use case", "Prompt that worked", "Copilot workflow", "ACE success story", "Certification experience", "Team activation story", "Customer prep example", "Productivity hack", "Learning reflection", "Question", "Challenge entry", "Demo / video"] },
-      { l: "Tool used", t: "select", opts: ["Copilot", "Copilot Premium", "Claude in Copilot", "ACE", "Yoodli", "Other"] },
-      { l: "Problem or opportunity", t: "textarea" }, { l: "What you tried", t: "textarea" },
-      { l: "What worked", t: "textarea" }, { l: "What did not work", t: "textarea" },
-      { l: "Outcome or value", t: "textarea" }, { l: "Screenshots or file upload", t: "file" },
-      { l: "This can be showcased publicly inside CRO", t: "checkbox" },
-      { l: "Leaders can reference this as a shoutout", t: "checkbox" },
-      { l: "I'd like support to take this further", t: "checkbox" },
-    ], "Submit Your Work"),
+    ]) + ctas([{ t: "Explore the Gallery", k: "cool", h: "#/gallery", svg: "grid" }, { t: "Join the Viva Engage Community", k: "primary", h: VIVA_URL, svg: "users" }]),
   }),
 };
 
 /* ---- Gallery ---- */
 ROUTES.gallery = {
-  title: "Submission Gallery", formation: "grid",
+  title: "Community Gallery", formation: "grid",
   html: () => block({
-    kicker: "Submission Gallery", title: "Real work from real people",
+    kicker: "Community Gallery", title: "Real work from real people",
     lead: "A living showcase from the community's AI April sprint — apps, AI art, dashboards, strategy decks, animations, and courses. Explore it as a 3D living canvas, or browse the highlights below.",
-    inner: ctas([{ t: "Open the 3D Portfolio Gallery", k: "primary", h: PORTFOLIO_URL, svg: "grid" }, { t: "Submit Your Work", k: "cool", h: "#/share", svg: "share" }])
+    inner: ctas([{ t: "Open the 3D Portfolio Gallery", k: "primary", h: PORTFOLIO_URL, svg: "grid" }, { t: "Share in Viva Engage", k: "cool", h: VIVA_URL, svg: "share" }])
       + pills(["AI Art", "Dashboards", "AI Decks", "Apps & Tools", "Animations", "Courses", "Customer workflow", "Productivity", "Beginner friendly", "Advanced"]),
   })
   + block({ kicker: "Highlights", title: "Art, dashboards, decks &amp; more", inner: `<div class="grid c3">` + SHOTS.map(shotCard).join("") + `</div>` })
   + block({ kicker: "Apps & Tools", title: "Things you can launch right now", lead: "Real working apps the community built with AI — open them and try.", inner: `<div class="grid c3">` + APPS.map(appCard).join("") + `</div>` })
-  + block({ panel: true, title: "Have something to add?", lead: "The gallery grows when you contribute. Add your prompt, workflow, demo, app, or story.", inner: ctas([{ t: "Submit to the Gallery", k: "primary", h: "#/share", svg: "share" }, { t: "Open the 3D Gallery", h: PORTFOLIO_URL, svg: "grid" }]) }),
+  + block({ panel: true, title: "Have something to add?", lead: "The gallery grows when you contribute. Share your prompt, workflow, demo, app, or story in the community.", inner: ctas([{ t: "Share in Viva Engage", k: "primary", h: VIVA_URL, svg: "share" }, { t: "Open the 3D Gallery", h: PORTFOLIO_URL, svg: "grid" }]) }),
 };
 
-/* ---- Learning Lane ---- */
-ROUTES.learning = {
-  title: "Learning Lane", formation: "stream",
+/* ---- Skill Up, Speed Up (AI video gallery) ---- */
+ROUTES.videos = {
+  title: "Skill Up, Speed Up", formation: "burst",
   html: () => block({
-    kicker: "Learning Lane", title: `Pick a lane. <span class="gradient-cool">Learn by doing.</span>`,
+    kicker: "Skill Up, Speed Up", title: `Learn fast with <span class="gradient-text">short AI videos</span>`,
+    lead: "Bite-size AI videos, demos, and creative experiments from across the community. Watch, get inspired, and try something new today.",
+    inner: `<div class="grid c3">` + VIDEOS.map(videoCard).join("") + `</div>`,
+  })
+  + block({
+    panel: true, title: "More videos coming every week",
+    lead: "We're building a library of 5-minute AI tips, Copilot walkthroughs, ACE demos, and community show-and-tells. Got a video to add? Share it in the community.",
+    inner: ctas([{ t: "Share a Video in Viva Engage", k: "primary", h: VIVA_URL, svg: "play" }, { t: "Browse the Community Gallery", h: "#/gallery", svg: "grid" }]),
+  }),
+};
+
+/* ---- Learning Lanes ---- */
+ROUTES.learning = {
+  title: "Learning Lanes", formation: "stream",
+  html: () => block({
+    kicker: "Learning Lanes", title: `Pick a lane. <span class="gradient-cool">Learn by doing.</span>`,
     lead: "Guided paths that feel practical, not like a course catalog. Each lane mixes quick tips, community examples, prompt packs, and mini challenges.",
     inner: iconCards([
       { t: "AI Basics for CRO", icon: "bulb" }, { t: "Copilot for Daily Productivity", icon: "bolt" },
@@ -603,17 +480,17 @@ ROUTES.learning = {
   })
   + block({
     kicker: "Learning formats", panel: true, title: "How you'll learn",
-    inner: pills(["5-minute tips", "Weekly learning cards", "Community examples", "Prompt packs", "Demo videos", "Office hours", "Mini challenges", "Peer walkthroughs", "Certification stories", "Practical templates"])
-      + ctas([{ t: "Choose a Learning Lane", k: "primary", toast: "Pick a lane — opening your learning path…", svg: "book" }, { t: "Pick a Learning Path", k: "cool", h: "#/challenges", svg: "trophy" }]),
+    inner: pills(["5-minute tips", "Weekly learning cards", "Community examples", "Prompt packs", "Demo videos", "Office hours", "Peer walkthroughs", "Practical templates"])
+      + ctas([{ t: "Choose a Learning Lane", k: "primary", toast: "Pick a lane — opening your learning path…", svg: "book" }, { t: "Watch quick videos", k: "cool", h: "#/videos", svg: "play" }]),
   }),
 };
 
 /* ---- Expert Clinic ---- */
 ROUTES.clinic = {
-  title: "Expert Clinic", formation: "ring",
+  title: "AI Clinic", formation: "ring",
   html: () => block({
-    kicker: "Expert Clinic", title: "Bring your questions — leave with answers",
-    lead: "Bring your AI questions, use cases, prompts, workflows, certification questions, or team activation challenges. The Expert Clinic is a practical support space to get guidance, improve ideas, and learn from others.",
+    kicker: "AI Clinic", title: "Bring your questions — leave with answers",
+    lead: "Bring your AI questions, use cases, prompts, workflows, or team activation challenges. The AI Clinic is a practical support space to get guidance, improve ideas, and learn from others.",
     inner: iconCards([
       { t: "Prompt Clinic", icon: "bolt" }, { t: "Copilot Clinic", icon: "chat" }, { t: "ACE Clinic", icon: "shield" },
       { t: "Certification Clinic", icon: "book" }, { t: "Use Case Clinic", icon: "grid" }, { t: "Team Activation Clinic", icon: "users" },
@@ -629,39 +506,6 @@ ROUTES.clinic = {
         { l: "Name", t: "text" }, { l: "Clinic type", t: "select", opts: ["Prompt", "Copilot", "ACE", "Certification", "Use Case", "Team Activation", "Responsible AI", "Demo Review"] },
         { l: "Your question", t: "textarea", ph: "What would you like help with?" },
       ], "Drop a Question") + `</div></div>`,
-  }),
-};
-
-/* ---- Certification Support ---- */
-ROUTES.certification = {
-  title: "Certification Support", formation: "check",
-  html: () => block({
-    kicker: "Certification Support & Counseling", title: `Get certified, <span class="gradient-text">with a guide</span>`,
-    lead: "We support CRO employees pursuing AI-related certifications — understanding options, learning paths, preparation expectations, peer experiences, and where to start.",
-    inner: numCards([
-      "Certification map", "Recommended certifications by role", "Beginner → advanced pathways",
-      "Stories from people who completed certifications", "Study tips", "Time commitment guidance",
-      "Exam experience blurbs", "Peer mentors", "Certification counseling", "Certification achievers wall",
-    ]),
-  })
-  + block({
-    kicker: "Certification Map", title: "Six certs our community has earned",
-    lead: "A starting map across levels — from a broad first step to advanced AI ethics. Each one was earned by a teammate you can ask.",
-    inner: certMap(),
-  })
-  + block({
-    kicker: "Voices of the certified", panel: true, title: "From people who've done it",
-    lead: "Why they chose it, how they prepared, and what they'd tell someone starting now.",
-    inner: certVoices() + ctas([{ t: "See the Certification Achievers Wall", h: "#/recognition", svg: "trophy" }]),
-  })
-  + block({
-    title: "Request certification counseling",
-    inner: formHTML([
-      { l: "Name", t: "text" }, { l: "Role / Team", t: "text" },
-      { l: "Experience level", t: "select", opts: ["Beginner", "Intermediate", "Advanced"] },
-      { l: "Certification you're considering", t: "text", ph: "Or ask us to recommend one" },
-      { l: "What would help most?", t: "textarea" },
-    ], "Request Certification Guidance"),
   }),
 };
 
@@ -697,66 +541,11 @@ ROUTES.teams = {
   }),
 };
 
-/* ---- License & Access Help ---- */
-ROUTES.access = {
-  title: "License & Access Help", formation: "power",
-  html: () => block({
-    kicker: "License & Access Help", title: "Need license or access?",
-    lead: "Not sure whether you have access to Copilot, ACE, Claude models in Copilot, Yoodli, or other AI tools? Start here.",
-    inner: numCards([
-      "Copilot access", "Copilot Premium access", "Claude model availability in Copilot", "ACE access",
-      "Yoodli access", "Tool eligibility", "Request forms", "Troubleshooting links",
-      "Who to contact", "What to do if access is denied",
-    ]),
-  })
-  + block({
-    panel: true, title: "Get access help",
-    inner: formHTML([
-      { l: "Name", t: "text" }, { l: "Team / Function", t: "text" },
-      { l: "Which tool?", t: "select", opts: ["Copilot", "Copilot Premium", "Claude in Copilot", "ACE", "Yoodli", "Not sure"] },
-      { l: "What's happening?", t: "select", opts: ["I don't have access", "Not sure if I'm eligible", "Access was denied", "Something isn't working", "General question"] },
-      { l: "Details", t: "textarea" },
-    ], "Get Access Help"),
-  }),
-};
-
-/* ---- Leaders Listening Post ---- */
-ROUTES.listening = {
-  title: "Leaders Listening Post", formation: "core",
-  html: () => block({
-    kicker: "Leaders Listening Post", title: `The field talks. <span class="gradient-cool">Leadership listens.</span>`,
-    lead: "A space where community members share ideas, blockers, questions, and feedback directly into a leadership-visible channel.",
-    inner: bullets([
-      "What is blocking AI adoption?", "What tools or access do you need?",
-      "What use cases should we prioritize?", "What are customers asking about?",
-      "What training would help your team?", "What is working well?",
-      "What needs leadership attention?", "What should we stop, start, or improve?",
-    ]),
-  })
-  + block({
-    panel: true, title: "Submit to the Listening Post",
-    inner: formHTML([
-      { l: "Name (optional)", t: "text" }, { l: "Team / Function", t: "text" },
-      { l: "Input type", t: "select", opts: ["Blocker", "Tool / access need", "Use case to prioritize", "Customer signal", "Training need", "What's working", "Needs leadership attention", "Stop / Start / Improve"] },
-      { l: "Your feedback", t: "textarea" },
-    ], "Submit Feedback to the Listening Post"),
-  })
-  + block({
-    kicker: "What We Heard", title: "Leadership publishes a monthly update",
-    lead: "Transparency closes the loop. Each month, leadership shares what they heard and what they're doing about it.",
-    inner: iconCards([
-      { t: "Top themes", icon: "chat" }, { t: "What's being acted on", icon: "bolt" },
-      { t: "What needs more discovery", icon: "bulb" }, { t: "What can't be done yet", icon: "shield" },
-      { t: "Where community input changed direction", icon: "heart" }, { t: "Leadership responses", icon: "bell" },
-    ]),
-  }),
-};
-
 /* ---- Recognition & Leaderboard ---- */
 ROUTES.recognition = {
-  title: "Recognition & Leaderboard", formation: "fireworks",
+  title: "Community Champions", formation: "fireworks",
   html: () => block({
-    kicker: "Recognition & Leaderboard", title: `Participation, <span class="gradient-text">made visible</span>`,
+    kicker: "Community Champions", title: `Participation, <span class="gradient-text">made visible</span>`,
     lead: "Members earn stars for meaningful participation. Contribution is celebrated weekly and monthly — and recognized by leadership.",
     inner: `<div class="split"><div><h3 class="reveal" style="margin-bottom:6px">How to earn stars</h3>` + `<div class="starlist">` + [
       ["Join the community", 5], ["Introduce yourself", 10], ["Ask a useful question", 10], ["Share a prompt", 15],
@@ -782,51 +571,26 @@ ROUTES.recognition = {
   + block({
     kicker: "Recognition", title: "Ways we celebrate people",
     inner: pills(["Weekly shoutout", "Monthly top contributor", "Best question of the week", "Best prompt of the week", "Certification achiever wall", "AI Activation Champion badge", "Leader-selected spotlight", "Team activation spotlight", "Rookie of the month", "Most helpful member", "Best learning reflection", "Funniest AI experiment", "Best practical workflow", "Best customer-facing use case", "Most creative use of AI"])
-      + ctas([{ t: "Nominate Someone", k: "primary", toast: "Opening the nomination form…", svg: "trophy" }, { t: "See How to Earn Stars", k: "cool", h: "#/start", svg: "star" }]),
+      + ctas([{ t: "Nominate Someone", k: "primary", toast: "Opening the nomination form…", svg: "trophy" }, { t: "Join the Community", k: "cool", h: "#/join", svg: "users" }]),
   }),
 };
 
 /* ---- Community Calendar ---- */
 ROUTES.calendar = {
-  title: "Community Calendar", formation: "clusters:4",
+  title: "AI Events Calendar", formation: "clusters:4",
   html: () => block({
-    kicker: "Community Calendar", title: "The community rhythm",
-    lead: "Weekly challenges, expert clinics, office hours, certification sessions, demo days, leadership messages, and showcase events.",
+    kicker: "AI Events Calendar", title: "The community rhythm",
+    lead: "AI clinics, office hours, demo days, leadership messages, and showcase events — all in one place.",
     inner: `<div class="cal">` + [
-      ["Mon", "Prompt of the Week drops", "Weekly Challenge", "Challenge"],
-      ["Tue", "Prompt Clinic — live help", "Expert Clinic", "Clinic"],
-      ["Wed", "Copilot Clinic + Office Hours", "Expert Clinic", "Clinic"],
-      ["Thu", "Certification Clinic & study group", "Certification", "Cert"],
+      ["Mon", "Prompt of the Week", "Community kickoff", "Kickoff"],
+      ["Tue", "AI Clinic — live help", "AI Clinic", "Clinic"],
+      ["Wed", "Copilot Clinic + Office Hours", "AI Clinic", "Clinic"],
+      ["Thu", "Learning Lane spotlight", "Learning Lanes", "Learn"],
       ["Fri", "Demo Friday — 60-second demos", "Showcase", "Showcase"],
       ["Monthly", "Leadership “What We Heard” update", "Leadership", "Leaders"],
       ["Monthly", "Community Showcase & awards", "Showcase", "Showcase"],
     ].map((e) => `<div class="cevent reveal"><span class="when">${e[0]}</span><div class="what"><h3>${e[1]}</h3><p>${e[2]}</p></div><span class="kind">${e[3]}</span></div>`).join("") + `</div>`
-      + ctas([{ t: "View Upcoming Events", k: "primary", toast: "Opening the full calendar…", svg: "calendar" }, { t: "See Weekly Challenges", k: "cool", h: "#/challenges", svg: "trophy" }]),
-  }),
-};
-
-/* ---- Weekly Challenges ---- */
-ROUTES.challenges = {
-  title: "Weekly Challenges", formation: "core-center",
-  html: () => block({
-    kicker: "Weekly Challenges", title: `A little challenge, <span class="gradient-text">every week</span>`,
-    lead: "Light, fun, and easy to join any week. Enter to learn, earn stars, and maybe land a leadership shoutout.",
-    inner: iconCards([
-      { t: "Prompt of the Week", p: "Share the one prompt that saved you the most time.", icon: "bolt" },
-      { t: "Use-Case Sprint", p: "Turn one real task into an AI workflow and post what happened.", icon: "grid" },
-      { t: "Demo Friday", p: "Record a 60-second demo — rough and real is welcome.", icon: "play" },
-      { t: "Certification Push", p: "Make one step of progress on a certification this week.", icon: "shield" },
-      { t: "Help-a-Teammate", p: "Answer someone's question in the community.", icon: "heart" },
-      { t: "Creative AI", p: "Show the most creative use of AI you tried.", icon: "star" },
-    ]),
-  })
-  + block({
-    panel: true, title: "How challenge points work",
-    inner: bullets([
-      "Enter a challenge: earn stars for participating.",
-      "Get starred by peers: bonus recognition.",
-      "Win the week: featured in the leadership shoutout and the gallery.",
-    ]) + ctas([{ t: "Enter This Week's Challenge", k: "primary", h: "#/share", svg: "trophy" }, { t: "View the Calendar", k: "cool", h: "#/calendar", svg: "calendar" }]),
+      + ctas([{ t: "View Upcoming Events", k: "primary", toast: "Opening the full calendar…", svg: "calendar" }, { t: "Visit the AI Clinic", k: "cool", h: "#/clinic", svg: "chat" }]),
   }),
 };
 
