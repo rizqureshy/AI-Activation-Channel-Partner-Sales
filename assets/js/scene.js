@@ -594,6 +594,45 @@ export class Cosmos {
     return { pos, col };
   }
 
+  // a medical sign — a filled "+" cross inside a ring
+  _formMedical() {
+    const { pos, col } = this._alloc(), N = this.N;
+    const tmp = new THREE.Color();
+    const baseY = 0.3;
+    const R = 2.7;                       // ring radius
+    const L = 1.55, w = 0.55;            // cross: half-length and half-width of each arm
+    const wRing = 5.0, wCross = 5.0, wTot = wRing + wCross;
+
+    for (let i = 0; i < N; i++) {
+      let x, y, onCross;
+      if (Math.random() * wTot < wRing) {           // the surrounding ring
+        onCross = false;
+        const a = Math.random() * Math.PI * 2;
+        x = Math.cos(a) * R;
+        y = Math.sin(a) * R;
+        x += (Math.random() - 0.5) * 0.22;          // ring thickness
+        y += (Math.random() - 0.5) * 0.22;
+      } else {                                       // the filled "+"
+        onCross = true;
+        if (Math.random() < 0.5) {                   // horizontal arm
+          x = (Math.random() * 2 - 1) * L;
+          y = (Math.random() * 2 - 1) * w;
+        } else {                                      // vertical arm
+          x = (Math.random() * 2 - 1) * w;
+          y = (Math.random() * 2 - 1) * L;
+        }
+      }
+      pos[i * 3] = x;
+      pos[i * 3 + 1] = y + baseY;
+      pos[i * 3 + 2] = (Math.random() - 0.5) * 0.7;
+      const tcol = onCross
+        ? (Math.random() < 0.12 ? C.white : tmp.copy(C.teal).lerp(C.white, Math.random() * 0.4))
+        : (Math.random() < 0.06 ? C.pink : tmp.copy(C.violet).lerp(C.blue, Math.random()));
+      this._setCol(col, i, tcol, 0.07);
+    }
+    return { pos, col };
+  }
+
   // fireworks — several coloured bursts scattered across the sky
   _formFireworks() {
     const { pos, col } = this._alloc(), N = this.N;
@@ -753,6 +792,7 @@ export class Cosmos {
       rocket:       { make: () => this._formRocket(),            cam: [0, 0.25, 14.4], opts: { spin: 0.0, arc: 1.7, dur: 1.9 } },
       power:        { make: () => this._formPower(),             cam: [0, 0.3, 13.8],  opts: { spin: 0.04, arc: 1.5, dur: 1.9 } },
       check:        { make: () => this._formCheck(),             cam: [0, 0.3, 13.6],  opts: { spin: 0.0, arc: 1.6, dur: 1.9 } },
+      medical:      { make: () => this._formMedical(),           cam: [0, 0.3, 13.2],  opts: { spin: 0.06, arc: 1.4, dur: 1.9 } },
       fireworks:    { make: () => this._formFireworks(),         cam: [0, 0.2, 13.4],  opts: { spin: 0.04, arc: 2.4, dur: 1.7, ease: "power2.out" } },
     };
   }

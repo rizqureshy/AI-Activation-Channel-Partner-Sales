@@ -394,7 +394,7 @@ ROUTES.learning = {
 
 /* ---- AI Clinic — book a 1:1 with a Community Expert ---- */
 ROUTES.clinic = {
-  title: "AI Clinic", formation: "ring",
+  title: "AI Clinic", formation: "medical",
   html: () => hero({
     eyebrow: "✦ AI Clinic",
     h1: `Book a <span class="gradient-text">1:1</span> with a Community Expert`,
