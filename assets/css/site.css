@@ -209,6 +209,13 @@ img { max-width: 100%; display: block; }
 }
 .primary-nav a:hover { background: var(--glass); color: var(--ink); }
 .primary-nav a.active { color: var(--ink); background: var(--glass-strong); }
+/* the Join the Community link is a colored pill, like the primary CTAs */
+.primary-nav a.cta {
+  color: #fff; background: var(--warm); font-weight: 600; padding: 8px 14px; margin-left: 4px;
+  box-shadow: 0 10px 26px -14px var(--pink), inset 0 1px 0 rgba(255,255,255,.3);
+}
+.primary-nav a.cta:hover { color: #fff; filter: brightness(1.06); }
+.primary-nav a.cta.active { color: #fff; background: var(--warm); }
 
 .utility-bar {
   position: sticky; top: var(--nav-h); z-index: 59;

@@ -143,7 +143,7 @@ const PRIMARY = [
 
 function buildNav() {
   document.getElementById("primary-nav").innerHTML =
-    PRIMARY.map(([t, h]) => `<a href="${h}">${t}</a>`).join("");
+    PRIMARY.map(([t, h]) => `<a href="${h}"${h === "#/join" ? ' class="cta"' : ""}>${t}</a>`).join("");
   document.getElementById("site-footer").innerHTML = `
     <div class="footer-inner">
       <div>
