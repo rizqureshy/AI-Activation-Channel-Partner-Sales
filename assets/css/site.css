@@ -319,22 +319,43 @@ body.light .hero h1, body.light .hero .sub, body.light .hero .emotional {
   .manifesto .mph-you { opacity: 1; }
 }
 
-/* refined hero: concise subhead + a soft frosted backing behind the text */
-.hero-frost { position: relative; max-width: 880px; margin: 0 auto;
-  padding: clamp(22px, 3.2vw, 40px) clamp(26px, 5vw, 66px); }
+/* refined hero: a small frosted backing behind just the subhead + matters line */
+.hero-frost { position: relative; max-width: 640px; margin: clamp(18px, 2.6vh, 28px) auto 0;
+  padding: clamp(18px, 2.4vw, 26px) clamp(22px, 4vw, 44px); }
 .hero-frost::before {
-  content: ""; position: absolute; inset: -8px; z-index: -1; border-radius: 44px;
-  background: rgba(8, 6, 22, 0.34);
-  backdrop-filter: blur(22px) saturate(1.15); -webkit-backdrop-filter: blur(22px) saturate(1.15);
+  content: ""; position: absolute; inset: -4px; z-index: -1; border-radius: 30px;
+  background: rgba(8, 6, 22, 0.36);
+  backdrop-filter: blur(20px) saturate(1.15); -webkit-backdrop-filter: blur(20px) saturate(1.15);
   /* soft radial fade so it reads as a frosted halo, not a hard card */
-  -webkit-mask: radial-gradient(120% 115% at 50% 48%, #000 52%, transparent 100%);
-  mask: radial-gradient(120% 115% at 50% 48%, #000 52%, transparent 100%);
+  -webkit-mask: radial-gradient(125% 120% at 50% 50%, #000 56%, transparent 100%);
+  mask: radial-gradient(125% 120% at 50% 50%, #000 56%, transparent 100%);
 }
-body.light .hero-frost::before { background: rgba(255, 255, 255, 0.42); }
-.hero-sub {
-  max-width: 600px; margin: clamp(16px, 2.4vh, 24px) auto 0;
-  color: var(--ink-dim); font-size: clamp(16px, 1.8vw, 20px); line-height: 1.55;
+body.light .hero-frost::before { background: rgba(255, 255, 255, 0.46); }
+.hero-sub { margin: 0 auto; color: var(--ink-dim); font-size: clamp(15.5px, 1.7vw, 19px); line-height: 1.55; }
+
+/* matters message: one morphing line at the bottom of the frost */
+.frost-rot { margin-top: 12px; text-align: center; font-family: var(--font-display);
+  font-weight: 800; line-height: 1.3; font-size: clamp(17px, 2.1vw, 25px); }
+.frost-rot .rot { display: inline-block; height: 1.3em; overflow: hidden; vertical-align: bottom; }
+.frost-rot .rot-track { display: flex; flex-direction: column; animation: frotcycle 15s cubic-bezier(0.7,0,0.3,1) infinite; }
+.frost-rot .ri { display: block; height: 1.3em; line-height: 1.3em; white-space: nowrap;
+  -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
+.frost-rot .ri0 { background-image: linear-gradient(120deg,#ff8a3d,#ff4db8); }
+.frost-rot .ri1 { background-image: linear-gradient(120deg,#2b88ff,#6b5bff); }
+.frost-rot .ri2 { background-image: linear-gradient(120deg,#18c8b6,#2b88ff); }
+.frost-rot .ri3 { background-image: linear-gradient(120deg,#9b4dff,#6b5bff); }
+.frost-rot .ri4 { background-image: linear-gradient(120deg,#ffd23d,#ff8a3d); }
+.frost-rot .ri5 { background-image: linear-gradient(120deg,#ff4db8,#9b4dff 60%,#2b88ff); }
+@keyframes frotcycle {
+  0%, 13%    { transform: translateY(0); }
+  16.6%, 30% { transform: translateY(-1.3em); }
+  33.3%, 46% { transform: translateY(-2.6em); }
+  50%, 63%   { transform: translateY(-3.9em); }
+  66.6%, 80% { transform: translateY(-5.2em); }
+  83.3%, 96% { transform: translateY(-6.5em); }
+  100%       { transform: translateY(-7.8em); }
 }
+@media (prefers-reduced-motion: reduce) { .frost-rot .rot-track { animation: none; } }
 .hero-link { margin-top: 14px; font-size: 14px; }
 .hero-link a { color: var(--ink-dim); border-bottom: 1px solid var(--glass-brd); padding-bottom: 1px; transition: color .2s, border-color .2s; }
 .hero-link a:hover { color: var(--ink); border-color: var(--ink-soft); }

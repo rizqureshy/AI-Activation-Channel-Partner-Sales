@@ -97,23 +97,25 @@ function morphCard(phrases) {
   `</div>`;
 }
 
-function hero({ eyebrow, h1, lead, cta, link }) {
-  return `<section class="hero">
-    <div class="hero-frost reveal">
-      ${eyebrow ? `<span class="eyebrow">${eyebrow}</span>` : ""}
-      <h1>${h1}</h1>
-      ${lead ? `<p class="hero-sub">${lead}</p>` : ""}
-    </div>
-    ${cta ? ctas(cta) : ""}
-    ${link ? `<p class="hero-link reveal"><a href="${link.h}">${link.t}</a></p>` : ""}
-  </section>`;
+/* one-line vertical "slot" rotator — phrases swap in place so it stays a single line */
+function rotLine(items) {
+  const seq = items.concat(items[0]);   // duplicate first for a seamless loop
+  return `<p class="frost-rot" aria-label="${items.join(" ")}"><span class="rot"><span class="rot-track">` +
+    seq.map((w, i) => `<span class="ri ri${i % items.length}" aria-hidden="true">${w}</span>`).join("") +
+  `</span></span></p>`;
 }
 
-/* an emotional "beat" — the matters message given its own airy moment */
-const manifestoBeat = () => `<section class="block manifesto-beat">
-  <p class="mb-caption reveal">Your <span class="g">AI story</span> · <span class="g">questions</span> · <span class="g">experiments</span> · <span class="g">work</span> · <span class="g">fun</span> — they all matter.</p>
-  <p class="mb-you reveal">You matter.</p>
-</section>`;
+function hero({ eyebrow, h1, lead, morph, cta }) {
+  return `<section class="hero">
+    ${eyebrow ? `<span class="eyebrow reveal">${eyebrow}</span>` : ""}
+    <h1 class="reveal">${h1}</h1>
+    <div class="hero-frost reveal">
+      ${lead ? `<p class="hero-sub">${lead}</p>` : ""}
+      ${morph ? rotLine(morph) : ""}
+    </div>
+    ${cta ? ctas(cta) : ""}
+  </section>`;
+}
 
 /* form builder (presentational demo — submits show a toast) */
 function field(f) {
@@ -174,14 +176,12 @@ ROUTES.home = {
     eyebrow: "✦ Learn · Share · Experiment · Have fun with AI",
     h1: `CRO <span class="gradient-text">AI Activation</span> Community`,
     lead: "The front door to AI at CRO — where everyone comes together to learn, build, and have fun. No experts required, just curiosity.",
+    morph: ["Your AI Story matters.", "Your AI Questions matter.", "Your AI Experiments matter.", "Your AI Work matters.", "Your AI Fun matters.", "You matter."],
     cta: [
       { t: "Join the Community", k: "primary", h: "#/join", svg: "users" },
       { t: "Explore the Gallery", k: "cool", h: "#/gallery", svg: "grid" },
     ],
-    link: { t: "or Skill Up, Speed Up →", h: "#/videos" },
   })
-
-  + manifestoBeat()
 
   + block({
     kicker: "Leadership Messages", title: "A warm welcome from our leaders",
