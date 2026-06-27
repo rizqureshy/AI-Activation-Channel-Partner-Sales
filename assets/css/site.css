@@ -317,6 +317,38 @@ h1, h2, h3 { font-family: var(--font-display); line-height: 1.08; font-weight: 7
   border: 1px solid var(--glass-brd); background: var(--glass);
 }
 .pill.on { color: #fff; background: var(--cool); border-color: transparent; }
+.pill.free { color: #57e0c8; border-color: rgba(87,224,200,.35); background: rgba(87,224,200,.10); font-weight: 600; }
+
+/* ---- Learning pathway: tier headers + course cards ---- */
+.tier-head { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 18px; }
+.tier-head .tier-num { font-size: 12px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
+  color: #fff; background: var(--cool); padding: 5px 11px; border-radius: 7px; }
+.tier-head h2 { margin: 0; font-size: clamp(20px, 2.4vw, 26px); }
+.tier-head .tier-who { margin-left: auto; font-size: 13px; color: var(--ink-soft); }
+.course {
+  display: grid; grid-template-columns: 44px 1fr; gap: 4px 18px;
+  padding: 22px 24px; margin-bottom: 14px; border-radius: 16px;
+  background: var(--glass); border: 1px solid var(--glass-brd);
+  transition: border-color .2s ease, transform .2s ease, background .2s ease;
+}
+.course:hover { border-color: var(--blue); transform: translateY(-2px); background: var(--glass-strong); }
+.course-idx { font-family: var(--font-display); font-size: 20px; font-weight: 700; color: var(--blue); }
+.course-body { min-width: 0; }
+.course-body h3 { margin: 0 0 3px; font-size: clamp(17px, 1.9vw, 20px); }
+.course-prov { margin: 0 0 4px; font-size: 13.5px; color: var(--ink-soft); }
+.course .pills { margin: 12px 0 14px; }
+.crow { display: flex; gap: 12px; margin: 0 0 8px; font-size: 14.5px; line-height: 1.5; }
+.crow .clabel { flex: 0 0 64px; color: var(--ink-soft); font-weight: 600; font-size: 12.5px;
+  text-transform: uppercase; letter-spacing: .08em; padding-top: 2px; }
+.crow .cval { color: var(--ink-dim); min-width: 0; }
+.crow .cval a { color: var(--blue); font-weight: 600; word-break: break-word; }
+.crow .cval a:hover { text-decoration: underline; }
+@media (max-width: 560px) {
+  .course { grid-template-columns: 1fr; }
+  .course-idx { display: none; }
+  .crow { flex-direction: column; gap: 2px; }
+  .crow .clabel { flex-basis: auto; }
+}
 
 /* ============================================================
    Hero

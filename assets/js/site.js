@@ -419,25 +419,94 @@ ROUTES.videos = {
   }),
 };
 
-/* ---- Learning Lanes ---- */
+/* ---- Learning Lanes: the GTM Ops AI Upskilling Pathway ---- */
+const PATHWAY = [
+  {
+    tier: "Tier 1", tierTitle: "Proficiency floor", who: "Broad · for everyone",
+    courses: [
+      {
+        idx: "01", t: "Google AI Essentials", prov: "Google · via Coursera (Grow with Google)",
+        tags: [{ l: "Paid certificate" }, { l: "~$49 per person" }, { l: "~10 hours · self-paced" }],
+        link: { url: "https://www.coursera.org/specializations/ai-essentials-google", label: "coursera.org/specializations/ai-essentials-google" },
+        cost: "Certificate requires a paid Coursera subscription, about $49 per person. Not covered by an Equinix license.",
+        outcome: "Universal generative-AI fluency: prompting, productivity, and responsible use across tools. Every operator can offload routine work and prompt with intent.",
+      },
+      {
+        idx: "02", t: "Career Essentials in Generative AI", prov: "Microsoft and LinkedIn",
+        tags: [{ l: "Free · LinkedIn Enterprise", free: true }, { l: "~4 to 5 hours" }, { l: "Certificate included" }],
+        link: { url: "https://www.linkedin.com/learning/paths/career-essentials-in-generative-ai-by-microsoft-and-linkedin", label: "linkedin.com/learning · Career Essentials in Generative AI" },
+        cost: "Free under the Equinix LinkedIn Learning Enterprise license, certificate included.",
+        outcome: "Stack-aligned adoption: Copilot inside Word, Excel, Outlook, Teams and PowerPoint, plus GenAI fundamentals and ethics. Proficiency on the tools the team already has.",
+      },
+      {
+        idx: "03", t: "Generative AI for Everyone", prov: "DeepLearning.AI (Andrew Ng) · via Coursera",
+        tags: [{ l: "Paid certificate" }, { l: "~$49 per person" }, { l: "~5 hours · self-paced" }],
+        link: { url: "https://www.coursera.org/learn/generative-ai-for-everyone", label: "coursera.org/learn/generative-ai-for-everyone" },
+        cost: "Certificate requires a paid Coursera subscription, about $49 per person. Not covered by an Equinix license.",
+        outcome: "Opportunity spotting and strategy: identify and scope where AI creates leverage across workflows. For the people who lead initiatives, not just use the tools.",
+      },
+    ],
+  },
+  {
+    tier: "Tier 2", tierTitle: "Microsoft certifications", who: "Recognized credentials",
+    courses: [
+      {
+        idx: "04", t: "Microsoft Certified: AI Business Professional", prov: "Microsoft · Exam AB-730 · practitioner level",
+        tags: [{ l: "Free course + completion cert", free: true }, { l: "Paid exam · $99" }, { l: "No coding" }],
+        link: { url: "https://learn.microsoft.com/en-us/credentials/certifications/ai-business-professional/", label: "learn.microsoft.com · AI Business Professional" },
+        cost: "The AB-730T00 course is free on Microsoft Learn with a completion certificate, study guide, practice assessment and exam sandbox. Only the official exam costs money — $99 USD (regional pricing).",
+        outcome: "Recognized practitioner credential: confident, responsible Copilot use in real business workflows. The broad cert for the GTM Ops population that clears Tier 1.",
+      },
+      {
+        idx: "05", t: "Microsoft Certified: AI Transformation Leader", prov: "Microsoft · Exam AB-731 · leadership level",
+        tags: [{ l: "Free course + completion cert", free: true }, { l: "Paid exam · $99" }, { l: "No coding" }],
+        link: { url: "https://learn.microsoft.com/en-us/credentials/certifications/ai-transformation-leader/", label: "learn.microsoft.com · AI Transformation Leader" },
+        cost: "The AB-731T00 course is free on Microsoft Learn with a completion certificate, study guide, practice assessment and exam sandbox. Only the official exam costs money — $99 USD (regional pricing).",
+        outcome: "Recognized leadership credential: define AI business value, plan adoption, govern responsibly and drive transformation across teams. For the leaders steering adoption.",
+      },
+    ],
+  },
+];
+function courseCard(c) {
+  const tags = `<div class="pills">` + c.tags.map((t) => `<span class="pill${t.free ? " free" : ""}">${t.l}</span>`).join("") + `</div>`;
+  return `<article class="course reveal">
+    <div class="course-idx">${c.idx}</div>
+    <div class="course-body">
+      <h3>${c.t}</h3>
+      <p class="course-prov">${c.prov}</p>
+      ${tags}
+      <p class="crow"><span class="clabel">Cost</span><span class="cval">${c.cost}</span></p>
+      <p class="crow"><span class="clabel">Outcome</span><span class="cval">${c.outcome}</span></p>
+      <p class="crow"><span class="clabel">Link</span><span class="cval"><a href="${c.link.url}" target="_blank" rel="noopener">${c.link.label} →</a></span></p>
+    </div>
+  </article>`;
+}
+function tierSection(t) {
+  return `<section class="block">
+    <div class="tier-head reveal"><span class="tier-num">${t.tier}</span><h2>${t.tierTitle}</h2><span class="tier-who">${t.who}</span></div>
+    ${t.courses.map(courseCard).join("")}
+  </section>`;
+}
 ROUTES.learning = {
   title: "Learning Lanes", formation: "stream",
-  html: () => block({
-    kicker: "Learning Lanes", title: `Pick a lane. <span class="gradient-cool">Learn by doing.</span>`,
-    lead: "Guided paths that feel practical, not like a course catalog. Each lane mixes quick tips, community examples, prompt packs, and mini challenges.",
-    inner: iconCards([
-      { t: "AI Basics for CRO", icon: "bulb" }, { t: "Copilot for Daily Productivity", icon: "bolt" },
-      { t: "ACE for GTM Knowledge & Customer Prep", icon: "shield" }, { t: "Prompting Beyond Basics", icon: "chat" },
-      { t: "AI for Account Planning", icon: "grid" }, { t: "AI for Sales Motions", icon: "rocket" },
-      { t: "AI for Customer Success", icon: "heart" }, { t: "AI for Marketing & Content", icon: "star" },
-      { t: "AI for Operations & Process", icon: "bolt" }, { t: "Responsible AI & Ethics", icon: "shield" },
-      { t: "Certification Prep", icon: "book" }, { t: "Team Activation Playbooks", icon: "users" },
-    ], 3),
+  html: () => hero({
+    eyebrow: "✦ GTM Ops Enablement",
+    h1: `AI Upskilling <span class="gradient-text">Pathway</span>`,
+    lead: "A clear path to build AI proficiency across GTM Ops — start with the proficiency floor, then earn a recognized Microsoft credential.",
   })
   + block({
-    kicker: "Learning formats", panel: true, title: "How you'll learn",
-    inner: pills(["5-minute tips", "Weekly learning cards", "Community examples", "Prompt packs", "Demo videos", "Office hours", "Peer walkthroughs", "Practical templates"])
-      + ctas([{ t: "Choose a Learning Lane", k: "primary", toast: "Pick a lane — opening your learning path…", svg: "book" }, { t: "Watch quick videos", k: "cool", h: "#/videos", svg: "play" }]),
+    panel: true, warm: true, title: "What's free, what's paid",
+    inner: bullets([
+      "<b>Free to your team:</b> the LinkedIn course, covered by the Equinix LinkedIn Learning Enterprise license — certificate included.",
+      "<b>Paid:</b> the two Coursera courses, about $49 per person, not licensed.",
+      "<b>Microsoft:</b> both courses are free with a completion certificate; only the official certification exam costs $99.",
+    ]),
+  })
+  + PATHWAY.map(tierSection).join("")
+  + block({
+    panel: true, title: "Suggested rollout",
+    lead: "Tier 1 sets the proficiency floor for everyone, with the AB-730 practitioner cert as the recognized next step. Reserve the AB-731 leadership cert for those guiding adoption.",
+    inner: ctas([{ t: "Watch quick AI videos", k: "primary", h: "#/videos", svg: "play" }, { t: "Book a 1:1 in the AI Clinic", k: "cool", h: "#/clinic", svg: "chat" }]),
   }),
 };
 
