@@ -97,14 +97,15 @@ function morphCard(phrases) {
   `</div>`;
 }
 
-function hero({ eyebrow, h1, lead, cta, link, proof }) {
+function hero({ eyebrow, h1, lead, cta, link }) {
   return `<section class="hero">
-    ${eyebrow ? `<span class="eyebrow reveal">${eyebrow}</span>` : ""}
-    <h1 class="reveal">${h1}</h1>
-    ${lead ? `<p class="hero-sub reveal">${lead}</p>` : ""}
+    <div class="hero-frost reveal">
+      ${eyebrow ? `<span class="eyebrow">${eyebrow}</span>` : ""}
+      <h1>${h1}</h1>
+      ${lead ? `<p class="hero-sub">${lead}</p>` : ""}
+    </div>
     ${cta ? ctas(cta) : ""}
     ${link ? `<p class="hero-link reveal"><a href="${link.h}">${link.t}</a></p>` : ""}
-    ${proof || ""}
   </section>`;
 }
 
@@ -178,7 +179,6 @@ ROUTES.home = {
       { t: "Explore the Gallery", k: "cool", h: "#/gallery", svg: "grid" },
     ],
     link: { t: "or Skill Up, Speed Up →", h: "#/videos" },
-    proof: proofRow(),
   })
 
   + manifestoBeat()
@@ -277,12 +277,6 @@ const leaderCards = () => `<div class="grid c3">` + LEADERS.map((l) => `
     <div class="lwho"><h3>${l.name}</h3><span>${l.role}</span></div>
     <p class="lmsg">${l.msg}</p>
   </article>`).join("") + `</div>`;
-
-/* hero "belonging" strip — leader avatars + a trust line */
-const proofRow = () => `<div class="proof reveal">
-  <span class="avatars">${LEADERS.map((l) => `<img loading="lazy" src="${l.img}" alt="${l.name}">`).join("")}</span>
-  <span class="proof-txt">Backed by leadership — and built by all of us across CRO.</span>
-</div>`;
 
 /* ---- certification map + voices (6 people, 6 certs from the AI Enablement session) ---- */
 const CERTS = [
