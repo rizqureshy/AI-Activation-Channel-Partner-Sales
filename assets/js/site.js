@@ -415,15 +415,42 @@ ROUTES.clinic = {
   })
   + block({
     id: "book", panel: true, warm: true, title: "Book your 1:1 consultation",
-    lead: "Tell us a little about what you'd like to discuss and we'll match you with the right Community Expert and follow up to confirm a time.",
-    inner: formHTML([
-      { l: "Your name", t: "text" },
-      { l: "Team / Function", t: "text" },
-      { l: "What would you like to discuss?", t: "select", opts: ["A use case or idea", "A challenge I'm stuck on", "My AI learning journey", "Choosing the right tool", "Something else"] },
-      { l: "Tell us more", t: "textarea", ph: "Share your use case, idea, or challenge so we can match you with the right expert." },
-    ], "Request a 1:1 Consultation"),
+    lead: "1:1 sessions run every Wednesday, 12:30–1:00 PM ET. Pick a date, tell us who you are and what you'd like to discuss, and we'll send a calendar invite to you and the clinic host.",
+    inner: clinicBooking(),
   }),
 };
+
+/* ---- AI Clinic booking: weekly Wednesday 12:30–1:00 PM ET slots ---- */
+const CLINIC = { host: "rqureshy@equinix.com", hostName: "Riz Qureshy", startHM: "1230", endHM: "1300" };
+
+function nextWednesdays(count) {
+  const out = [];
+  const d = new Date(); d.setHours(0, 0, 0, 0);
+  d.setDate(d.getDate() + ((3 - d.getDay() + 7) % 7));   // 3 = Wednesday
+  for (let i = 0; i < count; i++) { out.push(new Date(d)); d.setDate(d.getDate() + 7); }
+  return out;
+}
+function ymd(d) {
+  return `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, "0")}${String(d.getDate()).padStart(2, "0")}`;
+}
+function clinicBooking() {
+  const slots = nextWednesdays(8).map((d) => {
+    const label = d.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+    return `<button type="button" class="slot" data-date="${ymd(d)}" data-label="${label}">
+      <span class="slot-day">${label}</span><span class="slot-time">12:30–1:00 PM ET</span></button>`;
+  }).join("");
+  return `<div class="booking" id="booking">
+    <span class="kicker reveal"><span class="dot"></span> Choose a Wednesday</span>
+    <div class="slots reveal">${slots}</div>
+    <form class="form reveal" data-booking>
+      <div class="field"><label for="bk-first">First name</label><input id="bk-first" type="text" autocomplete="given-name" required></div>
+      <div class="field"><label for="bk-last">Last name</label><input id="bk-last" type="text" autocomplete="family-name" required></div>
+      <div class="field"><label for="bk-email">Email</label><input id="bk-email" type="email" autocomplete="email" required></div>
+      <div class="field"><label for="bk-intro">Brief intro — what's your use-case?</label><textarea id="bk-intro" required placeholder="A sentence or two about the idea, challenge, or use case you'd like to discuss."></textarea></div>
+      <div class="cta-row"><button class="btn primary" type="submit">${ic("calendar")}Book my slot</button></div>
+    </form>
+  </div>`;
+}
 
 /* ---- AI Activation for Teams ---- */
 ROUTES.teams = {
@@ -544,6 +571,7 @@ function showToast(msg) {
   toastTimer = setTimeout(() => toast.classList.remove("show"), 3200);
 }
 document.addEventListener("submit", (e) => {
+  if (e.target.matches("form[data-booking]")) { e.preventDefault(); submitBooking(e.target); return; }
   if (e.target.matches("form[data-demo]")) {
     e.preventDefault();
     showToast("Thanks for contributing! 🎉  (Demo — wiring to Viva Engage / SharePoint comes next.)");
@@ -559,7 +587,85 @@ document.addEventListener("click", (e) => {
     const tgt = document.getElementById(s.getAttribute("data-scroll"));
     if (tgt) tgt.scrollIntoView({ behavior: "smooth", block: "start" });
   }
+  const slot = e.target.closest(".slot");
+  if (slot) {
+    slot.closest(".slots").querySelectorAll(".slot.sel").forEach((s2) => s2.classList.remove("sel"));
+    slot.classList.add("sel");
+  }
 });
+
+/* ---- AI Clinic booking: build a calendar invite + notify the host ---- */
+function icsEscape(s) { return String(s).replace(/[\\,;]/g, (m) => "\\" + m).replace(/\r?\n/g, "\\n"); }
+function utcStamp() {
+  const d = new Date();
+  const p = (n) => String(n).padStart(2, "0");
+  return `${d.getUTCFullYear()}${p(d.getUTCMonth() + 1)}${p(d.getUTCDate())}T${p(d.getUTCHours())}${p(d.getUTCMinutes())}${p(d.getUTCSeconds())}Z`;
+}
+function buildICS({ date, first, last, email, intro }) {
+  const name = `${first} ${last}`.trim();
+  const uid = `${date}-${Math.random().toString(36).slice(2)}@cro-ai-activation`;
+  const desc = `1:1 AI Clinic consultation with a CRO AI Activation Community Expert.\n\nRequested by: ${name} <${email}>\n\nUse-case: ${intro}`;
+  return [
+    "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//CRO AI Activation Community//AI Clinic//EN",
+    "CALSCALE:GREGORIAN", "METHOD:REQUEST",
+    "BEGIN:VTIMEZONE", "TZID:America/New_York",
+    "BEGIN:DAYLIGHT", "TZOFFSETFROM:-0500", "TZOFFSETTO:-0400", "TZNAME:EDT",
+    "DTSTART:19700308T020000", "RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=2SU", "END:DAYLIGHT",
+    "BEGIN:STANDARD", "TZOFFSETFROM:-0400", "TZOFFSETTO:-0500", "TZNAME:EST",
+    "DTSTART:19701101T020000", "RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU", "END:STANDARD",
+    "END:VTIMEZONE",
+    "BEGIN:VEVENT", `UID:${uid}`, `DTSTAMP:${utcStamp()}`,
+    `DTSTART;TZID=America/New_York:${date}T${CLINIC.startHM}00`,
+    `DTEND;TZID=America/New_York:${date}T${CLINIC.endHM}00`,
+    "SUMMARY:AI Clinic — 1:1 with a Community Expert",
+    `DESCRIPTION:${icsEscape(desc)}`,
+    "LOCATION:Online",
+    `ORGANIZER;CN=CRO AI Activation Community:mailto:${CLINIC.host}`,
+    `ATTENDEE;CN=${icsEscape(name)};ROLE=REQ-PARTICIPANT;RSVP=TRUE:mailto:${email}`,
+    `ATTENDEE;CN=${CLINIC.hostName};ROLE=CHAIR;RSVP=TRUE:mailto:${CLINIC.host}`,
+    "STATUS:CONFIRMED", "SEQUENCE:0",
+    "BEGIN:VALARM", "TRIGGER:-PT10M", "ACTION:DISPLAY", "DESCRIPTION:AI Clinic 1:1 in 10 minutes", "END:VALARM",
+    "END:VEVENT", "END:VCALENDAR",
+  ].join("\r\n");
+}
+function submitBooking(form) {
+  const sel = document.querySelector("#booking .slot.sel");
+  if (!sel) { showToast("Please pick a Wednesday slot first."); return; }
+  const first = form.querySelector("#bk-first").value.trim();
+  const last = form.querySelector("#bk-last").value.trim();
+  const email = form.querySelector("#bk-email").value.trim();
+  const intro = form.querySelector("#bk-intro").value.trim();
+  if (!first || !last || !email || !intro) { showToast("Please complete every field so we can book your slot."); return; }
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { showToast("That email doesn't look right — please check it."); return; }
+
+  const date = sel.getAttribute("data-date");
+  const label = sel.getAttribute("data-label");
+  const ics = buildICS({ date, first, last, email, intro });
+
+  // 1) hand the requestor a real calendar invite (.ics with both attendees)
+  const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = `AI-Clinic-1on1-${date}.ics`;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 4000);
+
+  // 2) notify the host (cc the requestor) with the booking details
+  const subject = encodeURIComponent(`AI Clinic 1:1 — ${first} ${last} — ${label}, 12:30–1:00 PM ET`);
+  const body = encodeURIComponent(
+    `New AI Clinic 1:1 booking\n\n` +
+    `Name: ${first} ${last}\nEmail: ${email}\n` +
+    `Slot: ${label}, 12:30–1:00 PM ET\n\nUse-case:\n${intro}\n\n` +
+    `A calendar invite (.ics) has been generated for both attendees.`
+  );
+  const m = document.createElement("a");
+  m.href = `mailto:${CLINIC.host}?cc=${encodeURIComponent(email)}&subject=${subject}&body=${body}`;
+  document.body.appendChild(m); m.click(); m.remove();
+
+  showToast(`Booked ${label}, 12:30–1:00 PM ET 🎉  Calendar invite downloaded — confirm the email to notify the host.`);
+  form.reset();
+  sel.classList.remove("sel");
+}
 
 /* ---- theme: dark ⟷ dawn/dusk (light) ---- */
 const THEME_KEY = "cro-theme";

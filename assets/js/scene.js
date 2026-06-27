@@ -792,7 +792,8 @@ export class Cosmos {
       rocket:       { make: () => this._formRocket(),            cam: [0, 0.25, 14.4], opts: { spin: 0.0, arc: 1.7, dur: 1.9 } },
       power:        { make: () => this._formPower(),             cam: [0, 0.3, 13.8],  opts: { spin: 0.04, arc: 1.5, dur: 1.9 } },
       check:        { make: () => this._formCheck(),             cam: [0, 0.3, 13.6],  opts: { spin: 0.0, arc: 1.6, dur: 1.9 } },
-      medical:      { make: () => this._formMedical(),           cam: [0, 0.3, 13.2],  opts: { spin: 0.06, arc: 1.4, dur: 1.9 } },
+      medical:      { make: () => this._formMedical(),           cam: [0, 0.3, 13.2],  opts: { spin: 0.10, arc: 1.4, dur: 1.9 },
+                                                                 drift: { ax: 2.8, ay: 1.4, az: 0.6, sx: 0.07, sy: 0.05, sz: 0.04 } },
       fireworks:    { make: () => this._formFireworks(),         cam: [0, 0.2, 13.4],  opts: { spin: 0.04, arc: 2.4, dur: 1.7, ease: "power2.out" } },
     };
   }
@@ -808,6 +809,7 @@ export class Cosmos {
     const [nameRaw, arg] = String(spec || "orb").trim().split(":");
     const def = this._registry[nameRaw] || this._registry.orb;
     this._morphTo(def.make(arg), { ...def.opts, ...over });
+    this.drift = over.drift || def.drift || null;   // gentle wandering for this formation (else recenter)
     const cam = over.cam || def.cam;
     this._camTo(cam[0], cam[1], cam[2]);
 
@@ -884,6 +886,22 @@ export class Cosmos {
     this.camera.lookAt(0, this.camBase.y * 0.2, 0);
 
     if (this.uniforms) this.uniforms.uTime.value = t;
+
+    // per-formation drift: let the field wander gently instead of sitting locked
+    // at the origin. Formations without a drift spec ease back to centre.
+    if (this.points) {
+      const d = this.drift;
+      if (d) {
+        this.points.position.x = Math.sin(t * d.sx) * d.ax;
+        this.points.position.y = Math.cos(t * d.sy) * d.ay;
+        this.points.position.z = Math.sin(t * d.sz) * (d.az || 0);
+      } else if (this.points.position.lengthSq() > 0.0004) {
+        this.points.position.multiplyScalar(0.96);   // settle back to centre
+      } else {
+        this.points.position.set(0, 0, 0);
+      }
+    }
+
     if (this.live && this.liveMode === "fireworks") this._fwStep(t);
     if (this.stars) this.stars.rotation.y = t * 0.008;
     if (this.nebula) {
