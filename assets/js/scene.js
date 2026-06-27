@@ -686,6 +686,54 @@ export class Cosmos {
     return { pos, col };
   }
 
+  // a graduation cap — mortarboard + head + gold tassel. For Learning Lanes.
+  _formGradCap() {
+    const { pos, col } = this._alloc(), N = this.N;
+    const tmp = new THREE.Color();
+    const baseY = 0.3, cb = 0.75;                    // board centre height
+    const BW = 2.35, BH = 0.82;                      // mortarboard half-width / half-height (flat diamond)
+    const tx = 1.75;                                 // tassel hangs from this x
+    const wBoard = 5, wHead = 3, wTas = 1.3, wBtn = 0.3, wTot = wBoard + wHead + wTas + wBtn;
+
+    for (let i = 0; i < N; i++) {
+      let x, y, kind;
+      const pick = Math.random() * wTot;
+      if (pick < wBoard) {                            // mortarboard (flat diamond)
+        kind = "board";
+        let u = Math.random(), v = Math.random();
+        if (u + v > 1) { u = 1 - u; v = 1 - v; }
+        x = (Math.random() < 0.5 ? 1 : -1) * u * BW;
+        y = cb + (Math.random() < 0.5 ? 1 : -1) * v * BH;
+      } else if (pick < wBoard + wHead) {             // head / cap base (trapezoid below board)
+        kind = "head";
+        const t = Math.random();
+        const hw = 0.95 - t * 0.32;
+        x = (Math.random() * 2 - 1) * hw;
+        y = (cb - 0.1) - t * 1.25;
+      } else if (pick < wBoard + wHead + wTas) {      // tassel — along the board then hanging down
+        kind = "tassel";
+        if (Math.random() < 0.4) { x = Math.random() * tx; y = cb + (Math.random() - 0.5) * 0.06; }
+        else {
+          const d = Math.random();
+          x = tx + (Math.random() - 0.5) * (d > 0.85 ? 0.34 : 0.08);   // widen into a knot at the bottom
+          y = cb - d * 1.5;
+        }
+      } else {                                        // button at board centre
+        kind = "btn";
+        x = (Math.random() - 0.5) * 0.18; y = cb + (Math.random() - 0.5) * 0.18;
+      }
+      pos[i * 3] = x;
+      pos[i * 3 + 1] = y + baseY;
+      pos[i * 3 + 2] = (Math.random() - 0.5) * 0.6;
+      let tcol;
+      if (kind === "tassel" || kind === "btn") tcol = Math.random() < 0.3 ? C.white : tmp.copy(C.gold).lerp(C.pink, Math.random() * 0.3);
+      else if (kind === "board") tcol = Math.random() < 0.08 ? C.white : tmp.copy(C.iris).lerp(C.violet, Math.random());
+      else tcol = tmp.copy(C.violet).lerp(C.blue, Math.random());
+      this._setCol(col, i, tcol, 0.07);
+    }
+    return { pos, col };
+  }
+
   // a calendar page — card outline, binder tabs, header band, grid of day dots
   // with a few highlighted "event" days. For the AI Events Calendar.
   _formCalendar() {
@@ -940,6 +988,8 @@ export class Cosmos {
                                                                  drift: { ax: 0.6, ay: 1.0, az: 0.4, sx: 0.05, sy: 0.07, sz: 0.05 } },
       steps:        { make: () => this._formSteps(),             cam: [0, 0.3, 13.6],  opts: { spin: 0.0, arc: 1.5, dur: 1.9 },
                                                                  drift: { ax: 1.0, ay: 0.8, az: 0.4, sx: 0.05, sy: 0.06, sz: 0.04 } },
+      gradcap:      { make: () => this._formGradCap(),           cam: [0, 0.3, 13.4],  opts: { spin: 0.0, arc: 1.5, dur: 1.9 },
+                                                                 drift: { ax: 0.6, ay: 0.6, az: 0.3, sx: 0.05, sy: 0.05, sz: 0.04 } },
       calendar:     { make: () => this._formCalendar(),          cam: [0, 0.3, 13.6],  opts: { spin: 0.0, arc: 1.5, dur: 1.9 },
                                                                  drift: { ax: 0.9, ay: 0.9, az: 0.4, sx: 0.05, sy: 0.06, sz: 0.04 } },
       fireworks:    { make: () => this._formFireworks(),         cam: [0, 0.2, 13.4],  opts: { spin: 0.04, arc: 2.4, dur: 1.7, ease: "power2.out" } },

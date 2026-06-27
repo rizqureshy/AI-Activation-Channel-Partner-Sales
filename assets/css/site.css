@@ -335,10 +335,11 @@ h1, h2, h3 { font-family: var(--font-display); line-height: 1.08; font-weight: 7
 .course {
   display: grid; grid-template-columns: 44px 1fr; gap: 4px 18px;
   padding: 22px 24px; margin-bottom: 14px; border-radius: 16px;
-  background: var(--glass); border: 1px solid var(--glass-brd);
+  background: var(--surface-2); border: 1px solid var(--glass-brd);
+  backdrop-filter: blur(16px) saturate(1.08); -webkit-backdrop-filter: blur(16px) saturate(1.08);
   transition: border-color .2s ease, transform .2s ease, background .2s ease;
 }
-.course:hover { border-color: var(--blue); transform: translateY(-2px); background: var(--glass-strong); }
+.course:hover { border-color: var(--blue); transform: translateY(-2px); background: var(--surface-h); }
 .course-idx { font-family: var(--font-display); font-size: 20px; font-weight: 700; color: var(--blue); }
 .course-body { min-width: 0; }
 .course-body h3 { margin: 0 0 3px; font-size: clamp(17px, 1.9vw, 20px); }
