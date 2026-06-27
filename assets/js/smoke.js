@@ -43,41 +43,54 @@ float fbm(vec2 p){
   for(int i = 0; i < 6; i++){ v += a * noise(p); p = M * p; a *= 0.5; }
   return v;
 }
+// "billow" turbulence — abs() of signed noise stacks into puffy, cauliflower
+// shapes, the structure you see in real ink clouds and smoke.
+float turb(vec2 p){
+  float v = 0.0, a = 0.5;
+  for(int i = 0; i < 6; i++){ v += a * abs(2.0 * noise(p) - 1.0); p = M * p; a *= 0.5; }
+  return v;
+}
 
 void main(){
   vec2 uv = gl_FragCoord.xy / uRes;
-  vec2 p = vec2(uv.x * (uRes.x / uRes.y), uv.y) * 2.4;
-  float t = uTime * 0.045;
+  float asp = uRes.x / uRes.y;
+  vec2 c = uv - vec2(0.5, 0.52);
+  c.x *= asp;                                  // aspect-correct, centred
+  float t = uTime * 0.03;
 
-  // domain warping: fold the noise field through itself for smoky tendrils
-  vec2 q = vec2(fbm(p + t), fbm(p + vec2(5.2, 1.3) - t));
-  vec2 r = vec2(fbm(p + 3.6 * q + vec2(1.7, 9.2) + 0.15 * t),
-                fbm(p + 3.6 * q + vec2(8.3, 2.8) - 0.12 * t));
-  float f = fbm(p + 3.8 * r);
+  // slow domain warp drives the big rolling motion of the cloud
+  vec2 p = c * 1.55;
+  vec2 warp = vec2(fbm(p * 0.6 + vec2(0.0, t)), fbm(p * 0.6 + vec2(4.3, -t) + 5.0));
 
-  // bright liquid palette
-  vec3 pink   = vec3(1.00, 0.30, 0.72);
-  vec3 violet = vec3(0.42, 0.36, 1.00);
-  vec3 teal   = vec3(0.09, 0.78, 0.71);
-  vec3 blue   = vec3(0.17, 0.53, 1.00);
-  vec3 gold   = vec3(1.00, 0.78, 0.27);
+  // a big billowing mass + a wide falloff so it stays a cloud in clear water
+  float billow = turb(p * 1.3 + warp * 1.5 + vec2(t * 0.5, -t));
+  float rad = length(c * vec2(0.82, 1.0));
+  float fall = smoothstep(1.35, 0.05, rad);
+  float d = smoothstep(0.34, 0.82, billow) * fall;
 
-  // pick the dye colour from the warp vectors so different "drops" differ
-  vec3 ink = mix(violet, pink,  clamp(length(q) * 1.1, 0.0, 1.0));
-  ink = mix(ink, teal,   clamp(length(r) * 1.2, 0.0, 1.0));
-  ink = mix(ink, blue,   clamp(0.6 * r.x + 0.4 * q.y, 0.0, 1.0));
-  ink = mix(ink, gold,   clamp(f * f * 1.2 - 0.25, 0.0, 1.0));
+  // finer tendrils feathering off the edges of the mass
+  float fine = turb(p * 3.6 + warp * 2.4 - vec2(t * 1.3, t));
+  d += 0.30 * smoothstep(0.6, 0.95, fine) * fall * smoothstep(0.02, 0.45, d + 0.2);
+  d = clamp(d, 0.0, 1.0);
 
-  // clear water base, faintly cool
-  vec3 water = vec3(0.95, 0.965, 0.99);
+  // which dye colours bloom where (a few bright liquids, cool-leaning like the ref)
+  float hsel = fbm(p * 0.7 + warp + 12.0);
+  vec3 blue    = vec3(0.10, 0.52, 0.94);
+  vec3 cyan    = vec3(0.16, 0.80, 0.96);
+  vec3 violet  = vec3(0.42, 0.32, 0.98);
+  vec3 magenta = vec3(0.98, 0.30, 0.72);
+  vec3 ink = mix(blue, cyan, smoothstep(0.18, 0.42, hsel));
+  ink = mix(ink, violet,  smoothstep(0.48, 0.68, hsel));
+  ink = mix(ink, magenta, smoothstep(0.76, 0.96, hsel));
 
-  // density of dye in the water — translucent, with brighter cores
-  float d = smoothstep(0.32, 1.05, f + 0.35 * length(r));
-  vec3 col = mix(water, ink, d * 0.92);
-  col += 0.18 * smoothstep(0.85, 1.25, f + 0.3 * length(q)) * ink;   // luminous cores
+  // depth: pale, translucent wisps at the edges → deep saturated cores
+  vec3 edge = mix(vec3(1.0), ink, 0.85);
+  vec3 core = ink * 0.40;
+  vec3 inkShaded = mix(edge, core, smoothstep(0.28, 0.95, d));
 
-  // a gentle top-down light so the water feels lit
-  col *= 1.0 - 0.10 * (uv.y - 0.5);
+  vec3 water = vec3(1.0);                       // clear water
+  float alpha = smoothstep(0.0, 0.22, d);       // dense — ink reads strongly against the white
+  vec3 col = mix(water, inkShaded, alpha);
   fragColor = vec4(clamp(col, 0.0, 1.0), 1.0);
 }
 `;
@@ -88,7 +101,7 @@ export class Smoke {
     this.gl = canvas.getContext("webgl2", { antialias: false, alpha: false, powerPreference: "low-power" });
     this._raf = null;
     this._t0 = null;
-    this._scale = 0.6;                       // render below native res — it's soft anyway
+    this._scale = 0.8;                       // render a bit below native res (perf), still keeps tendrils
     if (!this.gl) { this.ok = false; return; }
     this.ok = this._build();
     if (this.ok) {
