@@ -659,6 +659,33 @@ export class Cosmos {
     return { pos, col };
   }
 
+  // ascending staircase — the upskilling "pathway": steps climb and warm in
+  // colour from cool (start) to gold (mastery). For Learning Lanes.
+  _formSteps() {
+    const { pos, col } = this._alloc(), N = this.N;
+    const tmp = new THREE.Color();
+    const baseY = 0.3, n = 5, sw = 0.95, sh = 0.62;
+    const Wt = n * sw, x0 = -Wt / 2, yBot = baseY - (n * sh) / 2 - 0.1;
+    const stops = [C.blue, C.teal, C.violet, C.pink, C.gold];   // cool → warm as you climb
+
+    for (let i = 0; i < N; i++) {
+      const s = Math.floor(Math.random() * n);
+      const riser = Math.random() < 0.18;                       // a few brighten the leading edge of each step
+      const xLo = x0 + s * sw, yHi = yBot + (s + 1) * sh;
+      let x = xLo + Math.random() * sw;
+      let y = yBot + Math.random() * (yHi - yBot);
+      if (riser) { x = xLo + (Math.random() - 0.5) * 0.12; }    // cluster on the step's left edge
+      x += (Math.random() - 0.5) * 0.05;
+      pos[i * 3] = x;
+      pos[i * 3 + 1] = y;
+      pos[i * 3 + 2] = (Math.random() - 0.5) * 0.7;
+      const base = stops[s];
+      const tcol = Math.random() < 0.08 ? C.white : tmp.copy(base).lerp(stops[Math.min(s + 1, n - 1)], Math.random() * 0.5);
+      this._setCol(col, i, tcol, 0.08);
+    }
+    return { pos, col };
+  }
+
   // a calendar page — card outline, binder tabs, header band, grid of day dots
   // with a few highlighted "event" days. For the AI Events Calendar.
   _formCalendar() {
@@ -911,6 +938,8 @@ export class Cosmos {
                                                                  drift: { ax: 1.1, ay: 1.5, az: 0.5, sx: 0.05, sy: 0.045, sz: 0.05 } },
       heart:        { make: () => this._formHeart(),             cam: [0, 0.3, 12.8],  opts: { spin: 0.0, arc: 1.6, dur: 1.9 },
                                                                  drift: { ax: 0.6, ay: 1.0, az: 0.4, sx: 0.05, sy: 0.07, sz: 0.05 } },
+      steps:        { make: () => this._formSteps(),             cam: [0, 0.3, 13.6],  opts: { spin: 0.0, arc: 1.5, dur: 1.9 },
+                                                                 drift: { ax: 1.0, ay: 0.8, az: 0.4, sx: 0.05, sy: 0.06, sz: 0.04 } },
       calendar:     { make: () => this._formCalendar(),          cam: [0, 0.3, 13.6],  opts: { spin: 0.0, arc: 1.5, dur: 1.9 },
                                                                  drift: { ax: 0.9, ay: 0.9, az: 0.4, sx: 0.05, sy: 0.06, sz: 0.04 } },
       fireworks:    { make: () => this._formFireworks(),         cam: [0, 0.2, 13.4],  opts: { spin: 0.04, arc: 2.4, dur: 1.7, ease: "power2.out" } },

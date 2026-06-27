@@ -488,19 +488,11 @@ function tierSection(t) {
   </section>`;
 }
 ROUTES.learning = {
-  title: "Learning Lanes", formation: "stream",
+  title: "Learning Lanes", formation: "steps",
   html: () => hero({
     eyebrow: "✦ GTM Ops Enablement",
     h1: `AI Upskilling <span class="gradient-text">Pathway</span>`,
     lead: "A clear path to build AI proficiency across GTM Ops — start with the proficiency floor, then earn a recognized Microsoft credential.",
-  })
-  + block({
-    panel: true, warm: true, title: "What's free, what's paid",
-    inner: bullets([
-      "<b>Free to your team:</b> the LinkedIn course, covered by the Equinix LinkedIn Learning Enterprise license — certificate included.",
-      "<b>Paid:</b> the two Coursera courses, about $49 per person, not licensed.",
-      "<b>Microsoft:</b> both courses are free with a completion certificate; only the official certification exam costs $99.",
-    ]),
   })
   + PATHWAY.map(tierSection).join("")
   + block({
