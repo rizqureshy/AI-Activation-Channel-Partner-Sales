@@ -721,7 +721,7 @@ if (splash && splashOpen) {
     document.body.classList.add("door-entry");      // home rises from the other side of the door
     splash.classList.add("opening");
     splash.setAttribute("aria-hidden", "true");
-    setTimeout(() => splash.classList.add("gone"), 2500);
+    setTimeout(() => splash.classList.add("gone"), 3700);
   };
   splashOpen.addEventListener("click", openDoor);
 }
