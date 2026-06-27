@@ -89,24 +89,21 @@ function block({ kicker, title, lead, inner = "", panel, warm }) {
     `</section>`;
 }
 
-function rotatorCard({ top, prefix, items }) {
-  const seq = items.concat(items[0]);   // duplicate first for a seamless loop
-  return `<div class="manifesto oneline">
-    <p class="mtop">${top}</p>
-    <p class="mrot">${prefix}&nbsp;<span class="rot" aria-label="${items.join(", ")}"><span class="rot-track">` +
-      seq.map((w, i) => `<span class="ri ri${i % items.length}" aria-hidden="true">${w}</span>`).join("") +
-    `</span></span></p>
-  </div>`;
+function morphCard(phrases) {
+  // one centered line that morphs through each phrase; because it's centered,
+  // the leading word ("You" / "Your") shifts position as the phrase changes
+  return `<div class="manifesto morph" aria-label="${phrases.join(" ")}">` +
+    phrases.map((w, i) => `<span class="mph m${i % 6}${i === phrases.length - 1 ? " mph-you" : ""}" style="--i:${i}" aria-hidden="true">${w}</span>`).join("") +
+  `</div>`;
 }
 
-function hero({ eyebrow, h1, sub, rotator, cta }) {
-  const subHTML = !sub ? ""
-    : (Array.isArray(sub) ? sub : [sub]).map((p) => `<p class="sub reveal">${p}</p>`).join("");
-  const card = rotator ? rotatorCard(rotator) : "";
+function hero({ eyebrow, h1, pane, morph, cta }) {
+  const paneHTML = pane ? `<div class="panel hero-pane reveal">${pane}</div>` : "";
+  const card = morph ? morphCard(morph) : "";
   return `<section class="hero">
     ${eyebrow ? `<span class="eyebrow reveal">${eyebrow}</span>` : ""}
     <h1 class="reveal">${h1}</h1>
-    ${subHTML}
+    ${paneHTML}
     ${card}
     ${cta ? ctas(cta) : ""}
   </section>`;
@@ -166,20 +163,14 @@ const ROUTES = {};
 
 /* ---- Home ---- */
 ROUTES.home = {
-  title: "Home", formation: "split",
+  title: "Home", formation: "orbit",
   html: () => hero({
-    eyebrow: "✦ The front door to the CRO AI Activation Community",
-    h1: `Welcome to CRO <span class="gradient-text">AI Activation</span> Community`,
-    sub: [
-      "AI Activation is not just about learning tools. It is about creating <b>energy, confidence, creativity, and momentum</b> across CRO.",
-      "Join the CRO AI Activation Community to learn, share, showcase, ask questions, experiment with AI — and above all, <b>have fun</b>.",
-      "This is a bright and burning space for ideas, experiments, challenges, stories, competitions, shoutouts, and real AI capability building across the business.",
-    ],
-    rotator: {
-      top: "You Matter.",
-      prefix: "Your",
-      items: ["AI Story Matters.", "AI Questions Matter.", "AI Experiments Matter.", "AI Work Matters.", "AI Fun Matters."],
-    },
+    eyebrow: "✦ The front door to the community",
+    h1: `CRO <span class="gradient-text">AI Activation</span> Community`,
+    pane: `<h2 class="reveal" style="font-size:clamp(19px,2.3vw,27px);margin-bottom:10px">A place for <span class="gradient-cool">practical AI</span>, real examples, and real people</h2>
+      <p class="lead reveal" style="margin:0 auto">Everyone across CRO, together around AI learning, practical use cases, team activation, experiments, and success stories — building <b>energy, confidence, creativity, and momentum</b>, and having fun along the way.</p>
+      <p class="micro reveal">You don't need to be an expert. Just curiosity, willingness to learn, and something to share.</p>`,
+    morph: ["Your AI Story Matters.", "Your AI Questions Matter.", "Your AI Experiments Matter.", "Your AI Work Matters.", "Your AI Fun Matters.", "You Matter."],
     cta: [
       { t: "Join the Community", k: "primary", h: "#/join", svg: "users" },
       { t: "Explore the Community Gallery", k: "cool", h: "#/gallery", svg: "grid" },
@@ -188,88 +179,9 @@ ROUTES.home = {
   })
 
   + block({
-    kicker: "Welcome to the Community", panel: true,
-    title: `A place for <span class="gradient-cool">practical AI</span>, real examples, and real people`,
-    lead: "Welcome to the CRO AI Activation Community — a space for everyone across CRO to come together around AI learning, practical use cases, team activation, experiments, and success stories.",
-    inner: `<p class="lead reveal" style="margin-top:14px">Whether you are just starting, trying to use Copilot more effectively, building a workflow, experimenting with ACE, or helping your team activate AI — this community is for you.</p>
-      <p class="micro reveal">You do not need to be an expert to participate. You just need curiosity, willingness to learn, and something to share.</p>`,
-  })
-
-  + block({
-    kicker: "Join Us", title: "Joining is open, simple, and friction-free",
-    lead: "The community lives in Viva Engage. Jump in, introduce yourself, ask your first question, and start exploring what others are learning and building.",
-    inner: ctas([
-      { t: "Join the Viva Engage Community", k: "primary", h: VIVA_URL, svg: "users" },
-      { t: "Ask the AI Clinic", h: "#/clinic", svg: "chat" },
-    ]) + `<p class="micro reveal">No perfect prompt required. No expert badge needed. Just come in.</p>`,
-  })
-
-  + block({
     kicker: "Leadership Messages", title: "A warm welcome from our leaders",
     lead: "This community matters to leadership — and they show up here. Fun, warmth, and a place where every question and every role counts.",
     inner: leaderCards() + ctas([{ t: "Join the Community", k: "primary", h: "#/join", svg: "users" }]),
-  })
-
-  + block({
-    kicker: "Community Champions", panel: true,
-    title: "Recognition that celebrates participation",
-    lead: "The best stories, prompts, questions, and experiments get celebrated — and our most active members become Community Champions.",
-    inner: pills(["Best community story", "Most practical use case", "Best prompt shared", "Best team activation story", "Most helpful contributor", "Best question asked", "Best learning reflection", "Strongest experiment", "Most creative use of AI"])
-      + ctas([{ t: "See the Community Champions", k: "cool", h: "#/recognition", svg: "trophy" }]),
-  })
-
-  + block({
-    kicker: "Community Gallery", title: "Real work from real people",
-    lead: "See what teammates across CRO are building, learning, and trying — then try it yourself.",
-    inner: galleryPreview() + ctas([{ t: "Explore the Community Gallery", k: "primary", h: "#/gallery", svg: "grid" }]),
-  })
-
-  + block({
-    kicker: "Skill Up, Speed Up", title: "Short AI videos to learn fast",
-    lead: "Bite-size AI videos and creative experiments from the community — watch, get inspired, and try something new.",
-    inner: videosPreview() + ctas([{ t: "Open the Video Gallery", k: "cool", h: "#/videos", svg: "play" }]),
-  })
-
-  + block({
-    kicker: "Learning Lanes", title: "Guided paths, not a course catalog",
-    lead: "Pick a lane and learn in small, practical steps with examples from the community.",
-    inner: iconCards([
-      { t: "AI Basics for CRO", p: "Start from zero with confidence.", icon: "bulb", link: "#/learning" },
-      { t: "Copilot for Daily Productivity", p: "Make Copilot part of your day.", icon: "bolt", link: "#/learning" },
-      { t: "ACE for GTM & Customer Prep", p: "Governed knowledge for sellers.", icon: "shield", link: "#/learning" },
-    ]) + ctas([{ t: "Choose a Learning Lane", k: "cool", h: "#/learning", svg: "book" }]),
-  })
-
-  + block({
-    kicker: "AI Clinic", title: "Bring your questions — get practical help",
-    lead: "A recurring support space to improve prompts, workflows, use cases, and team activation.",
-    inner: pills(["Prompt Clinic", "Copilot Clinic", "ACE Clinic", "Use Case Clinic", "Team Activation Clinic", "Responsible AI Clinic", "Demo Review Clinic"])
-      + ctas([{ t: "Book a Clinic Slot", k: "primary", h: "#/clinic", svg: "chat" }, { t: "Drop a Question", h: "#/clinic" }]),
-  })
-
-  + block({
-    kicker: "AI Activation for Teams", panel: true, warm: true,
-    title: "Want to activate AI for your team?",
-    lead: "If your team is ready to move from interest to action, the AI Activation Program helps you identify use cases, design practical learning, run team sessions, support adoption, and build confidence through hands-on practice.",
-    inner: ctas([{ t: "Request AI Activation Support", k: "primary", h: "#/teams", svg: "rocket" }]),
-  })
-
-  + block({
-    kicker: "AI Events Calendar", title: "The community rhythm",
-    lead: "Clinics, office hours, demo days, leadership messages, and showcase events — all in one place.",
-    inner: ctas([{ t: "View Upcoming Events", h: "#/calendar", svg: "calendar" }]),
-  })
-
-  + block({
-    panel: true, warm: true,
-    title: "Come In. Learn Something. Build Something.",
-    lead: "The CRO AI Activation Community is built by the people who participate in it. Your question may help someone else. Your experiment may become a new workflow. This community wants you in it.",
-    inner: ctas([
-      { t: "Join the Community", k: "primary", h: "#/join", svg: "users" },
-      { t: "Explore the Gallery", k: "cool", h: "#/gallery", svg: "grid" },
-      { t: "Ask a Question", h: "#/clinic", svg: "chat" },
-      { t: "Activate AI for Your Team", h: "#/teams", svg: "rocket" },
-    ]),
   }),
 };
 

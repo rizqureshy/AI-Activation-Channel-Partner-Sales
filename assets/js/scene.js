@@ -245,6 +245,48 @@ export class Cosmos {
     return { pos, col };
   }
 
+  // elliptical orbit system — a glowing core, two tilted elliptical rings,
+  // and a couple of "planet" clumps. With a little spin it reads as orbiting.
+  _formOrbit() {
+    const { pos, col } = this._alloc(), N = this.N;
+    const tmp = new THREE.Color();
+    const R1 = { A: 4.7, B: 1.75, tilt: 0.46 };
+    const R2 = { A: 3.2, B: 1.2, tilt: -0.34 };
+    const planets = [{ ring: R1, a: 0.5 }, { ring: R2, a: 2.5 }, { ring: R1, a: 3.7 }];
+    const wCore = 1.1, wR1 = 3.4, wR2 = 2.8, wPl = 1.1, wt = wCore + wR1 + wR2 + wPl;
+    const tilt = (px, py, pz, t) => [px, py * Math.cos(t) - pz * Math.sin(t), py * Math.sin(t) + pz * Math.cos(t)];
+
+    for (let i = 0; i < N; i++) {
+      const r = Math.random() * wt;
+      let x, y, z, c;
+      if (r < wCore) {                                   // central core
+        const u = Math.random() * Math.PI * 2, ct = 2 * Math.random() - 1, st = Math.sqrt(Math.max(0, 1 - ct * ct));
+        const rad = 0.95 * (0.4 + 0.6 * Math.random());
+        x = Math.cos(u) * st * rad; y = ct * rad; z = Math.sin(u) * st * rad;
+        c = Math.random() < 0.6 ? C.white : tmp.copy(C.gold).lerp(C.white, Math.random());
+      } else if (r < wCore + wR1 + wR2) {                // an elliptical ring
+        const ring = r < wCore + wR1 ? R1 : R2;
+        const a = Math.random() * Math.PI * 2;
+        const tubR = 0.16 + Math.random() * 0.16, tu = Math.random() * Math.PI * 2;
+        const ex = Math.cos(a) * ring.A + Math.cos(tu) * tubR;
+        const ez = Math.sin(a) * ring.B + Math.sin(tu) * tubR;
+        const ey = Math.cos(tu) * tubR * 0.6;
+        [x, y, z] = tilt(ex, ey, ez, ring.tilt);
+        c = Math.random() < 0.08 ? C.pink : tmp.copy(C.iris).lerp(C.blue, a / (Math.PI * 2));
+      } else {                                           // a planet clump
+        const pl = planets[(Math.random() * planets.length) | 0];
+        const ex = Math.cos(pl.a) * pl.ring.A, ez = Math.sin(pl.a) * pl.ring.B;
+        const u = Math.random() * Math.PI * 2, ct = 2 * Math.random() - 1, st = Math.sqrt(Math.max(0, 1 - ct * ct));
+        const rad = 0.5 * (0.4 + 0.6 * Math.random());
+        [x, y, z] = tilt(ex + Math.cos(u) * st * rad, ct * rad, ez + Math.sin(u) * st * rad, pl.ring.tilt);
+        c = Math.random() < 0.5 ? C.teal : C.gold;
+      }
+      pos[i * 3] = x; pos[i * 3 + 1] = y + 0.3; pos[i * 3 + 2] = z;
+      this._setCol(col, i, c, 0.08);
+    }
+    return { pos, col };
+  }
+
   _formRing() {
     const { pos, col } = this._alloc(), N = this.N, R = 3.2, r = 0.42;
     const tmp = new THREE.Color();
@@ -697,6 +739,7 @@ export class Cosmos {
   get _registry() {
     return {
       orb:          { make: () => this._formOrb(),               cam: [0, 0.5, 13.0],  opts: { spin: 0.05, arc: 1.5 } },
+      orbit:        { make: () => this._formOrbit(),             cam: [0, 0.7, 13.8],  opts: { spin: 0.16, arc: 1.3 } },
       core:         { make: () => this._formCore(3.3),           cam: [-0.6, 0.1, 12.8], opts: { spin: 0.0, arc: 1.3 } },
       "core-center":{ make: () => this._formCore(0),             cam: [0, 0.2, 12.8],  opts: { spin: 0.0, arc: 1.3 } },
       clusters:     { make: (n) => this._formClusters(Math.max(2, parseInt(n) || 3), -3.6),

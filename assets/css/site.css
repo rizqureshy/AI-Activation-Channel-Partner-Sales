@@ -112,30 +112,28 @@ img { max-width: 100%; display: block; }
    ============================================================ */
 .topbar {
   position: sticky; top: 0; z-index: 60;
-  display: flex; align-items: center; gap: 18px;
-  height: var(--nav-h); padding: 0 clamp(14px, 3vw, 30px);
+  display: flex; align-items: center; gap: 14px;
+  height: var(--nav-h); padding: 0 clamp(14px, 2.4vw, 28px);
   background: var(--nav-bg);
   backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
   border-bottom: 1px solid var(--brd);
 }
-.brand { display: flex; align-items: center; gap: 10px; flex: none; }
+.brand { display: flex; align-items: center; gap: 9px; flex: none; }
 .brand-spark {
-  width: 16px; height: 16px; border-radius: 5px; background: var(--warm);
+  width: 15px; height: 15px; border-radius: 5px; background: var(--warm);
   box-shadow: 0 0 18px -2px var(--pink); flex: none;
 }
-.brand-name { font-family: var(--font-display); font-size: clamp(14px, 1.5vw, 17px); letter-spacing: .01em; white-space: nowrap; }
+.brand-name { font-family: var(--font-display); font-size: clamp(13px, 1.3vw, 15.5px); letter-spacing: .01em; white-space: nowrap; }
 .brand-name b { font-weight: 700; }
 
-.primary-nav { display: flex; align-items: center; gap: 2px; margin-left: auto; flex-wrap: wrap; justify-content: flex-end; }
+/* single-line, vertically centred nav */
+.primary-nav { display: flex; align-items: center; gap: 1px; margin-left: auto; flex-wrap: nowrap; }
 .primary-nav a {
-  font-size: 13px; color: var(--ink-dim); padding: 7px 10px; border-radius: 9px;
+  font-size: 12.5px; color: var(--ink-dim); padding: 8px 9px; border-radius: 9px; line-height: 1;
   white-space: nowrap; transition: background .2s, color .2s;
 }
 .primary-nav a:hover { background: var(--glass); color: var(--ink); }
 .primary-nav a.active { color: var(--ink); background: var(--glass-strong); }
-.primary-nav a.active::after {
-  content: ""; display: block; height: 2px; margin-top: 5px; border-radius: 2px; background: var(--warm);
-}
 
 .utility-bar {
   position: sticky; top: var(--nav-h); z-index: 59;
@@ -268,40 +266,32 @@ body.light .hero h1, body.light .hero .sub, body.light .hero .emotional {
   animation: comeForward 1s var(--ease-out) both;
   will-change: transform, opacity, filter;
 }
-/* single-line block: "You Matter." on top, rotating line below */
-.manifesto.oneline { padding: clamp(26px, 3.4vw, 42px) clamp(28px, 4vw, 56px); }
-.manifesto .mtop {
-  font-family: var(--font-display); font-weight: 800; letter-spacing: -0.01em; line-height: 1.05;
-  font-size: clamp(34px, 5vw, 60px); margin-bottom: 12px;
-  background: linear-gradient(120deg, var(--orange), var(--pink) 55%, var(--purple));
+/* morphing single line — phrases cross-fade in the same centred cell, so the
+   leading word ("You"/"Your") shifts position as each phrase swaps in */
+.manifesto.morph {
+  display: grid; place-items: center; min-height: clamp(46px, 8vw, 78px);
+  padding: clamp(22px, 3.2vw, 38px) clamp(26px, 4vw, 56px);
+}
+.manifesto .mph {
+  grid-area: 1 / 1; opacity: 0; white-space: nowrap;
+  font-family: var(--font-display); font-weight: 800; letter-spacing: -0.01em; line-height: 1.1;
+  font-size: clamp(26px, 4.4vw, 50px);
   -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
+  animation: morphcycle 13.2s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 2.2s);
 }
-.manifesto .mrot {
-  font-family: var(--font-display); font-weight: 600; color: var(--ink);
-  font-size: clamp(20px, 2.6vw, 32px); line-height: 1.25;
-  display: flex; justify-content: center; align-items: baseline; gap: .3ch; white-space: nowrap;
-}
-.manifesto .rot { display: inline-block; height: 1.25em; overflow: hidden; vertical-align: bottom; }
-.manifesto .rot-track {
-  display: flex; flex-direction: column;
-  animation: rotwords 12s cubic-bezier(0.7,0,0.3,1) infinite;
-}
-.manifesto .ri {
-  display: block; height: 1.25em; line-height: 1.25em; white-space: nowrap; font-weight: 800;
-  -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
-}
-.manifesto .ri0 { background-image: linear-gradient(120deg,#ff8a3d,#ff4db8); }
-.manifesto .ri1 { background-image: linear-gradient(120deg,#2b88ff,#6b5bff); }
-.manifesto .ri2 { background-image: linear-gradient(120deg,#18c8b6,#2b88ff); }
-.manifesto .ri3 { background-image: linear-gradient(120deg,#9b4dff,#6b5bff); }
-.manifesto .ri4 { background-image: linear-gradient(120deg,#ffd23d,#ff8a3d); }
-@keyframes rotwords {
-  0%, 15%   { transform: translateY(0); }
-  20%, 35%  { transform: translateY(-1.25em); }
-  40%, 55%  { transform: translateY(-2.5em); }
-  60%, 75%  { transform: translateY(-3.75em); }
-  80%, 95%  { transform: translateY(-5em); }
-  100%      { transform: translateY(-6.25em); }
+.manifesto .m0 { background-image: linear-gradient(120deg,#ff8a3d,#ff4db8); }
+.manifesto .m1 { background-image: linear-gradient(120deg,#2b88ff,#6b5bff); }
+.manifesto .m2 { background-image: linear-gradient(120deg,#18c8b6,#2b88ff); }
+.manifesto .m3 { background-image: linear-gradient(120deg,#9b4dff,#6b5bff); }
+.manifesto .m4 { background-image: linear-gradient(120deg,#ffd23d,#ff8a3d); }
+.manifesto .m5 { background-image: linear-gradient(120deg,#ff4db8,#9b4dff 60%,#2b88ff); }
+@keyframes morphcycle {
+  0%    { opacity: 0; transform: translateY(0.45em) scale(0.94); }
+  1.6%  { opacity: 1; transform: translateY(0) scale(1); }
+  15%   { opacity: 1; transform: translateY(0) scale(1); }
+  20%   { opacity: 0; transform: translateY(-0.45em) scale(0.94); }
+  100%  { opacity: 0; transform: translateY(-0.45em) scale(0.94); }
 }
 @keyframes comeForward {
   0%   { opacity: 0; transform: perspective(1100px) translateZ(-340px) scale(0.82); filter: blur(8px); }
@@ -310,8 +300,13 @@ body.light .hero h1, body.light .hero .sub, body.light .hero .emotional {
 }
 @media (prefers-reduced-motion: reduce) {
   .manifesto { animation: none; }
-  .manifesto .rot-track { animation: none; }
+  .manifesto .mph { animation: none; opacity: 0; }
+  .manifesto .mph-you { opacity: 1; }
 }
+
+/* hero welcome glass pane (replaces the after-heading text) */
+.hero-pane { max-width: 720px; margin: clamp(20px, 3vh, 32px) auto 0; text-align: center; }
+.hero-pane .lead { margin-left: auto; margin-right: auto; }
 
 /* ============================================================
    Card grids
@@ -515,9 +510,8 @@ body.light .certcard .cthumb { background: #fff; }
 /* ============================================================
    Responsive
    ============================================================ */
-@media (max-width: 1080px) {
-  .primary-nav { gap: 0; }
-  .primary-nav a { padding: 7px 8px; font-size: 12.5px; }
+@media (max-width: 1180px) {
+  .primary-nav a { padding: 8px 7px; font-size: 12px; }
 }
 @media (max-width: 920px) {
   .grid.c4 { grid-template-columns: repeat(2, 1fr); }
@@ -525,7 +519,8 @@ body.light .certcard .cthumb { background: #fff; }
   .split { grid-template-columns: 1fr; }
   .footer-inner { grid-template-columns: 1fr 1fr; }
 }
-@media (max-width: 760px) {
+/* fold the nav into a drawer before it would wrap to a second line */
+@media (max-width: 1000px) {
   .nav-toggle { display: block; }
   .theme-toggle { margin-left: auto; }
   .primary-nav {
@@ -534,9 +529,9 @@ body.light .certcard .cthumb { background: #fff; }
     background: rgba(9,6,24,0.96); backdrop-filter: blur(20px); padding: 16px;
     transform: translateX(110%); transition: transform .35s var(--ease-out); overflow-y: auto;
   }
+  body.light .primary-nav { background: rgba(255,255,255,0.97); }
   .primary-nav.open { transform: none; }
   .primary-nav a { padding: 12px 14px; font-size: 15px; }
-  .primary-nav a.active::after { display: none; }
 }
 @media (max-width: 560px) {
   .grid.c2, .grid.c3, .grid.c4 { grid-template-columns: 1fr; }
