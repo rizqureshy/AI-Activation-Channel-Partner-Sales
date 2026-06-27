@@ -319,7 +319,40 @@ body.light .hero h1, body.light .hero .sub, body.light .hero .emotional {
   .manifesto .mph-you { opacity: 1; }
 }
 
-/* hero welcome glass pane (replaces the after-heading text) */
+/* refined hero: concise subhead, text link, belonging strip */
+.hero-sub {
+  max-width: 600px; margin: clamp(18px, 2.6vh, 26px) auto 0;
+  color: var(--ink-dim); font-size: clamp(16px, 1.8vw, 20px); line-height: 1.55;
+  text-shadow: 0 2px 16px rgba(3,1,12,0.55);
+}
+body.light .hero-sub { text-shadow: 0 1px 10px rgba(255,255,255,0.9); }
+.hero-link { margin-top: 14px; font-size: 14px; }
+.hero-link a { color: var(--ink-dim); border-bottom: 1px solid var(--glass-brd); padding-bottom: 1px; transition: color .2s, border-color .2s; }
+.hero-link a:hover { color: var(--ink); border-color: var(--ink-soft); }
+
+.proof { display: inline-flex; align-items: center; gap: 12px; margin: clamp(22px, 3vh, 32px) auto 0;
+  padding: 8px 16px 8px 10px; border-radius: 100px; border: 1px solid var(--glass-brd); background: var(--glass);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+.proof .avatars { display: inline-flex; }
+.proof .avatars img { width: 34px; height: 34px; border-radius: 50%; object-fit: cover;
+  border: 2px solid var(--bg); margin-left: -10px; }
+.proof .avatars img:first-child { margin-left: 0; }
+.proof .proof-txt { font-size: 13px; color: var(--ink-dim); }
+body.light .proof .avatars img { border-color: #fff; }
+
+/* emotional beat — the matters message with breathing room */
+.manifesto-beat { text-align: center; margin: clamp(40px, 8vh, 90px) 0 clamp(30px, 6vh, 60px); }
+.mb-caption { font-family: var(--font-display); font-weight: 600; color: var(--ink-dim);
+  font-size: clamp(15px, 1.8vw, 21px); line-height: 1.5; max-width: 720px; margin: 0 auto;
+  text-shadow: 0 2px 14px rgba(3,1,12,0.5); }
+body.light .mb-caption { text-shadow: 0 1px 10px rgba(255,255,255,0.9); }
+.mb-caption .g { font-weight: 700; background: var(--warm); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
+.mb-you { margin-top: 10px; font-family: var(--font-display); font-weight: 800; letter-spacing: -0.015em;
+  font-size: clamp(40px, 8vw, 92px); line-height: 1.02;
+  background: linear-gradient(120deg, var(--orange), var(--pink) 55%, var(--purple));
+  -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
+
+/* hero welcome glass pane (legacy, unused) */
 .hero-pane { max-width: 720px; margin: clamp(20px, 3vh, 32px) auto 0; text-align: center; }
 .hero-pane .lead { margin-left: auto; margin-right: auto; }
 /* the "matters" message, woven in as the pane's closing statement */

@@ -97,17 +97,22 @@ function morphCard(phrases) {
   `</div>`;
 }
 
-function hero({ eyebrow, h1, pane, morph, cta }) {
-  const paneHTML = pane ? `<div class="panel hero-pane reveal">${pane}</div>` : "";
-  const card = morph ? morphCard(morph) : "";
+function hero({ eyebrow, h1, lead, cta, link, proof }) {
   return `<section class="hero">
     ${eyebrow ? `<span class="eyebrow reveal">${eyebrow}</span>` : ""}
     <h1 class="reveal">${h1}</h1>
-    ${paneHTML}
-    ${card}
+    ${lead ? `<p class="hero-sub reveal">${lead}</p>` : ""}
     ${cta ? ctas(cta) : ""}
+    ${link ? `<p class="hero-link reveal"><a href="${link.h}">${link.t}</a></p>` : ""}
+    ${proof || ""}
   </section>`;
 }
+
+/* an emotional "beat" — the matters message given its own airy moment */
+const manifestoBeat = () => `<section class="block manifesto-beat">
+  <p class="mb-caption reveal">Your <span class="g">AI story</span> · <span class="g">questions</span> · <span class="g">experiments</span> · <span class="g">work</span> · <span class="g">fun</span> — they all matter.</p>
+  <p class="mb-you reveal">You matter.</p>
+</section>`;
 
 /* form builder (presentational demo — submits show a toast) */
 function field(f) {
@@ -165,18 +170,18 @@ const ROUTES = {};
 ROUTES.home = {
   title: "Home", formation: "ring",
   html: () => hero({
-    eyebrow: "✦ The front door to the community",
+    eyebrow: "✦ Learn · Share · Experiment · Have fun with AI",
     h1: `CRO <span class="gradient-text">AI Activation</span> Community`,
-    pane: `<h2 class="reveal" style="font-size:clamp(19px,2.3vw,27px);margin-bottom:10px">A place for <span class="gradient-cool">practical AI</span>, real examples, and real people</h2>
-      <p class="lead reveal" style="margin:0 auto">Everyone across CRO, together around AI learning, practical use cases, team activation, experiments, and success stories — building <b>energy, confidence, creativity, and momentum</b>, and having fun along the way.</p>
-      <p class="matters-line reveal">Your <span class="g">AI story</span>, <span class="g">questions</span>, <span class="g">experiments</span>, <span class="g">work</span> &amp; <span class="g">fun</span> — they all matter.</p>
-      <p class="you-line reveal">You matter.</p>`,
+    lead: "The front door to AI at CRO — where everyone comes together to learn, build, and have fun. No experts required, just curiosity.",
     cta: [
       { t: "Join the Community", k: "primary", h: "#/join", svg: "users" },
-      { t: "Explore the Community Gallery", k: "cool", h: "#/gallery", svg: "grid" },
-      { t: "Skill Up, Speed Up", k: "ghost", h: "#/videos", svg: "play" },
+      { t: "Explore the Gallery", k: "cool", h: "#/gallery", svg: "grid" },
     ],
+    link: { t: "or Skill Up, Speed Up →", h: "#/videos" },
+    proof: proofRow(),
   })
+
+  + manifestoBeat()
 
   + block({
     kicker: "Leadership Messages", title: "A warm welcome from our leaders",
@@ -272,6 +277,12 @@ const leaderCards = () => `<div class="grid c3">` + LEADERS.map((l) => `
     <div class="lwho"><h3>${l.name}</h3><span>${l.role}</span></div>
     <p class="lmsg">${l.msg}</p>
   </article>`).join("") + `</div>`;
+
+/* hero "belonging" strip — leader avatars + a trust line */
+const proofRow = () => `<div class="proof reveal">
+  <span class="avatars">${LEADERS.map((l) => `<img loading="lazy" src="${l.img}" alt="${l.name}">`).join("")}</span>
+  <span class="proof-txt">Backed by leadership — and built by all of us across CRO.</span>
+</div>`;
 
 /* ---- certification map + voices (6 people, 6 certs from the AI Enablement session) ---- */
 const CERTS = [
