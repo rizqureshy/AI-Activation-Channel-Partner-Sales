@@ -26,9 +26,9 @@
 
   /* content surfaces — opaque enough that the particle field never bleeds
      through text. Tuned per theme below. */
-  --surface:   rgba(13, 11, 28, 0.66);
-  --surface-2: rgba(16, 13, 33, 0.55);
-  --surface-h: rgba(30, 26, 54, 0.72);
+  --surface:   rgba(13, 11, 28, 0.82);
+  --surface-2: rgba(16, 13, 33, 0.80);
+  --surface-h: rgba(30, 26, 54, 0.88);
   --brd:       rgba(255, 255, 255, 0.16);
   --nav-bg:    rgba(7, 5, 20, 0.78);
   --util-bg:   rgba(7, 5, 20, 0.60);

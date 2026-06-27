@@ -935,7 +935,7 @@ export class Cosmos {
       medical:      { make: () => this._formMedical(),           cam: [0, 0.3, 13.2],  opts: { spin: 0.10, arc: 1.4, dur: 1.9 },
                                                                  drift: { ax: 2.8, ay: 1.4, az: 0.6, sx: 0.07, sy: 0.05, sz: 0.04 } },
       play:         { make: () => this._formPlay(),              cam: [0, 0.3, 13.2],  opts: { spin: 0.08, arc: 1.4, dur: 1.9 },
-                                                                 drift: { ax: 1.1, ay: 1.5, az: 0.5, sx: 0.05, sy: 0.045, sz: 0.05 } },
+                                                                 drift: { ax: 0.7, ay: 0.6, az: 0.4, sx: 0.05, sy: 0.045, sz: 0.05 } },
       heart:        { make: () => this._formHeart(),             cam: [0, 0.3, 12.8],  opts: { spin: 0.0, arc: 1.6, dur: 1.9 },
                                                                  drift: { ax: 0.6, ay: 1.0, az: 0.4, sx: 0.05, sy: 0.07, sz: 0.05 } },
       steps:        { make: () => this._formSteps(),             cam: [0, 0.3, 13.6],  opts: { spin: 0.0, arc: 1.5, dur: 1.9 },
