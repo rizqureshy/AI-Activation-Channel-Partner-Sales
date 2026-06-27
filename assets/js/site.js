@@ -573,32 +573,24 @@ function clinicBooking() {
 /* ---- AI Activation for Teams ---- */
 ROUTES.teams = {
   title: "AI Activation for Teams", formation: "rocket",
-  html: () => block({
-    kicker: "AI Activation for Teams", title: `Move your team <span class="gradient-text">from interest to action</span>`,
-    lead: "If your team is ready, the AI Activation Program helps you identify use cases, design practical learning experiences, run team sessions, support workflow adoption, and build confidence through hands-on practice.",
-    inner: numCards([
-      "Team discovery", "Use case identification", "Workflow mapping", "AI learning session design",
-      "Practical exercises", "Prompt packs", "Team challenges", "Adoption support",
-      "Leadership readout", "Measurement and follow-up",
-    ]),
+  html: () => hero({
+    eyebrow: "✦ AI Activation for Teams",
+    h1: `Run AI Activation for <span class="gradient-text">your team</span>`,
+    lead: "A hands-on service from the Enablement team — a custom, curated learning framework built entirely around your team's real work, motions, and goals. Not a generic course.",
+    cta: [{ t: "Be the champion — reach out", k: "primary", h: VIVA_URL, svg: "rocket" }],
   })
   + block({
-    kicker: "How it works", panel: true, warm: true, title: "A practical, hands-on journey",
-    inner: bullets([
-      "Discover — understand the team, its motions, and where AI can help.",
-      "Design — map real workflows and build a practical learning session.",
-      "Activate — run hands-on reps, challenges, and prompt packs together.",
-      "Adopt — support the team after the session and measure what changed.",
-    ]) + ctas([{ t: "Activate AI for My Team", k: "primary", h: "#/teams", svg: "rocket" }]),
+    kicker: "What you get", title: "Built around your team — totally hands-on",
+    inner: iconCards([
+      { t: "Custom &amp; curated", p: "We shape everything around your team's workflows, tools, and use cases — designed for you, not off the shelf.", icon: "grid" },
+      { t: "Totally hands-on", p: "Real reps, real prompts, real workflows. Your team learns by doing, together, on the work that matters.", icon: "bolt" },
+      { t: "We run it with you", p: "The Enablement team helps discover use cases, design the session, run it, and support adoption afterwards.", icon: "users" },
+    ], 3),
   })
   + block({
-    title: "Request AI Activation support",
-    inner: formHTML([
-      { l: "Your name", t: "text" }, { l: "Team / Function", t: "text" }, { l: "Region", t: "text" },
-      { l: "Approx. team size", t: "text" },
-      { l: "What does your team do?", t: "textarea" },
-      { l: "What would success look like?", t: "textarea" },
-    ], "Request AI Activation Support"),
+    panel: true, warm: true, title: "Interested in running it for your team?",
+    lead: "Be the champion for your team. Reach out and we'll help you scope it, design it, and run it — start to finish.",
+    inner: ctas([{ t: "Reach Out in Viva Engage", k: "primary", h: VIVA_URL, svg: "users" }, { t: "Talk it through in the AI Clinic", k: "cool", h: "#/clinic", svg: "chat" }]),
   }),
 };
 
