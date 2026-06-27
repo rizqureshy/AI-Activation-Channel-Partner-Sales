@@ -311,43 +311,32 @@ const certVoices = () => `<div class="grid c3">` + CERTFOLKS.map((p) => `
 /* ---- Join ---- */
 ROUTES.join = {
   title: "Join the Community", formation: "burst",
-  html: () => block({
-    kicker: "Join the Community", title: `Welcome — <span class="gradient-text">we saved you a seat</span>`,
-    lead: "The community is open to everyone across CRO. Join the main space, introduce yourself, and start exploring. No perfect prompt required. No expert badge needed. Just come in.",
-    inner: ctas([
-      { t: "Join the Viva Engage Community", k: "primary", h: VIVA_URL, svg: "users" },
-      { t: "Ask the AI Clinic", h: "#/clinic", svg: "chat" },
-    ]),
+  html: () => hero({
+    eyebrow: "✦ Join the Community",
+    h1: `You <span class="gradient-text">belong</span> here`,
+    lead: "This community is for everyone across CRO. No perfect prompt required, no expert badge needed — just come in.",
+    morph: ["Go ahead — ask away.", "Just say hi.", "Tell us what excites you.", "What do you want to know?", "What do you want to share?", "Want to organize a huddle?"],
+    cta: [{ t: "Join the Viva Engage Community", k: "primary", h: VIVA_URL, svg: "users" }],
   })
+
   + block({
-    panel: true, title: "Our community promise",
-    lead: "We meet you where you are. Curiosity counts more than expertise. Every question, story, and experiment makes the community stronger.",
+    inner: iconCards([
+      { t: "You're welcome", p: "Exactly as you are — beginner or builder, every role counts.", icon: "heart" },
+      { t: "You're celebrated", p: "Wins big and small get cheered on, out loud.", icon: "star" },
+      { t: "You're recognized", p: "Earn stars and rise to Community Champion.", icon: "trophy" },
+      { t: "You get the spotlight", p: "Your work and your story get featured.", icon: "bolt" },
+    ], 4),
+  })
+
+  + block({
+    kicker: "Our Promise", panel: true, warm: true,
+    title: "What you can count on",
     inner: bullets([
-      "You belong here — beginners and builders alike.",
-      "Sharing what failed is as valued as sharing what worked.",
-      "Help is always one question away.",
-      "Your participation is seen, celebrated, and rewarded with stars.",
-    ]),
-  })
-  + block({
-    kicker: "First actions", title: "Five ways to start in the next five minutes",
-    inner: numCards([
-      { t: "Introduce yourself", p: "Drop a one-line hello in the Welcome Chat." },
-      { t: "Ask your first question", p: "No question is too basic here." },
-      { t: "Star a submission", p: "Find one idea in the gallery worth trying." },
-      { t: "Pick a learning lane", p: "Choose a path that fits your role." },
-      { t: "Save the calendar", p: "Add the weekly rhythm to your week." },
-      { t: "Share a win", p: "Even a tiny one. Especially a tiny one." },
-    ]),
-  })
-  + block({
-    kicker: "Community norms", title: "How we show up for each other",
-    inner: bullets([
-      "Be generous: share prompts, templates, and what you learned.",
-      "Be kind: assume good intent, celebrate attempts.",
-      "Be practical: real examples beat theory.",
-      "Be safe: follow Responsible AI guidance and keep customer data protected.",
-    ]) + ctas([{ t: "Explore the Gallery", k: "cool", h: "#/gallery", svg: "grid" }, { t: "Join the Viva Engage Community", k: "primary", h: VIVA_URL, svg: "users" }]),
+      "You will be <b>heard</b> — your ideas reach a leadership-visible channel.",
+      "You will be <b>helped</b> — no question is ever too small.",
+      "You will be <b>celebrated</b> — and recognized for showing up.",
+      "Curiosity counts more than expertise. Always.",
+    ]) + ctas([{ t: "Join the Viva Engage Community", k: "primary", h: VIVA_URL, svg: "users" }]),
   }),
 };
 
