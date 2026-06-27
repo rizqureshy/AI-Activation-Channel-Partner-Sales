@@ -163,7 +163,7 @@ const ROUTES = {};
 
 /* ---- Home ---- */
 ROUTES.home = {
-  title: "Home", formation: "orbit",
+  title: "Home", formation: "ring",
   html: () => hero({
     eyebrow: "✦ The front door to the community",
     h1: `CRO <span class="gradient-text">AI Activation</span> Community`,
