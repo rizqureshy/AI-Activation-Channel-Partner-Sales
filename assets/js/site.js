@@ -447,37 +447,14 @@ ROUTES.teams = {
   }),
 };
 
-/* ---- Recognition & Leaderboard ---- */
+/* ---- Community Champions ---- */
 ROUTES.recognition = {
   title: "Community Champions", formation: "fireworks",
-  html: () => block({
-    kicker: "Community Champions", title: `Participation, <span class="gradient-text">made visible</span>`,
-    lead: "Members earn stars for meaningful participation. Contribution is celebrated weekly and monthly — and recognized by leadership.",
-    inner: `<div class="split"><div><h3 class="reveal" style="margin-bottom:6px">How to earn stars</h3>` + `<div class="starlist">` + [
-      ["Join the community", 5], ["Introduce yourself", 10], ["Ask a useful question", 10], ["Share a prompt", 15],
-      ["Submit a use case", 25], ["Share a certification story", 25], ["Help answer a question", 15],
-      ["Present in a showcase", 50], ["Lead a learning huddle", 75], ["Mentor someone on certification", 100], ["Activate a team", 150],
-    ].map(([t, a]) => `<div class="starrow reveal"><span>${t}</span><span class="amt">${a}</span></div>`).join("") + `</div></div>` +
-    `<div><h3 class="reveal" style="margin-bottom:6px">Top contributors</h3><div class="board">` + [
-      ["Diego F.", "GTM · LATAM", 640], ["Marcus L.", "GTM · AMER", 585], ["Priya N.", "Enterprise · EMEA", 470],
-      ["Sara D.", "Customer Success · APAC", 415], ["Tom R.", "Sales Ops · EMEA", 360],
-    ].map((r, i) => `<div class="brow reveal ${i === 0 ? "top1" : ""}"><span class="rank">${i + 1}</span><span class="who">${r[0]}<small>${r[1]}</small></span><span class="pts">★ ${r[2]}</span></div>`).join("") + `</div></div></div>`,
-  })
-  + block({
-    kicker: "Contributor levels", panel: true, title: "From Explorer to Community Luminary",
-    inner: `<div class="levels">` + [
-      ["1", "Explorer", "Joined the community and completed onboarding."],
-      ["2", "Contributor", "Shared a story, question, or prompt."],
-      ["3", "Builder", "Submitted a use case, workflow, demo, or learning artifact."],
-      ["4", "Guide", "Helped others, answered questions, or supported a clinic."],
-      ["5", "Champion", "Led a session, mentored others, or activated a team."],
-      ["6", "Community Luminary", "Recognized by leadership for sustained contribution and impact."],
-    ].map((l, i) => `<div class="level reveal"><div class="lv" style="background:${PAL[i % PAL.length].ic}">${l[0]}</div><div><h3>${l[1]}</h3><p>${l[2]}</p></div></div>`).join("") + `</div>`,
-  })
-  + block({
-    kicker: "Recognition", title: "Ways we celebrate people",
-    inner: pills(["Weekly shoutout", "Monthly top contributor", "Best question of the week", "Best prompt of the week", "Certification achiever wall", "AI Activation Champion badge", "Leader-selected spotlight", "Team activation spotlight", "Rookie of the month", "Most helpful member", "Best learning reflection", "Funniest AI experiment", "Best practical workflow", "Best customer-facing use case", "Most creative use of AI"])
-      + ctas([{ t: "Nominate Someone", k: "primary", toast: "Opening the nomination form…", svg: "trophy" }, { t: "Join the Community", k: "cool", h: "#/join", svg: "users" }]),
+  html: () => hero({
+    eyebrow: "✦ Community Champions",
+    h1: `Community <span class="gradient-text">Champions</span>`,
+    lead: "The Hall of Fame of our Community Champions — refreshed every month.",
+    cta: [{ t: "Join the Community", k: "primary", h: "#/join", svg: "users" }],
   }),
 };
 
