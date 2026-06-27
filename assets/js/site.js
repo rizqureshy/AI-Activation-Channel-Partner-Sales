@@ -508,20 +508,9 @@ ROUTES.clinic = {
   html: () => hero({
     eyebrow: "✦ AI Clinic",
     h1: `Book a <span class="gradient-text">1:1</span> with a Community Expert`,
-    lead: "A dedicated space to book a 1:1 consultation with our Community Experts — to talk through your deeper AI use cases, ideas, and challenges, one to one.",
+    lead: "A dedicated space to talk through, one to one with our experts:",
+    morph: ["Your use-cases.", "Your ideas.", "Your challenges.", "Your prompts.", "Your AI journey.", "Whatever's on your mind."],
     cta: [{ t: "Book a 1:1 Consultation", k: "primary", scroll: "book", svg: "calendar" }],
-  })
-  + block({
-    kicker: "How our experts help", title: "You'll leave with a clear next step",
-    lead: "Bring a use case, an idea, or a challenge. Our experts will help guide you on your journey and connect you with the right people and resources to get you sorted.",
-    inner: iconCards([
-      { t: "Guide your use case", p: "Talk through where AI fits — and where it doesn't — for your specific situation.", icon: "bulb" },
-      { t: "Work through challenges", p: "Stuck on a prompt, a workflow, or a tool? Bring it and we'll work it through together.", icon: "bolt" },
-      { t: "Shape your AI journey", p: "Figure out the right next move for you, your role, and your goals.", icon: "rocket" },
-      { t: "Connect you to the right people", p: "We'll point you to the experts, teams, and communities who can help most.", icon: "users" },
-      { t: "Point you to resources", p: "Leave with the right learning, templates, and tools to keep moving.", icon: "book" },
-      { t: "Get you sorted", p: "The goal of every 1:1 is a clear, practical next step you can act on.", icon: "check" },
-    ], 3),
   })
   + block({
     id: "book", panel: true, warm: true, title: "Book your 1:1 consultation",
