@@ -494,12 +494,7 @@ ROUTES.learning = {
     h1: `AI Upskilling <span class="gradient-text">Pathway</span>`,
     lead: "A clear path to build AI proficiency across GTM Ops — start with the proficiency floor, then earn a recognized Microsoft credential.",
   })
-  + PATHWAY.map(tierSection).join("")
-  + block({
-    panel: true, title: "Suggested rollout",
-    lead: "Tier 1 sets the proficiency floor for everyone, with the AB-730 practitioner cert as the recognized next step. Reserve the AB-731 leadership cert for those guiding adoption.",
-    inner: ctas([{ t: "Watch quick AI videos", k: "primary", h: "#/videos", svg: "play" }, { t: "Book a 1:1 in the AI Clinic", k: "cool", h: "#/clinic", svg: "chat" }]),
-  }),
+  + PATHWAY.map(tierSection).join(""),
 };
 
 /* ---- AI Clinic — book a 1:1 with a Community Expert ---- */
