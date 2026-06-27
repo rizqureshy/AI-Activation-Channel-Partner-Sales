@@ -1010,28 +1010,28 @@ export class Cosmos {
       split:        { make: () => this._formSplit(),             cam: [0, 0.2, 13.6],  opts: { spin: 0.0, arc: 1.6, dur: 1.8 } },
       ring:         { make: () => this._formRing(),              cam: [-0.5, 0.1, 12.8], opts: { spin: 0.10, arc: 1.2 },
                                                                  drift: { ax: 2.2, ay: 1.0, az: 0.5, sx: 0.06, sy: 0.05, sz: 0.04 } },
-      grid:         { make: () => this._formGrid(),              cam: [0, 0.2, 13.8],  opts: { spin: 0.0, arc: 1.4, dur: 1.9 }, roll: 0.07,
+      grid:         { make: () => this._formGrid(),              cam: [0, 0.2, 13.8],  opts: { spin: 0.10, arc: 1.4, dur: 1.9 },
                                                                  drift: { ax: 2.4, ay: 1.1, az: 0.5, sx: 0.05, sy: 0.055, sz: 0.04 } },
       stream:       { make: () => this._formStream(),            cam: [0, 0.1, 13.4],  opts: { spin: 0.0, arc: 1.3, dur: 1.8 } },
       burst:        { make: () => this._formBurst(),             cam: [0, 0.0, 13.0],  opts: { spin: 0.06, arc: 2.6, dur: 1.7, ease: "power2.out" } },
       question:     { make: () => this._formQuestion(),          cam: [0, 0.3, 13.6],  opts: { spin: 0.03, arc: 1.6, dur: 1.9 } },
-      rocket:       { make: () => this._formRocket(),            cam: [0, 0.25, 14.4], opts: { spin: 0.0, arc: 1.7, dur: 1.9 }, roll: 0.05,
+      rocket:       { make: () => this._formRocket(),            cam: [0, 0.25, 14.4], opts: { spin: 0.07, arc: 1.7, dur: 1.9 },
                                                                  drift: { ax: 2.2, ay: 1.2, az: 0.5, sx: 0.05, sy: 0.05, sz: 0.04 } },
       power:        { make: () => this._formPower(),             cam: [0, 0.3, 13.8],  opts: { spin: 0.04, arc: 1.5, dur: 1.9 } },
       check:        { make: () => this._formCheck(),             cam: [0, 0.3, 13.6],  opts: { spin: 0.0, arc: 1.6, dur: 1.9 } },
-      medical:      { make: () => this._formMedical(),           cam: [0, 0.3, 13.2],  opts: { spin: 0.0, arc: 1.4, dur: 1.9 }, roll: 0.12,
+      medical:      { make: () => this._formMedical(),           cam: [0, 0.3, 13.2],  opts: { spin: 0.12, arc: 1.4, dur: 1.9 },
                                                                  drift: { ax: 2.8, ay: 1.4, az: 0.6, sx: 0.07, sy: 0.05, sz: 0.04 } },
-      play:         { make: () => this._formPlay(),              cam: [0, 0.3, 13.2],  opts: { spin: 0.0, arc: 1.4, dur: 1.9 }, roll: 0.14,
+      play:         { make: () => this._formPlay(),              cam: [0, 0.3, 13.2],  opts: { spin: 0.12, arc: 1.4, dur: 1.9 },
                                                                  drift: { ax: 2.4, ay: 1.2, az: 0.5, sx: 0.06, sy: 0.05, sz: 0.05 } },
-      heart:        { make: () => this._formHeart(),             cam: [0, 0.3, 12.8],  opts: { spin: 0.0, arc: 1.6, dur: 1.9 }, roll: 0.12,
+      heart:        { make: () => this._formHeart(),             cam: [0, 0.3, 12.8],  opts: { spin: 0.11, arc: 1.6, dur: 1.9 },
                                                                  drift: { ax: 2.4, ay: 1.2, az: 0.5, sx: 0.055, sy: 0.05, sz: 0.05 } },
-      steps:        { make: () => this._formSteps(),             cam: [0, 0.3, 13.6],  opts: { spin: 0.0, arc: 1.5, dur: 1.9 }, roll: 0.08,
+      steps:        { make: () => this._formSteps(),             cam: [0, 0.3, 13.6],  opts: { spin: 0.10, arc: 1.5, dur: 1.9 },
                                                                  drift: { ax: 2.2, ay: 1.0, az: 0.4, sx: 0.05, sy: 0.06, sz: 0.04 } },
-      gradcap:      { make: () => this._formGradCap(),           cam: [0, 0.3, 13.4],  opts: { spin: 0.0, arc: 1.5, dur: 1.9 }, roll: 0.10,
+      gradcap:      { make: () => this._formGradCap(),           cam: [0, 0.3, 13.4],  opts: { spin: 0.10, arc: 1.5, dur: 1.9 },
                                                                  drift: { ax: 2.2, ay: 1.1, az: 0.4, sx: 0.05, sy: 0.05, sz: 0.04 } },
-      book:         { make: () => this._formBook(),              cam: [0, 0.3, 13.4],  opts: { spin: 0.0, arc: 1.5, dur: 1.9 }, roll: 0.09,
+      book:         { make: () => this._formBook(),              cam: [0, 0.3, 13.4],  opts: { spin: 0.10, arc: 1.5, dur: 1.9 },
                                                                  drift: { ax: 2.4, ay: 1.1, az: 0.5, sx: 0.05, sy: 0.055, sz: 0.04 } },
-      calendar:     { make: () => this._formCalendar(),          cam: [0, 0.3, 13.6],  opts: { spin: 0.0, arc: 1.5, dur: 1.9 }, roll: 0.09,
+      calendar:     { make: () => this._formCalendar(),          cam: [0, 0.3, 13.6],  opts: { spin: 0.10, arc: 1.5, dur: 1.9 },
                                                                  drift: { ax: 2.6, ay: 1.1, az: 0.5, sx: 0.05, sy: 0.05, sz: 0.04 } },
       fireworks:    { make: () => this._formFireworks(),         cam: [0, 0.2, 13.4],  opts: { spin: 0.04, arc: 2.4, dur: 1.7, ease: "power2.out" } },
     };
@@ -1049,7 +1049,6 @@ export class Cosmos {
     const def = this._registry[nameRaw] || this._registry.orb;
     this._morphTo(def.make(arg), { ...def.opts, ...over });
     this.drift = over.drift || def.drift || null;   // gentle wandering for this formation (else recenter)
-    this.roll = over.roll ?? def.roll ?? 0;          // in-plane spin (rad/s) for flat icon shapes
     const cam = over.cam || def.cam;
     this._camTo(cam[0], cam[1], cam[2]);
 
@@ -1140,11 +1139,6 @@ export class Cosmos {
       } else {
         this.points.position.set(0, 0, 0);
       }
-      // in-plane roll: flat "icon" shapes visibly rotate while still facing the
-      // viewer (a vertical-axis spin would just turn them edge-on and vanish).
-      // Skipped during the live fireworks sim. Eases back to 0 when not rolling.
-      if (this.roll && !this.live) this.points.rotation.z = t * this.roll;
-      else this.points.rotation.z *= 0.97;
     }
 
     if (this.live && this.liveMode === "fireworks") this._fwStep(t);
