@@ -684,13 +684,14 @@ themeBtn.addEventListener("click", () => {
 });
 
 /* ---- background music (50% volume) ---- */
+let startAudio = () => {};
 const bgm = document.getElementById("bgm");
 const soundBtn = document.getElementById("sound");
 if (bgm && soundBtn) {
   bgm.volume = 0.5;
   let audioStarted = false;
   const refreshSound = () => { soundBtn.classList.toggle("muted", bgm.paused); soundBtn.setAttribute("aria-pressed", String(!bgm.paused)); };
-  const startAudio = () => { if (audioStarted) return; audioStarted = true; bgm.play().then(refreshSound).catch(() => soundBtn.classList.add("muted")); };
+  startAudio = () => { if (audioStarted) return; audioStarted = true; bgm.play().then(refreshSound).catch(() => soundBtn.classList.add("muted")); };
   // browsers block sound until a user gesture — kick it off on the first one
   window.addEventListener("pointerdown", startAudio, { once: true });
   window.addEventListener("keydown", startAudio, { once: true });
@@ -709,3 +710,18 @@ if (!location.hash) location.replace("#/home");
 render();
 const loader = document.getElementById("loader");
 setTimeout(() => loader.classList.add("hidden"), 450);
+
+/* ---- splash door: open it to enter (and unlock the soundtrack) ---- */
+const splash = document.getElementById("splash");
+const splashOpen = document.getElementById("splash-open");
+if (splash && splashOpen) {
+  const openDoor = () => {
+    if (splash.classList.contains("opening")) return;
+    startAudio();                                   // the click is the gesture that unlocks audio
+    document.body.classList.add("door-entry");      // home rises from the other side of the door
+    splash.classList.add("opening");
+    splash.setAttribute("aria-hidden", "true");
+    setTimeout(() => splash.classList.add("gone"), 1300);
+  };
+  splashOpen.addEventListener("click", openDoor);
+}
