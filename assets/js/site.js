@@ -488,7 +488,7 @@ function tierSection(t) {
   </section>`;
 }
 ROUTES.learning = {
-  title: "Learning Lanes", formation: "gradcap",
+  title: "Learning Lanes", formation: "book",
   html: () => hero({
     eyebrow: "✦ GTM Ops Enablement",
     h1: `AI Upskilling <span class="gradient-text">Pathway</span>`,

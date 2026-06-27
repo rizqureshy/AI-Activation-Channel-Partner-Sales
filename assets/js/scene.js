@@ -686,6 +686,42 @@ export class Cosmos {
     return { pos, col };
   }
 
+  // a simple open book — two pages fanning up from a centre spine. Learning Lanes.
+  _formBook() {
+    const { pos, col } = this._alloc(), N = this.N;
+    const tmp = new THREE.Color();
+    const baseY = 0.3, oy = -0.35;
+    // left page quad corners (inner = spine side); right page mirrors on x
+    const ib = [0, -0.25], it = [0, 0.55], ot = [-2.5, 1.0], ob = [-2.5, 0.2];
+    const wPage = 4.6, wSpine = 0.9, wTot = 2 * wPage + wSpine;
+
+    const lerp = (a, b, k) => [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k];
+    for (let i = 0; i < N; i++) {
+      let x, y, kind;
+      const pick = Math.random() * wTot;
+      if (pick < wSpine) {                            // centre spine
+        kind = "spine";
+        x = (Math.random() - 0.5) * 0.1;
+        y = -0.25 + Math.random() * 0.8;
+      } else {                                        // a page (left, then mirror for right)
+        kind = "page";
+        const s = Math.random(), t = Math.random();
+        const pb = lerp(ib, ob, s), pt = lerp(it, ot, s);
+        const pPt = lerp(pb, pt, t);
+        x = pPt[0]; y = pPt[1];
+        if (pick > wSpine + wPage) x = -x;            // right page
+      }
+      pos[i * 3] = x;
+      pos[i * 3 + 1] = y + oy + baseY;
+      pos[i * 3 + 2] = (Math.random() - 0.5) * 0.5;
+      const tcol = kind === "spine"
+        ? (Math.random() < 0.4 ? C.gold : C.white)
+        : (Math.random() < 0.14 ? C.white : tmp.copy(C.iris).lerp(C.blue, Math.random()));
+      this._setCol(col, i, tcol, 0.07);
+    }
+    return { pos, col };
+  }
+
   // a graduation cap — mortarboard + head + gold tassel. For Learning Lanes.
   _formGradCap() {
     const { pos, col } = this._alloc(), N = this.N;
@@ -989,6 +1025,8 @@ export class Cosmos {
       steps:        { make: () => this._formSteps(),             cam: [0, 0.3, 13.6],  opts: { spin: 0.0, arc: 1.5, dur: 1.9 },
                                                                  drift: { ax: 1.0, ay: 0.8, az: 0.4, sx: 0.05, sy: 0.06, sz: 0.04 } },
       gradcap:      { make: () => this._formGradCap(),           cam: [0, 0.3, 13.4],  opts: { spin: 0.0, arc: 1.5, dur: 1.9 },
+                                                                 drift: { ax: 0.6, ay: 0.6, az: 0.3, sx: 0.05, sy: 0.05, sz: 0.04 } },
+      book:         { make: () => this._formBook(),              cam: [0, 0.3, 13.4],  opts: { spin: 0.0, arc: 1.5, dur: 1.9 },
                                                                  drift: { ax: 0.6, ay: 0.6, az: 0.3, sx: 0.05, sy: 0.05, sz: 0.04 } },
       calendar:     { make: () => this._formCalendar(),          cam: [0, 0.3, 13.6],  opts: { spin: 0.0, arc: 1.5, dur: 1.9 },
                                                                  drift: { ax: 0.9, ay: 0.9, az: 0.4, sx: 0.05, sy: 0.06, sz: 0.04 } },
