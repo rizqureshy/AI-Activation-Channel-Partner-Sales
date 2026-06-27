@@ -177,7 +177,7 @@ ROUTES.home = {
     eyebrow: "✦ Learn · Share · Experiment · Have fun with AI",
     h1: `CRO <span class="gradient-text">AI Activation</span> Community`,
     lead: "The front door to AI at CRO — where everyone comes together to learn, build, and have fun. No experts required, just curiosity.",
-    morph: ["Your AI Story matters.", "Your AI Questions matter.", "Your AI Experiments matter.", "Your AI Work matters.", "Your AI Fun matters.", "You matter."],
+    morph: ["Your Story matters.", "Your Questions matter.", "Your Experiments matter.", "Your Work matters.", "Your Fun matters.", "You matter."],
     cta: [
       { t: "Join the Community", k: "primary", h: "#/join", svg: "users" },
       { t: "Community Projects Gallery", k: "cool", h: "#/gallery", svg: "grid" },
