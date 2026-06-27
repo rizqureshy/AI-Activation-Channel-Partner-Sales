@@ -72,14 +72,15 @@ const pills = (items) => `<div class="pills reveal">` + items.map((t) => `<span 
 function ctas(arr) {
   return `<div class="cta-row reveal">` + arr.map((c) => {
     const inner = `${c.svg ? ic(c.svg) : ""}${c.t}`;
+    if (c.scroll) return `<button class="btn ${c.k || "ghost"}" data-scroll="${c.scroll}">${inner}</button>`;
     if (c.toast) return `<button class="btn ${c.k || "ghost"}" data-toast="${c.toast}">${inner}</button>`;
     const ext = c.h && /^https?:/.test(c.h) ? ` target="_blank" rel="noopener"` : "";
     return `<a class="btn ${c.k || "ghost"}" href="${c.h || "#/home"}"${ext}>${inner}</a>`;
   }).join("") + `</div>`;
 }
 
-function block({ kicker, title, lead, inner = "", panel, warm }) {
-  return `<section class="block">` +
+function block({ kicker, title, lead, inner = "", panel, warm, id }) {
+  return `<section class="block"${id ? ` id="${id}"` : ""}>` +
     (panel ? `<div class="panel${warm ? " warm" : ""}">` : "") +
     (kicker ? `<span class="kicker reveal"><span class="dot"></span> ${kicker}</span>` : "") +
     (title ? `<h2 class="reveal">${title}</h2>` : "") +
@@ -391,27 +392,36 @@ ROUTES.learning = {
   }),
 };
 
-/* ---- Expert Clinic ---- */
+/* ---- AI Clinic — book a 1:1 with a Community Expert ---- */
 ROUTES.clinic = {
   title: "AI Clinic", formation: "ring",
-  html: () => block({
-    kicker: "AI Clinic", title: "Bring your questions — leave with answers",
-    lead: "Bring your AI questions, use cases, prompts, workflows, or team activation challenges. The AI Clinic is a practical support space to get guidance, improve ideas, and learn from others.",
-    inner: iconCards([
-      { t: "Prompt Clinic", icon: "bolt" }, { t: "Copilot Clinic", icon: "chat" }, { t: "ACE Clinic", icon: "shield" },
-      { t: "Certification Clinic", icon: "book" }, { t: "Use Case Clinic", icon: "grid" }, { t: "Team Activation Clinic", icon: "users" },
-      { t: "Responsible AI Clinic", icon: "shield" }, { t: "Demo Review Clinic", icon: "play" },
-    ], 4),
+  html: () => hero({
+    eyebrow: "✦ AI Clinic",
+    h1: `Book a <span class="gradient-text">1:1</span> with a Community Expert`,
+    lead: "A dedicated space to book a 1:1 consultation with our Community Experts — to talk through your deeper AI use cases, ideas, and challenges, one to one.",
+    cta: [{ t: "Book a 1:1 Consultation", k: "primary", scroll: "book", svg: "calendar" }],
   })
   + block({
-    panel: true, title: "Book a slot — or drop a question",
-    lead: "Can't make it live? Drop your question and we'll route it to the right clinic and follow up.",
-    inner: `<div class="split"><div>` + ctas([{ t: "Book a Clinic Slot", k: "primary", toast: "Opening the clinic schedule…", svg: "calendar" }]) +
-      `<p class="micro">Upcoming: Prompt Clinic (Tue), Copilot Clinic (Wed), Certification Clinic (Thu).</p></div><div class="panel">` +
-      formHTML([
-        { l: "Name", t: "text" }, { l: "Clinic type", t: "select", opts: ["Prompt", "Copilot", "ACE", "Certification", "Use Case", "Team Activation", "Responsible AI", "Demo Review"] },
-        { l: "Your question", t: "textarea", ph: "What would you like help with?" },
-      ], "Drop a Question") + `</div></div>`,
+    kicker: "How our experts help", title: "You'll leave with a clear next step",
+    lead: "Bring a use case, an idea, or a challenge. Our experts will help guide you on your journey and connect you with the right people and resources to get you sorted.",
+    inner: iconCards([
+      { t: "Guide your use case", p: "Talk through where AI fits — and where it doesn't — for your specific situation.", icon: "bulb" },
+      { t: "Work through challenges", p: "Stuck on a prompt, a workflow, or a tool? Bring it and we'll work it through together.", icon: "bolt" },
+      { t: "Shape your AI journey", p: "Figure out the right next move for you, your role, and your goals.", icon: "rocket" },
+      { t: "Connect you to the right people", p: "We'll point you to the experts, teams, and communities who can help most.", icon: "users" },
+      { t: "Point you to resources", p: "Leave with the right learning, templates, and tools to keep moving.", icon: "book" },
+      { t: "Get you sorted", p: "The goal of every 1:1 is a clear, practical next step you can act on.", icon: "check" },
+    ], 3),
+  })
+  + block({
+    id: "book", panel: true, warm: true, title: "Book your 1:1 consultation",
+    lead: "Tell us a little about what you'd like to discuss and we'll match you with the right Community Expert and follow up to confirm a time.",
+    inner: formHTML([
+      { l: "Your name", t: "text" },
+      { l: "Team / Function", t: "text" },
+      { l: "What would you like to discuss?", t: "select", opts: ["A use case or idea", "A challenge I'm stuck on", "My AI learning journey", "Choosing the right tool", "Something else"] },
+      { l: "Tell us more", t: "textarea", ph: "Share your use case, idea, or challenge so we can match you with the right expert." },
+    ], "Request a 1:1 Consultation"),
   }),
 };
 
@@ -543,6 +553,12 @@ document.addEventListener("submit", (e) => {
 document.addEventListener("click", (e) => {
   const b = e.target.closest("[data-toast]");
   if (b) { e.preventDefault(); showToast(b.getAttribute("data-toast")); }
+  const s = e.target.closest("[data-scroll]");
+  if (s) {
+    e.preventDefault();
+    const tgt = document.getElementById(s.getAttribute("data-scroll"));
+    if (tgt) tgt.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
 });
 
 /* ---- theme: dark ⟷ dawn/dusk (light) ---- */
