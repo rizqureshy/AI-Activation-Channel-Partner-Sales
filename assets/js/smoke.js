@@ -62,7 +62,7 @@ void main(){
   // slow domain warp drives the big rolling motion of the cloud; on a page
   // change uBurst swells the warp so the mass churns and rearranges itself.
   vec2 p = c * 1.55;
-  float wamp = 1.0 + uBurst * 2.2;
+  float wamp = 1.0 + uBurst * 1.1;
   vec2 warp = wamp * vec2(fbm(p * 0.6 + vec2(0.0, t)), fbm(p * 0.6 + vec2(4.3, -t) + 5.0));
 
   // a big, thick billowing mass + a wide falloff so it stays a cloud in clear water
@@ -107,8 +107,8 @@ export class Smoke {
     this._flow = 0;                          // accumulated flow time (advances fast during a burst)
     this._burst = 0;                         // 0..1 churn envelope, kicked on page change
     this._bt = Infinity;                     // seconds since the last burst started
-    this._burstDur = 2.8;                    // how long the churn takes to fully settle
-    this._scale = 0.8;                       // render a bit below native res (perf), still keeps tendrils
+    this._burstDur = 2.6;                    // how long the churn takes to fully settle
+    this._scale = 1.0;                       // render at native CSS resolution — keeps the ink sharp
     if (!this.gl) { this.ok = false; return; }
     this.ok = this._build();
     if (this.ok) {
@@ -149,7 +149,7 @@ export class Smoke {
 
   resize() {
     if (!this.ok) return;
-    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.25);
     const w = Math.max(2, Math.floor(window.innerWidth * dpr * this._scale));
     const h = Math.max(2, Math.floor(window.innerHeight * dpr * this._scale));
     if (this.canvas.width !== w || this.canvas.height !== h) {
@@ -163,18 +163,15 @@ export class Smoke {
   start() {
     if (!this.ok || this._raf) return;
     const gl = this.gl;
-    const smoothstep = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
-    const ATT = 0.12;                        // brief smooth attack, then a long smooth release
     const tick = (now) => {
       const dt = this._last == null ? 0.016 : Math.min(0.05, (now - this._last) / 1000);
       this._last = now;
-      // burst envelope: smooth ramp up then ease all the way down to zero with
-      // zero slope at the end, so the flow decelerates gently (no sudden stop).
+      // burst envelope: a raised-cosine bell (0 → 1 → 0) with zero slope at both
+      // ends, so the churn eases in AND out — no pop on start, no jolt on settle.
       this._bt += dt;
       const u = this._bt / this._burstDur;
-      this._burst = u >= 1 ? 0
-        : (u < ATT ? smoothstep(0, ATT, u) : 1 - smoothstep(ATT, 1, u));
-      const speed = 1.0 + this._burst * 6.0;
+      this._burst = u >= 1 ? 0 : 0.5 - 0.5 * Math.cos(2 * Math.PI * u);
+      const speed = 1.0 + this._burst * 5.0;
       this._flow += dt * speed;
       gl.viewport(0, 0, this.canvas.width, this.canvas.height);
       gl.useProgram(this.prog);

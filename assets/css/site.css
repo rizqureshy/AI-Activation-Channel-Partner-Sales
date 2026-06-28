@@ -82,7 +82,7 @@ img { max-width: 100%; display: block; }
    diffusion stays soft and the blur never reveals a hard canvas edge. */
 #smoke-canvas {
   position: fixed; left: -2vw; top: -2vh; width: 104vw; height: 104vh;
-  z-index: 0; display: none; filter: blur(2.5px) saturate(1.08);
+  z-index: 0; display: none; filter: saturate(1.1);
 }
 body.smoke-on #smoke-canvas { display: block; }
 body.smoke-on #bg-canvas { display: none; }
