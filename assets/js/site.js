@@ -361,15 +361,6 @@ ROUTES.join = {
   })
 
   + block({
-    inner: iconCards([
-      { t: "You're welcome", p: "Exactly as you are — beginner or builder, every role counts.", icon: "heart" },
-      { t: "You're celebrated", p: "Wins big and small get cheered on, out loud.", icon: "star" },
-      { t: "You're recognized", p: "Earn stars and rise to Community Champion.", icon: "trophy" },
-      { t: "You get the spotlight", p: "Your work and your story get featured.", icon: "bolt" },
-    ], 4),
-  })
-
-  + block({
     kicker: "The community feed", title: "Jump straight into the conversation",
     lead: "This is our live Viva Engage community, right here. Read along, say hi, ask anything — sign in with your Equinix account to post.",
     inner: `<div class="viva-embed reveal">
