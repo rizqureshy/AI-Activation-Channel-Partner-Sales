@@ -86,8 +86,14 @@ img { max-width: 100%; display: block; }
 }
 body.smoke-on #smoke-canvas { display: block; }
 body.smoke-on #bg-canvas { display: none; }
-/* the smoke is the whole sky in this mode — drop the particle-tuned overlays */
-body.smoke-on .cosmos-wash, body.smoke-on .vignette { display: none; }
+/* the smoke is the whole sky in this mode — drop the particle-tuned overlays
+   AND the light content scrim, which was a ~55% white veil washing out the ink */
+body.smoke-on .cosmos-wash, body.smoke-on .vignette, body.smoke-on #main::before { display: none; }
+/* headings sit directly on the vivid ink — a soft halo keeps them legible over
+   both pale and deep areas, without re-diffusing the background */
+body.smoke-on .hero h1, body.smoke-on .block > h2, body.smoke-on .tier-head h2 {
+  text-shadow: 0 1px 18px rgba(255,255,255,0.5);
+}
 
 /* a soft scrim directly behind content so text always reads */
 /* Veils the particle field only — sits BEHIND the page content (negative
