@@ -171,6 +171,7 @@ body.smoke-on .cosmos-wash, body.smoke-on .vignette { display: none; }
 
 .splash-ui {
   position: relative; z-index: 2; text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: clamp(18px, 3vh, 30px);
   transition: opacity .6s var(--ease-out);
 }
 #splash.opening .splash-ui { opacity: 0; }                 /* button clears quickly so the doors lead */
