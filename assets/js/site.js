@@ -803,19 +803,29 @@ function submitBooking(form) {
 /* ---- theme: dark (particles) ⟷ light (ink-in-water smoke) ---- */
 const THEME_KEY = "cro-theme";
 const themeBtn = document.getElementById("theme-toggle");
-let smoke = null;   // lazily created on first switch to light
-function applyTheme(mode) {
+let smoke = null;           // lazily created on first switch to light
+let engineTimer = null;     // delays parking the hidden engine until the cross-fade ends
+let themeAnimTimer = null;
+function applyTheme(mode, animate) {
   const light = mode === "light";
+  if (animate) {
+    document.body.classList.add("theme-anim");                 // ease all colours during the switch
+    clearTimeout(themeAnimTimer);
+    themeAnimTimer = setTimeout(() => document.body.classList.remove("theme-anim"), 950);
+  }
   document.body.classList.toggle("light", light);
+  clearTimeout(engineTimer);
   if (light) {
-    // hand the sky over to the smoke engine; park the particle field
     if (!smoke) smoke = new Smoke(document.getElementById("smoke-canvas"));
-    if (smoke.ok) { smoke.start(); document.body.classList.add("smoke-on"); cosmos.pause(); }
-    else { cosmos.resume(); }     // no WebGL2 → keep particles (light-tuned) as a fallback
+    if (smoke.ok) {
+      smoke.start(); cosmos.resume();                          // both run through the cross-fade
+      document.body.classList.add("smoke-on");                 // ink fades in, particles fade out
+      engineTimer = setTimeout(() => cosmos.pause(), 900);     // park particles once hidden
+    } else { cosmos.resume(); }                                // no WebGL2 → keep particles as fallback
   } else {
-    if (smoke) smoke.stop();
+    cosmos.resume();                                           // particles fade back in
     document.body.classList.remove("smoke-on");
-    cosmos.resume();
+    if (smoke) engineTimer = setTimeout(() => smoke.stop(), 900);
   }
   cosmos.setTheme(mode);
   themeBtn.setAttribute("aria-pressed", String(light));
@@ -824,7 +834,7 @@ function applyTheme(mode) {
 let theme = "dark";
 try { theme = localStorage.getItem(THEME_KEY) || "dark"; } catch (e) {}
 themeBtn.addEventListener("click", () => {
-  applyTheme(document.body.classList.contains("light") ? "dark" : "light");
+  applyTheme(document.body.classList.contains("light") ? "dark" : "light", true);
 });
 
 /* ---- background music (50% volume) ---- */
