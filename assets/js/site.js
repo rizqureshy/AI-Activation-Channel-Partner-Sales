@@ -629,7 +629,7 @@ function render() {
   const route = (location.hash.replace(/^#\/?/, "").split("?")[0]) || "home";
   const page = ROUTES[route] || ROUTES.home;
   document.title = page.title + " · CRO AI Activation Community";
-  main.innerHTML = `<div class="view">${page.html()}</div>`;
+  main.innerHTML = `<div class="view"><div class="page-logo"><img src="assets/img/equinix-logo-mark.png" alt="Equinix"></div>${page.html()}</div>`;
   cosmos.applyFormation(page.formation, gsap, {});
   if (smoke && document.body.classList.contains("smoke-on")) smoke.burst();   // ink churns + resettles
   window.scrollTo(0, 0);
