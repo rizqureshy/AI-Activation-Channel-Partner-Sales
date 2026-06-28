@@ -357,16 +357,17 @@ ROUTES.join = {
     h1: `You <span class="gradient-text">belong</span> here`,
     lead: "This community is for everyone across CRO. No perfect prompt required, no expert badge needed — just come in.",
     morph: ["Go ahead — ask away.", "Just say hi.", "Tell us what excites you.", "What do you want to know?", "What do you want to share?", "Want to organize a huddle?"],
-    cta: [{ t: "Join the Viva Engage Community", k: "primary", h: VIVA_URL, svg: "users" }],
+    cta: [{ t: "Open the Viva Engage Community in a new tab", k: "primary", h: VIVA_URL, svg: "share" }],
   })
 
   + block({
-    kicker: "The community feed", title: "Jump straight into the conversation",
+    kicker: "Live now", title: "CRO AI Community Feed",
     lead: "This is our live Viva Engage community, right here. Read along, say hi, ask anything — sign in with your Equinix account to post.",
     inner: `<div class="viva-embed reveal">
+      <div class="viva-head"><span class="live-dot"></span> CRO AI Community Feed</div>
       <iframe name="embed-feed" title="Viva Engage" src="https://engage.cloud.microsoft/embed/groups/eyJfdHlwZSI6Ikdyb3VwIiwiaWQiOiIyMTA0NzYxMjgxNTExNDI0In0" loading="lazy"></iframe>
     </div>`
-      + ctas([{ t: "Open Viva Engage in a new tab", k: "cool", h: VIVA_URL, svg: "share" }]),
+      + ctas([{ t: "Open the Viva Engage Community in a new tab", k: "cool", h: VIVA_URL, svg: "share" }]),
   })
 
   + block({
@@ -377,7 +378,7 @@ ROUTES.join = {
       "You will be <b>helped</b> — no question is ever too small.",
       "You will be <b>celebrated</b> — and recognized for showing up.",
       "Curiosity counts more than expertise. Always.",
-    ]) + ctas([{ t: "Join the Viva Engage Community", k: "primary", h: VIVA_URL, svg: "users" }]),
+    ]) + ctas([{ t: "Open the Viva Engage Community in a new tab", k: "primary", h: VIVA_URL, svg: "share" }]),
   }),
 };
 
