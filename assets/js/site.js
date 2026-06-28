@@ -221,11 +221,10 @@ const APPS = [
 ];
 function shotCard(s) {
   return `<article class="card gcard reveal">
-    <div class="gthumb"><img loading="lazy" src="${s.img}" alt="${s.t} — ${s.author}"></div>
+    <button class="gthumb gthumb-btn" data-img="${s.img}" aria-label="View ${s.t} by ${s.author}"><img loading="lazy" src="${s.img}" alt="${s.t} — ${s.author}"></button>
     <span class="tag">${s.cat}</span>
     <h3>${s.t}</h3>
     <div class="gmeta">${s.author}</div>
-    <div class="gactions"><a class="btn cool sm" href="${PORTFOLIO_URL}" target="_blank" rel="noopener">${ic("grid")}Open in 3D Gallery</a></div>
   </article>`;
 }
 function appCard(a) {
@@ -233,7 +232,7 @@ function appCard(a) {
     <span class="tag">App &amp; Tool</span>
     <h3>${a.t}</h3>
     <div class="gmeta">${a.author}</div>
-    <div class="gactions"><a class="btn cool sm" href="${a.url}" target="_blank" rel="noopener">${ic("bolt")}Launch app</a></div>
+    <div class="gactions"><button class="btn cool sm" data-app="${a.url}">${ic("bolt")}Open app</button></div>
   </article>`;
 }
 const galleryPreview = () => `<div class="grid c3">` + SHOTS.slice(0, 3).map(shotCard).join("") + `</div>`;
@@ -387,13 +386,12 @@ ROUTES.gallery = {
   title: "Community Gallery", formation: "grid",
   html: () => block({
     kicker: "Community Gallery", title: "Real work from real people",
-    lead: "A living showcase from the community's AI April sprint — apps, AI art, dashboards, strategy decks, animations, and courses. Explore it as a 3D living canvas, or browse the highlights below.",
-    inner: ctas([{ t: "Open the 3D Portfolio Gallery", k: "primary", h: PORTFOLIO_URL, svg: "grid" }, { t: "Share in Viva Engage", k: "cool", h: VIVA_URL, svg: "share" }])
-      + pills(["AI Art", "Dashboards", "AI Decks", "Apps & Tools", "Animations", "Courses", "Customer workflow", "Productivity", "Beginner friendly", "Advanced"]),
+    lead: "A living showcase from the community's AI April sprint — AI art, dashboards, strategy decks, animations, courses, and working apps. Click any piece to view it, and open the apps right here on the page.",
+    inner: pills(["AI Art", "Dashboards", "AI Decks", "Apps & Tools", "Animations", "Courses", "Customer workflow", "Productivity", "Beginner friendly", "Advanced"]),
   })
   + block({ kicker: "Highlights", title: "Art, dashboards, decks &amp; more", inner: `<div class="grid c3">` + SHOTS.map(shotCard).join("") + `</div>` })
-  + block({ kicker: "Apps & Tools", title: "Things you can launch right now", lead: "Real working apps the community built with AI — open them and try.", inner: `<div class="grid c3">` + APPS.map(appCard).join("") + `</div>` })
-  + block({ panel: true, title: "Have something to add?", lead: "The gallery grows when you contribute. Share your prompt, workflow, demo, app, or story in the community.", inner: ctas([{ t: "Share in Viva Engage", k: "primary", h: VIVA_URL, svg: "share" }, { t: "Open the 3D Gallery", h: PORTFOLIO_URL, svg: "grid" }]) }),
+  + block({ kicker: "Apps & Tools", title: "Things you can launch right now", lead: "Real working apps the community built with AI — open one and try it, right here.", inner: `<div class="grid c3">` + APPS.map(appCard).join("") + `</div>` })
+  + block({ panel: true, title: "Have something to add?", lead: "The gallery grows when you contribute. Share your prompt, workflow, demo, app, or story in the community.", inner: ctas([{ t: "Share in Viva Engage", k: "primary", h: VIVA_URL, svg: "share" }]) }),
 };
 
 /* ---- Skill Up, Speed Up (curated AI learning videos, embedded playback) ---- */
@@ -691,15 +689,26 @@ document.addEventListener("click", (e) => {
     e.preventDefault();
     openPlayer(`<video src="${vf.getAttribute("data-file")}" controls autoplay playsinline></video>`);
   }
+  const im = e.target.closest("[data-img]");
+  if (im) {
+    e.preventDefault();
+    openPlayer(`<img class="player-img" src="${im.getAttribute("data-img")}" alt="">`, "img");
+  }
+  const ap = e.target.closest("[data-app]");
+  if (ap) {
+    e.preventDefault();
+    openPlayer(`<iframe src="${ap.getAttribute("data-app")}" title="Community app" loading="lazy" allow="fullscreen; autoplay; clipboard-write"></iframe>`);
+  }
 });
 
 /* ---- inline video player (embedded; never redirects off the page) ---- */
 const player = document.getElementById("player");
 const playerFrame = document.getElementById("player-frame");
 let bgmWasPlaying = false;
-function openPlayer(html) {
+function openPlayer(html, mode) {
   if (!player) return;
   playerFrame.innerHTML = html;
+  player.classList.toggle("is-img", mode === "img");   // images size naturally, not 16:9
   player.classList.add("open");
   player.setAttribute("aria-hidden", "false");
   if (bgm && !bgm.paused) { bgmWasPlaying = true; bgm.pause(); soundBtn && soundBtn.classList.add("muted"); }
