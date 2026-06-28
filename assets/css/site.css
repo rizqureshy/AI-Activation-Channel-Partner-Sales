@@ -86,14 +86,10 @@ img { max-width: 100%; display: block; }
 }
 body.smoke-on #smoke-canvas { display: block; }
 body.smoke-on #bg-canvas { display: none; }
-/* the smoke is the whole sky in this mode — drop the particle-tuned overlays
-   AND the light content scrim, which was a ~55% white veil washing out the ink */
-body.smoke-on .cosmos-wash, body.smoke-on .vignette, body.smoke-on #main::before { display: none; }
-/* headings sit directly on the vivid ink — a soft halo keeps them legible over
-   both pale and deep areas, without re-diffusing the background */
-body.smoke-on .hero h1, body.smoke-on .block > h2, body.smoke-on .tier-head h2 {
-  text-shadow: 0 1px 18px rgba(255,255,255,0.5);
-}
+/* the smoke is the whole sky in this mode — drop the particle-tuned overlays.
+   Keep the light #main::before scrim: it gently diffuses the ink so the clouds
+   sit back behind the content instead of being too in-your-face. */
+body.smoke-on .cosmos-wash, body.smoke-on .vignette { display: none; }
 
 /* a soft scrim directly behind content so text always reads */
 /* Veils the particle field only — sits BEHIND the page content (negative
@@ -210,6 +206,17 @@ body.smoke-on .hero h1, body.smoke-on .block > h2, body.smoke-on .tier-head h2 {
   backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
   border-bottom: 1px solid var(--brd);
 }
+/* Equinix badge — a white chip so the logo reads on any theme/background */
+.eqx-badge {
+  display: inline-flex; align-items: center; flex: none;
+  background: #fff; border-radius: 9px; padding: 5px 10px;
+  box-shadow: 0 6px 16px -8px rgba(0,0,0,.5), 0 0 0 1px rgba(0,0,0,.05);
+}
+.eqx-badge img { display: block; height: 22px; width: auto; }
+.topbar .brand { padding-left: 2px; border-left: 1px solid var(--brd); margin-left: 2px; padding-left: 14px; }
+.eqx-door { padding: 10px 18px; border-radius: 14px; margin-bottom: 4px; }
+.eqx-door img { height: 40px; }
+
 .brand { display: flex; align-items: center; gap: 9px; flex: none; }
 .brand-spark {
   width: 15px; height: 15px; border-radius: 5px; background: var(--warm);
