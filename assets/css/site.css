@@ -585,6 +585,16 @@ body.light .mb-caption { text-shadow: 0 1px 10px rgba(255,255,255,0.9); }
 .card .tag.lv-inter { color: #ffcf45; }
 .card .tag.lv-adv   { color: #ff7ab8; }
 
+/* ---- Viva Engage embed (Join page) ---- */
+.viva-embed {
+  margin-top: 18px; border-radius: 16px; overflow: hidden;
+  border: 1px solid var(--glass-brd); background: var(--surface-2);
+  box-shadow: 0 24px 60px -30px rgba(0,0,0,.7);
+}
+.viva-embed iframe {
+  display: block; border: 0; width: 100%; height: 70vh; min-height: 460px; max-height: 760px;
+}
+
 /* ---- inline video player (modal) ---- */
 .player { position: fixed; inset: 0; z-index: 400; display: none; place-items: center;
   background: rgba(6,5,16,0.82); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); padding: 24px; }

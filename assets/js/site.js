@@ -370,6 +370,15 @@ ROUTES.join = {
   })
 
   + block({
+    kicker: "The community feed", title: "Jump straight into the conversation",
+    lead: "This is our live Viva Engage community, right here. Read along, say hi, ask anything — sign in with your Equinix account to post.",
+    inner: `<div class="viva-embed reveal">
+      <iframe name="embed-feed" title="Viva Engage" src="https://engage.cloud.microsoft/embed/groups/eyJfdHlwZSI6Ikdyb3VwIiwiaWQiOiIyMTA0NzYxMjgxNTExNDI0In0" loading="lazy"></iframe>
+    </div>`
+      + ctas([{ t: "Open Viva Engage in a new tab", k: "cool", h: VIVA_URL, svg: "share" }]),
+  })
+
+  + block({
     kicker: "Our Promise", panel: true, warm: true,
     title: "What you can count on",
     inner: bullets([
