@@ -137,9 +137,9 @@ const formHTML = (fields, submit) =>
    Navigation
    ============================================================ */
 const PRIMARY = [
-  ["Home", "#/home"], ["Join the Community", "#/join"], ["Weekly Fun", "#/fun"],
-  ["Skill Up, Speed Up", "#/videos"], ["Learning Lanes", "#/learning"], ["AI Clinic", "#/clinic"],
-  ["Community Champions", "#/recognition"], ["Community Gallery", "#/gallery"], ["AI Activation for Teams", "#/teams"],
+  ["Home", "#/home"], ["Join the Community", "#/join"], ["Skill Up, Speed Up", "#/videos"],
+  ["Learning Lanes", "#/learning"], ["AI Clinic", "#/clinic"], ["Community Champions", "#/recognition"],
+  ["Community Gallery", "#/gallery"], ["AI Activation for Teams", "#/teams"],
 ];
 
 function buildNav() {
@@ -178,27 +178,6 @@ ROUTES.home = {
     h1: `Curious about AI? <span class="gradient-text">You're in the right place.</span>`,
     lead: "This is a space for everyone across CRO who wants to explore, learn, and share how AI can transform the way we work. Whether you're just getting started or already experimenting, this community is here for you.<br><br>Come in, connect with others, swap ideas, learn something new, and most importantly, try things out.",
     cta: [{ t: "Join the Community", k: "primary", h: "#/join", svg: "users" }],
-  }),
-};
-
-/* ---- Weekly Fun (fresh community content on a weekly cadence) ---- */
-ROUTES.fun = {
-  title: "Weekly Fun", formation: "fireworks",
-  html: () => hero({
-    eyebrow: "✦ Fresh every week",
-    h1: `Weekly <span class="gradient-text">Fun</span>`,
-    lead: "A new drop every week to keep AI fun and hands-on — a prompt, a challenge, a quick tip, a clever trick, and the community's top prompt. Posted on a weekly cadence in Viva Engage.",
-    cta: [{ t: "See this week in Viva Engage", k: "primary", h: VIVA_URL, svg: "share" }],
-  })
-  + block({
-    kicker: "This week", title: "Five fresh things, every week",
-    inner: iconCards([
-      { t: "Prompt of the Week", p: "A ready-to-use prompt you can try today and make your own.", icon: "bolt" },
-      { t: "Challenge of the Week", p: "A quick AI challenge — give it a go and share what you made.", icon: "rocket" },
-      { t: "Quick Tip", p: "A bite-size tip to work smarter and faster with AI.", icon: "bulb" },
-      { t: "Top Trick", p: "A clever trick the community is loving right now.", icon: "star" },
-      { t: "Top Prompt", p: "The community's highest-rated prompt this week.", icon: "trophy" },
-    ], 3),
   }),
 };
 
