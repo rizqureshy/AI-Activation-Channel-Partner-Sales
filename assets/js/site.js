@@ -162,8 +162,7 @@ function buildNav() {
         <a href="#/learning">Learning Lanes</a><a href="#/videos">Skill Up, Speed Up</a>
         <a href="#/clinic">AI Clinic</a><a href="#/teams">AI Activation for Teams</a>
       </div>
-    </div>
-    <div class="footer-bottom">Your AI Story Matters · Your AI Questions Matter · Your AI Work Matters · You Matter</div>`;
+    </div>`;
 }
 
 /* ============================================================
