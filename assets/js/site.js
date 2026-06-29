@@ -550,11 +550,6 @@ const TOOLS = [
     uses: ["Products & Services", "Customer Preparation", "Competitive Intelligence", "RFPs", "Sales Content", "GTM Knowledge"],
   },
   {
-    name: "Equinix Vision", tag: "Operations", color: "#9b5dff",
-    rule: "Need help running the business?",
-    uses: ["Operational processes", "Operational knowledge", "Business operations", "Operations support"],
-  },
-  {
     name: "Microsoft Copilot", tag: "Personal Productivity", color: "#ff8a3d",
     rule: "Need help getting your own work done?",
     uses: ["Email", "Word", "Excel", "PowerPoint", "Teams", "Meeting summaries", "Brainstorming", "Writing", "Research", "General AI"],
@@ -580,7 +575,6 @@ ROUTES.tools = {
     inner: bullets([
       "Need help as an employee? → <b>SideKick</b>",
       "Need help selling to customers? → <b>ACE</b>",
-      "Need help running the business? → <b>Vision</b>",
       "Need help getting your own work done? → <b>Microsoft Copilot</b>",
     ]),
   }),
