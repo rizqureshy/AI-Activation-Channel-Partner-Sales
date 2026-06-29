@@ -637,6 +637,12 @@ body.light .mb-caption { text-shadow: 0 1px 10px rgba(255,255,255,0.9); }
   text-transform: uppercase; color: var(--tc); }
 .tool-rule { margin: 14px 0 0; font-size: 14.5px; color: var(--ink-dim); }
 .tool-card .pills { margin-top: 12px; }
+.tool-link { color: inherit; }
+.tool-link::after { content: " ↗"; font-size: .72em; color: var(--tc); }
+.tool-link:hover { color: var(--tc); text-decoration: underline; text-underline-offset: 3px; }
+.tool-access { margin: 14px 0 0; font-size: 13px; font-weight: 600; color: var(--tc);
+  display: inline-flex; align-items: center; gap: 7px; padding: 7px 13px; border-radius: 100px;
+  background: color-mix(in srgb, var(--tc) 14%, transparent); border: 1px solid color-mix(in srgb, var(--tc) 35%, transparent); }
 
 /* ---- Viva Engage embed (Join page) ---- */
 .viva-embed {
