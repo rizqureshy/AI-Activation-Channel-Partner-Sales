@@ -138,8 +138,8 @@ const formHTML = (fields, submit) =>
    ============================================================ */
 const PRIMARY = [
   ["Home", "#/home"], ["Join the Community", "#/join"], ["Skill Up, Speed Up", "#/videos"],
-  ["Learning Lanes", "#/learning"], ["AI Clinic", "#/clinic"], ["Community Champions", "#/recognition"],
-  ["Community Gallery", "#/gallery"], ["AI Activation for Teams", "#/teams"],
+  ["Learning Lanes", "#/learning"], ["Tools & Resources", "#/tools"], ["AI Clinic", "#/clinic"],
+  ["Community Champions", "#/recognition"], ["Community Gallery", "#/gallery"], ["AI Activation for Teams", "#/teams"],
 ];
 
 function buildNav() {
@@ -534,6 +534,55 @@ ROUTES.teams = {
     panel: true, warm: true, title: "Interested in running it for your team?",
     lead: "Be the champion for your team. Reach out and we'll help you scope it, design it, and run it — start to finish.",
     inner: ctas([{ t: "Reach Out in Viva Engage", k: "primary", h: VIVA_URL, svg: "users" }, { t: "Talk it through in the AI Clinic", k: "cool", h: "#/clinic", svg: "chat" }]),
+  }),
+};
+
+/* ---- Tools & Resources: which AI tool should I use? ---- */
+const TOOLS = [
+  {
+    name: "Equinix SideKick", tag: "Employee Support", color: "#2bb673",
+    rule: "Need help as an employee?",
+    uses: ["HR", "Legal", "Compliance", "IT Help", "Policies", "Support tickets"],
+  },
+  {
+    name: "Equinix ACE", tag: "Sales & Customer Success", color: "#2b88ff",
+    rule: "Need help selling to customers?",
+    uses: ["Products & Services", "Customer Preparation", "Competitive Intelligence", "RFPs", "Sales Content", "GTM Knowledge"],
+  },
+  {
+    name: "Equinix Vision", tag: "Operations", color: "#9b5dff",
+    rule: "Need help running the business?",
+    uses: ["Operational processes", "Operational knowledge", "Business operations", "Operations support"],
+  },
+  {
+    name: "Microsoft Copilot", tag: "Personal Productivity", color: "#ff8a3d",
+    rule: "Need help getting your own work done?",
+    uses: ["Email", "Word", "Excel", "PowerPoint", "Teams", "Meeting summaries", "Brainstorming", "Writing", "Research", "General AI"],
+  },
+];
+function toolCard(t) {
+  return `<article class="tool-card reveal" style="--tc:${t.color}">
+    <div class="tool-head"><span class="tool-dot"></span><div><h3>${t.name}</h3><p class="tool-tag">${t.tag}</p></div></div>
+    <p class="tool-rule">${t.rule}</p>
+    <div class="pills">${t.uses.map((u) => `<span class="pill">${u}</span>`).join("")}</div>
+  </article>`;
+}
+ROUTES.tools = {
+  title: "Tools & Resources", formation: "grid",
+  html: () => hero({
+    eyebrow: "✦ Tools & Resources",
+    h1: `Which AI Tool <span class="gradient-text">Should I Use?</span>`,
+    lead: "Pick by what you're trying to do — here's the right AI tool for the job.",
+  })
+  + block({ inner: `<div class="grid c2 tool-grid">` + TOOLS.map(toolCard).join("") + `</div>` })
+  + block({
+    panel: true, kicker: "Rule of thumb", title: "Think of it this way",
+    inner: bullets([
+      "Need help as an employee? → <b>SideKick</b>",
+      "Need help selling to customers? → <b>ACE</b>",
+      "Need help running the business? → <b>Vision</b>",
+      "Need help getting your own work done? → <b>Microsoft Copilot</b>",
+    ]),
   }),
 };
 
