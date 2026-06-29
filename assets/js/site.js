@@ -472,8 +472,7 @@ ROUTES.clinic = {
   html: () => hero({
     eyebrow: "✦ AI Clinic",
     h1: `Book a <span class="gradient-text">1:1</span> with a Community Expert`,
-    lead: "A dedicated space to talk through, one to one with our experts:",
-    morph: ["Your use-cases.", "Your ideas.", "Your challenges.", "Your prompts.", "Your AI journey.", "Whatever's on your mind."],
+    lead: "Have a question or idea you'd like to explore with an AI expert beyond the community chat? Book an AI clinic to meet with an expert, get live guidance, and learn how to move your project forward or connect with the right resources.",
     cta: [{ t: "Book a 1:1 Consultation", k: "primary", scroll: "book", svg: "calendar" }],
   })
   + block({
