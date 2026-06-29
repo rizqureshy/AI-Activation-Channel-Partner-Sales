@@ -574,7 +574,7 @@ ROUTES.tools = {
   html: () => hero({
     eyebrow: "✦ Tools & Resources",
     h1: `Which AI Tool <span class="gradient-text">Should I Use?</span>`,
-    lead: "Pick by what you're trying to do — here's the right AI tool for the job.",
+    lead: "Each AI tool at Equinix serves a distinct purpose and may draw from different data and knowledge sources. Unsure which one to use? Check out the decision tree below.",
   })
   + block({ inner: `<div class="grid c2 tool-grid">` + TOOLS.map(toolCard).join("") + `</div>` }),
 };
