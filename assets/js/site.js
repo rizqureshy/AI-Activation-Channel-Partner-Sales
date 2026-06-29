@@ -137,9 +137,9 @@ const formHTML = (fields, submit) =>
    Navigation
    ============================================================ */
 const PRIMARY = [
-  ["Home", "#/home"], ["Join the Community", "#/join"], ["Community Champions", "#/recognition"],
-  ["AI Clinic", "#/clinic"], ["Community Gallery", "#/gallery"],
-  ["Skill Up, Speed Up", "#/videos"], ["Learning Lanes", "#/learning"], ["AI Activation for Teams", "#/teams"],
+  ["Home", "#/home"], ["Join the Community", "#/join"], ["Skill Up, Speed Up", "#/videos"],
+  ["Learning Lanes", "#/learning"], ["AI Clinic", "#/clinic"], ["Community Champions", "#/recognition"],
+  ["Community Gallery", "#/gallery"], ["AI Activation for Teams", "#/teams"],
 ];
 
 function buildNav() {
