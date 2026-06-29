@@ -137,9 +137,9 @@ const formHTML = (fields, submit) =>
    Navigation
    ============================================================ */
 const PRIMARY = [
-  ["Home", "#/home"], ["Join the Community", "#/join"], ["Skill Up, Speed Up", "#/videos"],
-  ["Learning Lanes", "#/learning"], ["AI Clinic", "#/clinic"], ["Community Champions", "#/recognition"],
-  ["Community Gallery", "#/gallery"], ["AI Activation for Teams", "#/teams"],
+  ["Home", "#/home"], ["Join the Community", "#/join"], ["Weekly Fun", "#/fun"],
+  ["Skill Up, Speed Up", "#/videos"], ["Learning Lanes", "#/learning"], ["AI Clinic", "#/clinic"],
+  ["Community Champions", "#/recognition"], ["Community Gallery", "#/gallery"], ["AI Activation for Teams", "#/teams"],
 ];
 
 function buildNav() {
@@ -148,7 +148,7 @@ function buildNav() {
   document.getElementById("site-footer").innerHTML = `
     <div class="footer-inner">
       <div>
-        <h4>CRO AI Activation Community</h4>
+        <h4>CRO AI Community</h4>
         <p class="muted" style="font-size:14px;line-height:1.6;max-width:34ch">Built by the people who participate in it. Come in, share something, learn something, build something.</p>
         <div class="cta-row" style="margin-top:16px"><a class="btn primary sm" href="${VIVA_URL}" target="_blank" rel="noopener">${ic("users")}Join the Community</a></div>
       </div>
@@ -178,6 +178,27 @@ ROUTES.home = {
     h1: `Curious about AI? <span class="gradient-text">You're in the right place.</span>`,
     lead: "This is a space for everyone across CRO who wants to explore, learn, and share how AI can transform the way we work. Whether you're just getting started or already experimenting, this community is here for you.<br><br>Come in, connect with others, swap ideas, learn something new, and most importantly, try things out.",
     cta: [{ t: "Join the Community", k: "primary", h: "#/join", svg: "users" }],
+  }),
+};
+
+/* ---- Weekly Fun (fresh community content on a weekly cadence) ---- */
+ROUTES.fun = {
+  title: "Weekly Fun", formation: "fireworks",
+  html: () => hero({
+    eyebrow: "✦ Fresh every week",
+    h1: `Weekly <span class="gradient-text">Fun</span>`,
+    lead: "A new drop every week to keep AI fun and hands-on — a prompt, a challenge, a quick tip, a clever trick, and the community's top prompt. Posted on a weekly cadence in Viva Engage.",
+    cta: [{ t: "See this week in Viva Engage", k: "primary", h: VIVA_URL, svg: "share" }],
+  })
+  + block({
+    kicker: "This week", title: "Five fresh things, every week",
+    inner: iconCards([
+      { t: "Prompt of the Week", p: "A ready-to-use prompt you can try today and make your own.", icon: "bolt" },
+      { t: "Challenge of the Week", p: "A quick AI challenge — give it a go and share what you made.", icon: "rocket" },
+      { t: "Quick Tip", p: "A bite-size tip to work smarter and faster with AI.", icon: "bulb" },
+      { t: "Top Trick", p: "A clever trick the community is loving right now.", icon: "star" },
+      { t: "Top Prompt", p: "The community's highest-rated prompt this week.", icon: "trophy" },
+    ], 3),
   }),
 };
 
@@ -382,61 +403,56 @@ ROUTES.videos = {
       inner: `<div class="grid c3">` + LEARN.filter((v) => v.track === tr).map(learnCard).join("") + `</div>`,
     })).join("")
   + block({
-    kicker: "Made by our community", title: "AI films from the community",
-    lead: "Short creative films, music videos, and avatars our community made with AI. They play here too.",
-    inner: `<div class="grid c3">` + VIDEOS.map(videoCard).join("") + `</div>`,
-  })
-  + block({
     panel: true, title: "Got a video to add?",
     lead: "Found a great AI explainer, or made one yourself? Share it with the community and we'll add it to the library.",
     inner: ctas([{ t: "Share a Video in Viva Engage", k: "primary", h: VIVA_URL, svg: "play" }, { t: "Browse the Community Gallery", h: "#/gallery", svg: "grid" }]),
   }),
 };
 
-/* ---- Learning Lanes: the GTM Ops AI Upskilling Pathway ---- */
+/* ---- Learning Lanes: the AI Upskilling Pathway ---- */
 const PATHWAY = [
   {
-    tier: "Tier 1", tierTitle: "Proficiency floor", who: "Broad · for everyone",
+    tier: "Tier 1", tierTitle: "No charge", who: "Free courses & certificates",
     courses: [
       {
-        idx: "01", t: "Google AI Essentials", prov: "Google · via Coursera (Grow with Google)",
-        tags: [{ l: "Paid certificate" }, { l: "~$49 per person" }, { l: "~10 hours · self-paced" }],
-        link: { url: "https://www.coursera.org/specializations/ai-essentials-google", label: "coursera.org/specializations/ai-essentials-google" },
-        cost: "Certificate requires a paid Coursera subscription, about $49 per person. Not covered by an Equinix license.",
-        outcome: "Universal generative-AI fluency: prompting, productivity, and responsible use across tools. Every operator can offload routine work and prompt with intent.",
-      },
-      {
-        idx: "02", t: "Career Essentials in Generative AI", prov: "Microsoft and LinkedIn",
+        idx: "01", t: "Career Essentials in Generative AI", prov: "Microsoft and LinkedIn",
         tags: [{ l: "Free · LinkedIn Enterprise", free: true }, { l: "~4 to 5 hours" }, { l: "Certificate included" }],
         link: { url: "https://www.linkedin.com/learning/paths/career-essentials-in-generative-ai-by-microsoft-and-linkedin", label: "linkedin.com/learning · Career Essentials in Generative AI" },
         cost: "Free under the Equinix LinkedIn Learning Enterprise license, certificate included.",
         outcome: "Stack-aligned adoption: Copilot inside Word, Excel, Outlook, Teams and PowerPoint, plus GenAI fundamentals and ethics. Proficiency on the tools the team already has.",
       },
       {
-        idx: "03", t: "Generative AI for Everyone", prov: "DeepLearning.AI (Andrew Ng) · via Coursera",
-        tags: [{ l: "Paid certificate" }, { l: "~$49 per person" }, { l: "~5 hours · self-paced" }],
-        link: { url: "https://www.coursera.org/learn/generative-ai-for-everyone", label: "coursera.org/learn/generative-ai-for-everyone" },
-        cost: "Certificate requires a paid Coursera subscription, about $49 per person. Not covered by an Equinix license.",
-        outcome: "Opportunity spotting and strategy: identify and scope where AI creates leverage across workflows. For the people who lead initiatives, not just use the tools.",
+        idx: "02", t: "Microsoft AI Business Professional", prov: "Microsoft Learn · course AB-730T00 · practitioner level",
+        tags: [{ l: "Free course + completion cert", free: true }, { l: "No coding" }, { l: "Optional cert exam · $99" }],
+        link: { url: "https://learn.microsoft.com/en-us/credentials/certifications/ai-business-professional/", label: "learn.microsoft.com · AI Business Professional" },
+        cost: "The course is free on Microsoft Learn with a completion certificate, study guide, practice assessment and exam sandbox. Only the optional official certification exam costs money.",
+        outcome: "A practitioner foundation: confident, responsible Copilot use in real business workflows. The broad starting point for most of the community.",
+      },
+      {
+        idx: "03", t: "Microsoft AI Transformation Leader", prov: "Microsoft Learn · course AB-731T00 · leadership level",
+        tags: [{ l: "Free course + completion cert", free: true }, { l: "No coding" }, { l: "Optional cert exam · $99" }],
+        link: { url: "https://learn.microsoft.com/en-us/credentials/certifications/ai-transformation-leader/", label: "learn.microsoft.com · AI Transformation Leader" },
+        cost: "The course is free on Microsoft Learn with a completion certificate, study guide, practice assessment and exam sandbox. Only the optional official certification exam costs money.",
+        outcome: "For those steering adoption: define AI business value, plan adoption, govern responsibly, and drive transformation across teams.",
       },
     ],
   },
   {
-    tier: "Tier 2", tierTitle: "Microsoft certifications", who: "Recognized credentials",
+    tier: "Tier 2", tierTitle: "Paid certification", who: "Recognized credentials",
     courses: [
       {
-        idx: "04", t: "Microsoft Certified: AI Business Professional", prov: "Microsoft · Exam AB-730 · practitioner level",
-        tags: [{ l: "Free course + completion cert", free: true }, { l: "Paid exam · $99" }, { l: "No coding" }],
-        link: { url: "https://learn.microsoft.com/en-us/credentials/certifications/ai-business-professional/", label: "learn.microsoft.com · AI Business Professional" },
-        cost: "The AB-730T00 course is free on Microsoft Learn with a completion certificate, study guide, practice assessment and exam sandbox. Only the official exam costs money — $99 USD (regional pricing).",
-        outcome: "Recognized practitioner credential: confident, responsible Copilot use in real business workflows. The broad cert for the GTM Ops population that clears Tier 1.",
+        idx: "04", t: "Google AI Essentials", prov: "Google · via Coursera (Grow with Google)",
+        tags: [{ l: "Paid certificate" }, { l: "~$49 per person" }, { l: "~10 hours · self-paced" }],
+        link: { url: "https://www.coursera.org/specializations/ai-essentials-google", label: "coursera.org/specializations/ai-essentials-google" },
+        cost: "Certificate requires a paid Coursera subscription, about $49 per person. Not covered by an Equinix license.",
+        outcome: "Universal generative-AI fluency: prompting, productivity, and responsible use across tools. Every operator can offload routine work and prompt with intent.",
       },
       {
-        idx: "05", t: "Microsoft Certified: AI Transformation Leader", prov: "Microsoft · Exam AB-731 · leadership level",
-        tags: [{ l: "Free course + completion cert", free: true }, { l: "Paid exam · $99" }, { l: "No coding" }],
-        link: { url: "https://learn.microsoft.com/en-us/credentials/certifications/ai-transformation-leader/", label: "learn.microsoft.com · AI Transformation Leader" },
-        cost: "The AB-731T00 course is free on Microsoft Learn with a completion certificate, study guide, practice assessment and exam sandbox. Only the official exam costs money — $99 USD (regional pricing).",
-        outcome: "Recognized leadership credential: define AI business value, plan adoption, govern responsibly and drive transformation across teams. For the leaders steering adoption.",
+        idx: "05", t: "Generative AI for Everyone", prov: "DeepLearning.AI (Andrew Ng) · via Coursera",
+        tags: [{ l: "Paid certificate" }, { l: "~$49 per person" }, { l: "~5 hours · self-paced" }],
+        link: { url: "https://www.coursera.org/learn/generative-ai-for-everyone", label: "coursera.org/learn/generative-ai-for-everyone" },
+        cost: "Certificate requires a paid Coursera subscription, about $49 per person. Not covered by an Equinix license.",
+        outcome: "Opportunity spotting and strategy: identify and scope where AI creates leverage across workflows. For the people who lead initiatives, not just use the tools.",
       },
     ],
   },
@@ -527,10 +543,10 @@ ROUTES.teams = {
     eyebrow: "✦ AI Activation for Teams",
     h1: `Run AI Activation for <span class="gradient-text">your team</span>`,
     lead: "A hands-on service from the Enablement team — a custom, curated learning framework built entirely around your team's real work, motions, and goals. Not a generic course.",
-    cta: [{ t: "Be the champion — reach out", k: "primary", h: VIVA_URL, svg: "rocket" }],
+    cta: [{ t: "Learn More", k: "primary", scroll: "team-details", svg: "rocket" }],
   })
   + block({
-    kicker: "What you get", title: "Built around your team — totally hands-on",
+    id: "team-details", kicker: "What you get", title: "Built around your team — totally hands-on",
     inner: iconCards([
       { t: "Custom &amp; curated", p: "We shape everything around your team's workflows, tools, and use cases — designed for you, not off the shelf.", icon: "grid" },
       { t: "Totally hands-on", p: "Real reps, real prompts, real workflows. Your team learns by doing, together, on the work that matters.", icon: "bolt" },
@@ -586,7 +602,7 @@ function closeMenu() {
 function render() {
   const route = (location.hash.replace(/^#\/?/, "").split("?")[0]) || "home";
   const page = ROUTES[route] || ROUTES.home;
-  document.title = page.title + " · CRO AI Activation Community";
+  document.title = page.title + " · CRO AI Community";
   main.innerHTML = `<div class="view"><div class="page-logo"><img src="assets/img/equinix-logo-mark.png" alt="Equinix"></div>${page.html()}</div>`;
   cosmos.applyFormation(page.formation, gsap, {});
   if (smoke && document.body.classList.contains("smoke-on")) smoke.burst();   // ink churns + resettles
@@ -662,22 +678,18 @@ document.addEventListener("click", (e) => {
 /* ---- inline video player (embedded; never redirects off the page) ---- */
 const player = document.getElementById("player");
 const playerFrame = document.getElementById("player-frame");
-let bgmWasPlaying = false;
 function openPlayer(html, mode) {
   if (!player) return;
   playerFrame.innerHTML = html;
   player.classList.toggle("is-img", mode === "img");   // images size naturally, not 16:9
   player.classList.add("open");
   player.setAttribute("aria-hidden", "false");
-  if (bgm && !bgm.paused) { bgmWasPlaying = true; bgm.pause(); soundBtn && soundBtn.classList.add("muted"); }
 }
 function closePlayer() {
   if (!player) return;
   playerFrame.innerHTML = "";              // unloading the iframe/video stops playback
   player.classList.remove("open");
   player.setAttribute("aria-hidden", "true");
-  if (bgmWasPlaying && bgm) { bgm.play().then(() => soundBtn && soundBtn.classList.remove("muted")).catch(() => {}); }
-  bgmWasPlaying = false;
 }
 if (player) {
   document.getElementById("player-close").addEventListener("click", closePlayer);
@@ -795,26 +807,6 @@ themeBtn.addEventListener("click", () => {
   applyTheme(document.body.classList.contains("light") ? "dark" : "light", true);
 });
 
-/* ---- background music (50% volume) ---- */
-let startAudio = () => {};
-const bgm = document.getElementById("bgm");
-const soundBtn = document.getElementById("sound");
-if (bgm && soundBtn) {
-  bgm.volume = 0.5;
-  let audioStarted = false;
-  const refreshSound = () => { soundBtn.classList.toggle("muted", bgm.paused); soundBtn.setAttribute("aria-pressed", String(!bgm.paused)); };
-  startAudio = () => { if (audioStarted) return; audioStarted = true; bgm.play().then(refreshSound).catch(() => soundBtn.classList.add("muted")); };
-  // browsers block sound until a user gesture — kick it off on the first one
-  window.addEventListener("pointerdown", startAudio, { once: true });
-  window.addEventListener("keydown", startAudio, { once: true });
-  soundBtn.addEventListener("click", (e) => {
-    e.stopPropagation();
-    audioStarted = true;
-    if (bgm.paused) bgm.play().then(refreshSound).catch(() => {});
-    else { bgm.pause(); refreshSound(); }
-  });
-}
-
 /* boot */
 buildNav();
 applyTheme(theme);
@@ -822,18 +814,3 @@ if (!location.hash) location.replace("#/home");
 render();
 const loader = document.getElementById("loader");
 setTimeout(() => loader.classList.add("hidden"), 450);
-
-/* ---- splash door: open it to enter (and unlock the soundtrack) ---- */
-const splash = document.getElementById("splash");
-const splashOpen = document.getElementById("splash-open");
-if (splash && splashOpen) {
-  const openDoor = () => {
-    if (splash.classList.contains("opening")) return;
-    startAudio();                                   // the click is the gesture that unlocks audio
-    document.body.classList.add("door-entry");      // home rises from the other side of the door
-    splash.classList.add("opening");
-    splash.setAttribute("aria-hidden", "true");
-    setTimeout(() => splash.classList.add("gone"), 3700);
-  };
-  splashOpen.addEventListener("click", openDoor);
-}
