@@ -522,7 +522,7 @@ ROUTES.teams = {
     eyebrow: "✦ AI Activation for Teams",
     h1: `Run AI Activation for <span class="gradient-text">your team</span>`,
     lead: "A hands-on service from the Enablement team — a custom, curated learning framework built entirely around your team's real work, motions, and goals. Not a generic course.",
-    cta: [{ t: "Learn More", k: "primary", scroll: "team-details", svg: "rocket" }],
+    cta: [{ t: "Learn More", k: "primary", h: "https://gtm-webapps.corp.equinix.com/gtmWebApps/v1/aiActivationStudio/", svg: "rocket" }],
   })
   + block({
     id: "team-details", kicker: "What you get", title: "Built around your team — totally hands-on",
