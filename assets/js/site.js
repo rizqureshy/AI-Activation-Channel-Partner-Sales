@@ -108,13 +108,13 @@ function rotLine(items) {
 }
 
 function hero({ eyebrow, h1, lead, morph, cta }) {
+  const frost = (lead || morph)
+    ? `<div class="hero-frost reveal">${lead ? `<p class="hero-sub">${lead}</p>` : ""}${morph ? rotLine(morph) : ""}</div>`
+    : "";
   return `<section class="hero">
     ${eyebrow ? `<span class="eyebrow reveal">${eyebrow}</span>` : ""}
     <h1 class="reveal">${h1}</h1>
-    <div class="hero-frost reveal">
-      ${lead ? `<p class="hero-sub">${lead}</p>` : ""}
-      ${morph ? rotLine(morph) : ""}
-    </div>
+    ${frost}
     ${cta ? ctas(cta) : ""}
   </section>`;
 }
