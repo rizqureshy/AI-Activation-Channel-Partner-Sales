@@ -138,7 +138,7 @@ const formHTML = (fields, submit) =>
    ============================================================ */
 const PRIMARY = [
   ["Home", "#/home"], ["Join the Community", "#/join"], ["Community Champions", "#/recognition"],
-  ["AI Events Calendar", "#/calendar"], ["AI Clinic", "#/clinic"], ["Community Gallery", "#/gallery"],
+  ["AI Clinic", "#/clinic"], ["Community Gallery", "#/gallery"],
   ["Skill Up, Speed Up", "#/videos"], ["Learning Lanes", "#/learning"], ["AI Activation for Teams", "#/teams"],
 ];
 
@@ -155,7 +155,7 @@ function buildNav() {
       <div>
         <h4>Take part</h4>
         <a href="#/join">Join the Community</a><a href="#/recognition">Community Champions</a>
-        <a href="#/gallery">Community Gallery</a><a href="#/calendar">AI Events Calendar</a>
+        <a href="#/gallery">Community Gallery</a>
       </div>
       <div>
         <h4>Learn &amp; get help</h4>
@@ -175,20 +175,9 @@ const ROUTES = {};
 ROUTES.home = {
   title: "Home", formation: "ring",
   html: () => hero({
-    eyebrow: "✦ Learn · Share · Experiment · Have fun with AI",
-    h1: `CRO <span class="gradient-text">AI Activation</span> Community`,
-    lead: "The front door to AI at CRO — where everyone comes together to learn, build, and have fun. No experts required, just curiosity.",
-    morph: ["Your Story matters.", "Your Questions matter.", "Your Experiments matter.", "Your Work matters.", "Your Fun matters.", "You matter."],
-    cta: [
-      { t: "Join the Community", k: "primary", h: "#/join", svg: "users" },
-      { t: "Community Projects Gallery", k: "cool", h: "#/gallery", svg: "grid" },
-    ],
-  })
-
-  + block({
-    kicker: "Leadership Messages", title: "A warm welcome from our leaders",
-    lead: "This community matters to leadership — and they show up here. Fun, warmth, and a place where every question and every role counts.",
-    inner: leaderCards() + ctas([{ t: "Join the Community", k: "primary", h: "#/join", svg: "users" }]),
+    h1: `Curious about AI? <span class="gradient-text">You're in the right place.</span>`,
+    lead: "This is a space for everyone across CRO who wants to explore, learn, and share how AI can transform the way we work. Whether you're just getting started or already experimenting, this community is here for you.<br><br>Come in, connect with others, swap ideas, learn something new, and most importantly, try things out.",
+    cta: [{ t: "Join the Community", k: "primary", h: "#/join", svg: "users" }],
   }),
 };
 
@@ -353,45 +342,30 @@ ROUTES.join = {
   title: "Join the Community", formation: "heart",
   html: () => hero({
     eyebrow: "✦ Join the Community",
-    h1: `You <span class="gradient-text">belong</span> here`,
-    lead: "This community is for everyone across CRO. No perfect prompt required, no expert badge needed — just come in.",
-    morph: ["Go ahead — ask away.", "Just say hi.", "Tell us what excites you.", "What do you want to know?", "What do you want to share?", "Want to organize a huddle?"],
+    h1: `Join the <span class="gradient-text">Community</span>`,
     cta: [{ t: "Open the Viva Engage Community in a new tab", k: "primary", h: VIVA_URL, svg: "share" }],
   })
 
   + block({
     kicker: "Live now", title: "CRO AI Community Feed",
-    lead: "This is our live Viva Engage community, right here. Read along, say hi, ask anything — sign in with your Equinix account to post.",
+    lead: "Jump in, share your ideas, and ask your AI questions. Look out for weekly prompts and challenges to keep things fresh and interactive.",
     inner: `<div class="viva-embed reveal">
       <div class="viva-head"><span class="live-dot"></span> CRO AI Community Feed</div>
       <iframe name="embed-feed" title="Viva Engage" src="https://engage.cloud.microsoft/embed/groups/eyJfdHlwZSI6Ikdyb3VwIiwiaWQiOiIyMTA0NzYxMjgxNTExNDI0In0" loading="lazy"></iframe>
     </div>`
       + ctas([{ t: "Open the Viva Engage Community in a new tab", k: "cool", h: VIVA_URL, svg: "share" }]),
-  })
-
-  + block({
-    kicker: "Our Promise", panel: true, warm: true,
-    title: "What you can count on",
-    inner: bullets([
-      "You will be <b>heard</b> — your ideas reach a leadership-visible channel.",
-      "You will be <b>helped</b> — no question is ever too small.",
-      "You will be <b>celebrated</b> — and recognized for showing up.",
-      "Curiosity counts more than expertise. Always.",
-    ]) + ctas([{ t: "Open the Viva Engage Community in a new tab", k: "primary", h: VIVA_URL, svg: "share" }]),
   }),
 };
 
 /* ---- Gallery ---- */
 ROUTES.gallery = {
   title: "Community Gallery", formation: "grid",
-  html: () => block({
-    kicker: "Community Gallery", title: "Real work from real people",
-    lead: "A living showcase from the community's AI April sprint — AI art, dashboards, strategy decks, animations, courses, and working apps. Click any piece to view it, and open the apps right here on the page.",
-    inner: pills(["AI Art", "Dashboards", "AI Decks", "Apps & Tools", "Animations", "Courses", "Customer workflow", "Productivity", "Beginner friendly", "Advanced"]),
-  })
-  + block({ kicker: "Highlights", title: "Art, dashboards, decks &amp; more", inner: `<div class="grid c3">` + SHOTS.map(shotCard).join("") + `</div>` })
-  + block({ kicker: "Apps & Tools", title: "Things you can launch right now", lead: "Real working apps the community built with AI — open one and try it, right here.", inner: `<div class="grid c3">` + APPS.map(appCard).join("") + `</div>` })
-  + block({ panel: true, title: "Have something to add?", lead: "The gallery grows when you contribute. Share your prompt, workflow, demo, app, or story in the community.", inner: ctas([{ t: "Share in Viva Engage", k: "primary", h: VIVA_URL, svg: "share" }]) }),
+  html: () => hero({
+    eyebrow: "✦ Community Gallery",
+    h1: `Community <span class="gradient-text">Gallery</span>`,
+    lead: "Show us what you can do with AI. Weekly prompts and challenges will be posted in Viva Engage. Top entries will be showcased right here.",
+    cta: [{ t: "Open the Viva Engage Community in a new tab", k: "primary", h: VIVA_URL, svg: "share" }],
+  }),
 };
 
 /* ---- Skill Up, Speed Up (curated AI learning videos, embedded playback) ---- */
@@ -492,7 +466,7 @@ ROUTES.learning = {
   html: () => hero({
     eyebrow: "✦ GTM Ops Enablement",
     h1: `AI Upskilling <span class="gradient-text">Pathway</span>`,
-    lead: "A clear path to build AI proficiency across GTM Ops — start with the proficiency floor, then earn a recognized Microsoft credential.",
+    lead: "A clear path to build AI proficiency — start with the proficiency floor, then earn a recognized Microsoft credential.",
   })
   + PATHWAY.map(tierSection).join(""),
 };
@@ -576,29 +550,13 @@ ROUTES.recognition = {
   html: () => hero({
     eyebrow: "✦ Community Champions",
     h1: `Community <span class="gradient-text">Champions</span>`,
-    lead: "The Hall of Fame of our Community Champions — refreshed every month.",
+    lead: "Passionate about AI and actively using it in their day-to-day work, these individuals help others learn, experiment, and get more value from AI. They share what works, answer questions, and inspire the community through real examples.",
     cta: [{ t: "Join the Community", k: "primary", h: "#/join", svg: "users" }],
   }),
 };
 
-/* ---- Community Calendar ---- */
-ROUTES.calendar = {
-  title: "AI Events Calendar", formation: "calendar",
-  html: () => block({
-    kicker: "AI Events Calendar", title: "The community rhythm",
-    lead: "AI clinics, office hours, demo days, leadership messages, and showcase events — all in one place.",
-    inner: `<div class="cal">` + [
-      ["Mon", "Prompt of the Week", "Community kickoff", "Kickoff"],
-      ["Tue", "AI Clinic — live help", "AI Clinic", "Clinic"],
-      ["Wed", "Copilot Clinic + Office Hours", "AI Clinic", "Clinic"],
-      ["Thu", "Learning Lane spotlight", "Learning Lanes", "Learn"],
-      ["Fri", "Demo Friday — 60-second demos", "Showcase", "Showcase"],
-      ["Monthly", "Leadership “What We Heard” update", "Leadership", "Leaders"],
-      ["Monthly", "Community Showcase & awards", "Showcase", "Showcase"],
-    ].map((e) => `<div class="cevent reveal"><span class="when">${e[0]}</span><div class="what"><h3>${e[1]}</h3><p>${e[2]}</p></div><span class="kind">${e[3]}</span></div>`).join("") + `</div>`
-      + ctas([{ t: "View Upcoming Events", k: "primary", toast: "Opening the full calendar…", svg: "calendar" }]),
-  }),
-};
+/* AI Events Calendar — pulled for now; will revisit after launch once we see
+   engagement (route + nav entry removed). */
 
 /* ============================================================
    Router + interactions
