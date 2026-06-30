@@ -644,6 +644,23 @@ body.light .mb-caption { text-shadow: 0 1px 10px rgba(255,255,255,0.9); }
   display: inline-flex; align-items: center; gap: 7px; padding: 7px 13px; border-radius: 100px;
   background: color-mix(in srgb, var(--tc) 14%, transparent); border: 1px solid color-mix(in srgb, var(--tc) 35%, transparent); }
 
+/* ---- AI Mastery Paths: course list inside a path card ---- */
+.path-courses { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 8px; }
+.path-courses li { position: relative; padding-left: 16px; font-size: 14px; }
+.path-courses li::before { content: ""; position: absolute; left: 0; top: 9px; width: 6px; height: 6px;
+  border-radius: 50%; background: var(--tc); }
+.path-courses a { color: var(--ink-dim); }
+.path-courses a:hover { color: var(--tc); text-decoration: underline; text-underline-offset: 3px; }
+
+/* ---- AI Events Calendar: team-hosted event cards ---- */
+.event-card { border-left: 3px solid var(--tc); }
+.event-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.event-host { font-size: 12px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--tc); }
+.event-when { font-size: 12px; color: var(--ink-soft); padding: 3px 10px; border-radius: 999px;
+  background: var(--glass); border: 1px solid var(--glass-brd); }
+.event-card h3 { margin: 0 0 6px; font-size: clamp(17px, 1.9vw, 20px); }
+.event-card p { margin: 0; color: var(--ink-dim); font-size: 14.5px; line-height: 1.55; }
+
 /* ---- Viva Engage embed (Join page) ---- */
 .viva-embed {
   margin-top: 18px; border-radius: 16px; overflow: hidden;

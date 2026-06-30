@@ -137,9 +137,10 @@ const formHTML = (fields, submit) =>
    Navigation
    ============================================================ */
 const PRIMARY = [
-  ["Home", "#/home"], ["Join the Community", "#/join"], ["Skill Up, Speed Up", "#/videos"],
-  ["Learning Lanes", "#/learning"], ["Tools & Resources", "#/tools"], ["AI Clinic", "#/clinic"],
-  ["Community Champions", "#/recognition"], ["Community Gallery", "#/gallery"], ["AI Activation for Teams", "#/teams"],
+  ["Home", "#/home"], ["Join the Community", "#/join"], ["AI Tips in Minutes", "#/videos"],
+  ["AI Mastery Paths", "#/learning"], ["Guided AI Program", "#/teams"], ["AI Clinic", "#/clinic"],
+  ["AI Tools", "#/tools"], ["AI Events", "#/calendar"], ["Community Champions", "#/recognition"],
+  ["Community Gallery", "#/gallery"],
 ];
 
 function buildNav() {
@@ -154,13 +155,13 @@ function buildNav() {
       </div>
       <div>
         <h4>Take part</h4>
-        <a href="#/join">Join the Community</a><a href="#/recognition">Community Champions</a>
-        <a href="#/gallery">Community Gallery</a>
+        <a href="#/join">Join the Community</a><a href="#/calendar">AI Events Calendar</a>
+        <a href="#/recognition">Community Champions</a><a href="#/gallery">Community Gallery</a>
       </div>
       <div>
         <h4>Learn &amp; get help</h4>
-        <a href="#/learning">Learning Lanes</a><a href="#/videos">Skill Up, Speed Up</a>
-        <a href="#/clinic">AI Clinic</a><a href="#/teams">AI Activation for Teams</a>
+        <a href="#/videos">AI Tips in Minutes</a><a href="#/learning">AI Mastery Paths</a>
+        <a href="#/clinic">AI Clinic</a><a href="#/tools">Tools &amp; Resources</a><a href="#/teams">Guided AI Program</a>
       </div>
     </div>`;
 }
@@ -369,11 +370,11 @@ ROUTES.gallery = {
 
 /* ---- Skill Up, Speed Up (curated AI learning videos, embedded playback) ---- */
 ROUTES.videos = {
-  title: "Skill Up, Speed Up", formation: "play",
+  title: "AI Tips in Minutes", formation: "play",
   html: () => hero({
-    eyebrow: "✦ Skill Up, Speed Up",
-    h1: `Learn AI, <span class="gradient-text">fast</span>`,
-    lead: "A curated path from your first prompt to building agents — basic, intermediate, and advanced. Click any video and it plays right here, no leaving the page.",
+    eyebrow: "✦ AI Tips in Minutes",
+    h1: `AI Tips in <span class="gradient-text">Minutes</span>`,
+    lead: "Quick videos and simple guidance to help you build useful AI habits — one tip at a time.",
     cta: [{ t: "Start with Prompt Engineering", k: "primary", scroll: slug("Prompt Engineering"), svg: "play" }],
   })
   + LEARN_TRACKS.map((tr) => block({
@@ -387,82 +388,50 @@ ROUTES.videos = {
   }),
 };
 
-/* ---- Learning Lanes: the AI Upskilling Pathway ---- */
-const PATHWAY = [
+/* ---- AI Mastery Paths: curated LinkedIn Learning routes ---- */
+const LL = (q) => "https://www.linkedin.com/learning/search?keywords=" + encodeURIComponent(q);
+const MASTERY_PATHS = [
   {
-    tier: "Tier 1", tierTitle: "No charge", who: "Free courses & certificates",
-    courses: [
-      {
-        idx: "01", t: "Career Essentials in Generative AI", prov: "Microsoft and LinkedIn",
-        tags: [{ l: "Free · LinkedIn Enterprise", free: true }, { l: "~4 to 5 hours" }, { l: "Certificate included" }],
-        link: { url: "https://www.linkedin.com/learning/paths/career-essentials-in-generative-ai-by-microsoft-and-linkedin", label: "linkedin.com/learning · Career Essentials in Generative AI" },
-        cost: "Free under the Equinix LinkedIn Learning Enterprise license, certificate included.",
-        outcome: "Stack-aligned adoption: Copilot inside Word, Excel, Outlook, Teams and PowerPoint, plus GenAI fundamentals and ethics. Proficiency on the tools the team already has.",
-      },
-      {
-        idx: "02", t: "Microsoft AI Business Professional", prov: "Microsoft Learn · course AB-730T00 · practitioner level",
-        tags: [{ l: "Free course + completion cert", free: true }, { l: "No coding" }, { l: "Optional cert exam · $99" }],
-        link: { url: "https://learn.microsoft.com/en-us/credentials/certifications/ai-business-professional/", label: "learn.microsoft.com · AI Business Professional" },
-        cost: "The course is free on Microsoft Learn with a completion certificate, study guide, practice assessment and exam sandbox. Only the optional official certification exam costs money.",
-        outcome: "A practitioner foundation: confident, responsible Copilot use in real business workflows. The broad starting point for most of the community.",
-      },
-      {
-        idx: "03", t: "Microsoft AI Transformation Leader", prov: "Microsoft Learn · course AB-731T00 · leadership level",
-        tags: [{ l: "Free course + completion cert", free: true }, { l: "No coding" }, { l: "Optional cert exam · $99" }],
-        link: { url: "https://learn.microsoft.com/en-us/credentials/certifications/ai-transformation-leader/", label: "learn.microsoft.com · AI Transformation Leader" },
-        cost: "The course is free on Microsoft Learn with a completion certificate, study guide, practice assessment and exam sandbox. Only the optional official certification exam costs money.",
-        outcome: "For those steering adoption: define AI business value, plan adoption, govern responsibly, and drive transformation across teams.",
-      },
-    ],
+    name: "AI for Business Productivity", color: "#ff8a3d",
+    desc: "Work faster and smarter day to day — let AI handle the busywork.",
+    courses: ["Microsoft Copilot for Productivity", "Boosting Productivity with Generative AI", "Prompt Engineering Essentials"],
   },
   {
-    tier: "Tier 2", tierTitle: "Paid certification", who: "Recognized credentials",
-    courses: [
-      {
-        idx: "04", t: "Google AI Essentials", prov: "Google · via Coursera (Grow with Google)",
-        tags: [{ l: "Paid certificate" }, { l: "~$49 per person" }, { l: "~10 hours · self-paced" }],
-        link: { url: "https://www.coursera.org/specializations/ai-essentials-google", label: "coursera.org/specializations/ai-essentials-google" },
-        cost: "Certificate requires a paid Coursera subscription, about $49 per person. Not covered by an Equinix license.",
-        outcome: "Universal generative-AI fluency: prompting, productivity, and responsible use across tools. Every operator can offload routine work and prompt with intent.",
-      },
-      {
-        idx: "05", t: "Generative AI for Everyone", prov: "DeepLearning.AI (Andrew Ng) · via Coursera",
-        tags: [{ l: "Paid certificate" }, { l: "~$49 per person" }, { l: "~5 hours · self-paced" }],
-        link: { url: "https://www.coursera.org/learn/generative-ai-for-everyone", label: "coursera.org/learn/generative-ai-for-everyone" },
-        cost: "Certificate requires a paid Coursera subscription, about $49 per person. Not covered by an Equinix license.",
-        outcome: "Opportunity spotting and strategy: identify and scope where AI creates leverage across workflows. For the people who lead initiatives, not just use the tools.",
-      },
-    ],
+    name: "AI for Customer Success", color: "#18c8b6",
+    desc: "Use AI to prep, retain, and grow your accounts.",
+    courses: ["AI for Customer Experience", "Generative AI for Customer Success", "Using AI to Strengthen Customer Relationships"],
+  },
+  {
+    name: "AI for Data Analysis", color: "#2b88ff",
+    desc: "Turn data into insight with AI assistance.",
+    courses: ["AI for Data Analysis", "Data Analysis with Copilot in Excel", "Generative AI for Data Analytics"],
+  },
+  {
+    name: "AI for Project Management", color: "#9b5dff",
+    desc: "Plan, track, and deliver projects with AI support.",
+    courses: ["AI for Project Managers", "Generative AI for Project Management", "Copilot for Planning & Reporting"],
   },
 ];
-function courseCard(c) {
-  const tags = `<div class="pills">` + c.tags.map((t) => `<span class="pill${t.free ? " free" : ""}">${t.l}</span>`).join("") + `</div>`;
-  return `<article class="course reveal">
-    <div class="course-idx">${c.idx}</div>
-    <div class="course-body">
-      <h3>${c.t}</h3>
-      <p class="course-prov">${c.prov}</p>
-      ${tags}
-      <p class="crow"><span class="clabel">Cost</span><span class="cval">${c.cost}</span></p>
-      <p class="crow"><span class="clabel">Outcome</span><span class="cval">${c.outcome}</span></p>
-      <p class="crow"><span class="clabel">Link</span><span class="cval"><a href="${c.link.url}" target="_blank" rel="noopener">${c.link.label} →</a></span></p>
-    </div>
+function pathCard(pth) {
+  return `<article class="tool-card reveal" style="--tc:${pth.color}">
+    <div class="tool-head"><span class="tool-dot"></span><div><h3>${pth.name}</h3></div></div>
+    <p class="tool-rule">${pth.desc}</p>
+    <ul class="path-courses">${pth.courses.map((c) => `<li><a href="${LL(c)}" target="_blank" rel="noopener">${c}</a></li>`).join("")}</ul>
   </article>`;
 }
-function tierSection(t) {
-  return `<section class="block">
-    <div class="tier-head reveal"><span class="tier-num">${t.tier}</span><h2>${t.tierTitle}</h2><span class="tier-who">${t.who}</span></div>
-    ${t.courses.map(courseCard).join("")}
-  </section>`;
-}
 ROUTES.learning = {
-  title: "Learning Lanes", formation: "book",
+  title: "AI Mastery Paths", formation: "book",
   html: () => hero({
-    eyebrow: "✦ GTM Ops Enablement",
-    h1: `AI Upskilling <span class="gradient-text">Pathway</span>`,
-    lead: "A clear path to build AI proficiency — start with the proficiency floor, then earn a recognized Microsoft credential.",
+    eyebrow: "✦ AI Mastery Paths",
+    h1: `AI Mastery <span class="gradient-text">Paths</span>`,
+    lead: "Curated learning journeys to help you strengthen AI capability, improve judgment, and apply AI with purpose.",
   })
-  + PATHWAY.map(tierSection).join(""),
+  + block({ kicker: "Choose your route", title: "Four paths to grow", inner: `<div class="grid c2 tool-grid">` + MASTERY_PATHS.map(pathCard).join("") + `</div>` })
+  + block({
+    panel: true, title: "Powered by LinkedIn Learning",
+    lead: "Courses are free under the Equinix LinkedIn Learning Enterprise license — certificates included.",
+    inner: ctas([{ t: "Open LinkedIn Learning", k: "primary", h: "https://www.linkedin.com/learning/", svg: "book" }]),
+  }),
 };
 
 /* ---- AI Clinic — book a 1:1 with a Community Expert ---- */
@@ -515,25 +484,25 @@ function clinicBooking() {
 
 /* ---- AI Activation for Teams ---- */
 ROUTES.teams = {
-  title: "AI Activation for Teams", formation: "rocket",
+  title: "Guided AI Program", formation: "rocket",
   html: () => hero({
-    eyebrow: "✦ AI Activation for Teams",
-    h1: `Run AI Activation for <span class="gradient-text">your team</span>`,
-    lead: "A hands-on service from the Enablement team — a custom, curated learning framework built entirely around your team's real work, motions, and goals. Not a generic course.",
+    eyebrow: "✦ Guided AI Program",
+    h1: `Guided AI <span class="gradient-text">Program</span>`,
+    lead: "We guide your team through using AI on your real work, step by step. You bring the goals, we build the sessions and hands-on practice around them. Customized to your team, with options from single-day workshops to monthly programs with ongoing guidance.",
     cta: [{ t: "Learn More", k: "primary", h: "https://gtm-webapps.corp.equinix.com/gtmWebApps/v1/aiActivationStudio/", svg: "rocket" }],
   })
   + block({
-    id: "team-details", kicker: "What you get", title: "Built around your team — totally hands-on",
+    id: "team-details", kicker: "How it works", title: "Built around your team's real work",
     inner: iconCards([
-      { t: "Custom &amp; curated", p: "We shape everything around your team's workflows, tools, and use cases — designed for you, not off the shelf.", icon: "grid" },
-      { t: "Totally hands-on", p: "Real reps, real prompts, real workflows. Your team learns by doing, together, on the work that matters.", icon: "bolt" },
-      { t: "We run it with you", p: "The Enablement team helps discover use cases, design the session, run it, and support adoption afterwards.", icon: "users" },
+      { t: "You bring the goals", p: "Tell us what your team needs to get done — we shape everything around it.", icon: "grid" },
+      { t: "We build the sessions", p: "Custom sessions and hands-on practice on your real work, not generic exercises.", icon: "bolt" },
+      { t: "Step by step", p: "Guided practice so the team learns by doing — and keeps the habit afterwards.", icon: "users" },
     ], 3),
   })
   + block({
-    panel: true, warm: true, title: "Interested in running it for your team?",
-    lead: "Be the champion for your team. Reach out and we'll help you scope it, design it, and run it — start to finish.",
-    inner: ctas([{ t: "Reach Out in Viva Engage", k: "primary", h: VIVA_URL, svg: "users" }, { t: "Talk it through in the AI Clinic", k: "cool", h: "#/clinic", svg: "chat" }]),
+    kicker: "Choose your format", panel: true, warm: true, title: "From a single day to an ongoing program",
+    inner: pills(["Single-day workshop", "Multi-session series", "Monthly program", "Ongoing guidance"])
+      + ctas([{ t: "Learn More", k: "primary", h: "https://gtm-webapps.corp.equinix.com/gtmWebApps/v1/aiActivationStudio/", svg: "rocket" }, { t: "Talk it through in the AI Clinic", k: "cool", h: "#/clinic", svg: "chat" }]),
   }),
 };
 
@@ -556,6 +525,12 @@ const TOOLS = [
     access: "Access in MS Teams",
     rule: "Need help getting your own work done?",
     uses: ["Email", "Word", "Excel", "PowerPoint", "Teams", "Meeting summaries", "Brainstorming", "Writing", "Research", "General AI"],
+  },
+  {
+    name: "Equinix Approved AI Tools", tag: "Approved Tools Directory", color: "#ffcf45",
+    url: "https://equinixinc.sharepoint.com/sites/Intranet/SitePages/IT/Approved-AI-Applications-at-Equinix.aspx?web=1",
+    rule: "See every AI application approved for use at Equinix.",
+    uses: ["Full directory", "IT-approved", "Security-reviewed"],
   },
 ];
 function toolCard(t) {
@@ -590,8 +565,50 @@ ROUTES.recognition = {
   }),
 };
 
-/* AI Events Calendar — pulled for now; will revisit after launch once we see
-   engagement (route + nav entry removed). */
+/* ---- AI Events Calendar: AI-upskilling events hosted by teams across CRO ---- */
+const EVENTS = [
+  {
+    group: "GTM Ops", color: "#2b88ff", cadence: "Monthly",
+    title: "AI for Pipeline Hygiene & Forecasting",
+    desc: "Hands-on: use AI to clean pipeline data, spot risk, and sharpen forecasts.",
+  },
+  {
+    group: "Marketing", color: "#e3008c", cadence: "Monthly",
+    title: "AI for Content & Campaigns",
+    desc: "Draft, repurpose, and localize campaign content faster — with brand guardrails.",
+  },
+  {
+    group: "Customer Success", color: "#18c8b6", cadence: "Monthly",
+    title: "AI for Customer Health & QBRs",
+    desc: "Summarize accounts, prep QBRs, and surface renewal and churn signals with AI.",
+  },
+  {
+    group: "GTST", color: "#9b5dff", cadence: "Monthly",
+    title: "AI for Technical Solution Prep",
+    desc: "Speed up solution design, discovery, and technical responses with AI.",
+  },
+];
+function eventCard(e) {
+  return `<article class="card event-card reveal" style="--tc:${e.color}">
+    <div class="event-top"><span class="event-host">Hosted by ${e.group}</span><span class="event-when">${e.cadence}</span></div>
+    <h3>${e.title}</h3>
+    <p>${e.desc}</p>
+  </article>`;
+}
+ROUTES.calendar = {
+  title: "AI Events Calendar", formation: "calendar",
+  html: () => hero({
+    eyebrow: "✦ AI Events Calendar",
+    h1: `AI Events <span class="gradient-text">Calendar</span>`,
+    lead: "AI-upskilling events hosted by teams across CRO — each tailored to how that team works. Drop into any session that's relevant to you.",
+    cta: [{ t: "See events in Viva Engage", k: "primary", h: VIVA_URL, svg: "share" }],
+  })
+  + block({ kicker: "Hosted by your teams", title: "Sessions built for how each team works",
+    inner: `<div class="grid c2">` + EVENTS.map(eventCard).join("") + `</div>` })
+  + block({ panel: true, title: "Want your team to host one?",
+    lead: "Running an AI-upskilling session for your group? Share it in the community and we'll add it to the calendar.",
+    inner: ctas([{ t: "Add your event in Viva Engage", k: "primary", h: VIVA_URL, svg: "share" }]) }),
+};
 
 /* ============================================================
    Router + interactions
