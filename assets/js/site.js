@@ -137,9 +137,9 @@ const formHTML = (fields, submit) =>
    Navigation
    ============================================================ */
 const PRIMARY = [
-  ["Home", "#/home"], ["Join the Community", "#/join"], ["AI Tips in Minutes", "#/videos"],
-  ["AI Mastery Paths", "#/learning"], ["Guided AI Program", "#/teams"], ["AI Clinic", "#/clinic"],
-  ["AI Tools", "#/tools"], ["AI Events", "#/calendar"], ["Community Champions", "#/recognition"],
+  ["Home", "#/home"], ["Join the Community", "#/join"], ["AI Events", "#/calendar"],
+  ["AI Mastery Paths", "#/learning"], ["AI Tips in Minutes", "#/videos"], ["AI Tools", "#/tools"],
+  ["AI Clinic", "#/clinic"], ["Community Champions", "#/recognition"], ["Guided AI Program", "#/teams"],
   ["Community Gallery", "#/gallery"],
 ];
 
