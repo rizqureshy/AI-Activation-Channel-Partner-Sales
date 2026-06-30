@@ -139,8 +139,8 @@ const formHTML = (fields, submit) =>
 const PRIMARY = [
   ["Home", "#/home"], ["Join the Community", "#/join"], ["AI Events", "#/calendar"],
   ["AI Mastery Paths", "#/learning"], ["AI Tips in Minutes", "#/videos"], ["AI Tools", "#/tools"],
-  ["AI Clinic", "#/clinic"], ["Community Champions", "#/recognition"], ["Guided AI Program", "#/teams"],
-  ["Community Gallery", "#/gallery"],
+  ["AI Experts", "#/clinic"], ["Community Champions", "#/recognition"], ["Community Gallery", "#/gallery"],
+  ["Guided AI Program", "#/teams"],
 ];
 
 function buildNav() {
@@ -161,7 +161,7 @@ function buildNav() {
       <div>
         <h4>Learn &amp; get help</h4>
         <a href="#/videos">AI Tips in Minutes</a><a href="#/learning">AI Mastery Paths</a>
-        <a href="#/clinic">AI Clinic</a><a href="#/tools">Tools &amp; Resources</a><a href="#/teams">Guided AI Program</a>
+        <a href="#/clinic">AI Experts</a><a href="#/tools">Tools &amp; Resources</a><a href="#/teams">Guided AI Program</a>
       </div>
     </div>`;
 }
@@ -436,9 +436,9 @@ ROUTES.learning = {
 
 /* ---- AI Clinic — book a 1:1 with a Community Expert ---- */
 ROUTES.clinic = {
-  title: "AI Clinic", formation: "medical",
+  title: "AI Experts", formation: "medical",
   html: () => hero({
-    eyebrow: "✦ AI Clinic",
+    eyebrow: "✦ AI Experts",
     h1: `Book a <span class="gradient-text">1:1</span> with a Community Expert`,
     lead: "Have a question or idea you'd like to explore with an AI expert beyond the community chat? Book an AI clinic to meet with an expert, get live guidance, and learn how to move your project forward or connect with the right resources.",
     cta: [{ t: "Book a 1:1 Consultation", k: "primary", scroll: "book", svg: "calendar" }],
@@ -502,7 +502,7 @@ ROUTES.teams = {
   + block({
     kicker: "Choose your format", panel: true, warm: true, title: "From a single day to an ongoing program",
     inner: pills(["Single-day workshop", "Multi-session series", "Monthly program", "Ongoing guidance"])
-      + ctas([{ t: "Learn More", k: "primary", h: "https://gtm-webapps.corp.equinix.com/gtmWebApps/v1/aiActivationStudio/", svg: "rocket" }, { t: "Talk it through in the AI Clinic", k: "cool", h: "#/clinic", svg: "chat" }]),
+      + ctas([{ t: "Learn More", k: "primary", h: "https://gtm-webapps.corp.equinix.com/gtmWebApps/v1/aiActivationStudio/", svg: "rocket" }, { t: "Talk it through with an AI Expert", k: "cool", h: "#/clinic", svg: "chat" }]),
   }),
 };
 
@@ -743,7 +743,7 @@ function utcStamp() {
 function buildICS({ date, first, last, email, intro }) {
   const name = `${first} ${last}`.trim();
   const uid = `${date}-${Math.random().toString(36).slice(2)}@cro-ai-activation`;
-  const desc = `1:1 AI Clinic consultation with a CRO AI Activation Community Expert.\n\nRequested by: ${name} <${email}>\n\nUse-case: ${intro}`;
+  const desc = `1:1 AI Experts consultation with a CRO AI Community Expert.\n\nRequested by: ${name} <${email}>\n\nUse-case: ${intro}`;
   return [
     "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//CRO AI Activation Community//AI Clinic//EN",
     "CALSCALE:GREGORIAN", "METHOD:REQUEST",
@@ -756,14 +756,14 @@ function buildICS({ date, first, last, email, intro }) {
     "BEGIN:VEVENT", `UID:${uid}`, `DTSTAMP:${utcStamp()}`,
     `DTSTART;TZID=America/New_York:${date}T${CLINIC.startHM}00`,
     `DTEND;TZID=America/New_York:${date}T${CLINIC.endHM}00`,
-    "SUMMARY:AI Clinic — 1:1 with a Community Expert",
+    "SUMMARY:AI Experts — 1:1 with a Community Expert",
     `DESCRIPTION:${icsEscape(desc)}`,
     "LOCATION:Online",
     `ORGANIZER;CN=CRO AI Activation Community:mailto:${CLINIC.host}`,
     `ATTENDEE;CN=${icsEscape(name)};ROLE=REQ-PARTICIPANT;RSVP=TRUE:mailto:${email}`,
     `ATTENDEE;CN=${CLINIC.hostName};ROLE=CHAIR;RSVP=TRUE:mailto:${CLINIC.host}`,
     "STATUS:CONFIRMED", "SEQUENCE:0",
-    "BEGIN:VALARM", "TRIGGER:-PT10M", "ACTION:DISPLAY", "DESCRIPTION:AI Clinic 1:1 in 10 minutes", "END:VALARM",
+    "BEGIN:VALARM", "TRIGGER:-PT10M", "ACTION:DISPLAY", "DESCRIPTION:AI Experts 1:1 in 10 minutes", "END:VALARM",
     "END:VEVENT", "END:VCALENDAR",
   ].join("\r\n");
 }
@@ -790,9 +790,9 @@ function submitBooking(form) {
   setTimeout(() => URL.revokeObjectURL(url), 4000);
 
   // 2) notify the host (cc the requestor) with the booking details
-  const subject = encodeURIComponent(`AI Clinic 1:1 — ${first} ${last} — ${label}, 12:30–1:00 PM ET`);
+  const subject = encodeURIComponent(`AI Experts 1:1 — ${first} ${last} — ${label}, 12:30–1:00 PM ET`);
   const body = encodeURIComponent(
-    `New AI Clinic 1:1 booking\n\n` +
+    `New AI Experts 1:1 booking\n\n` +
     `Name: ${first} ${last}\nEmail: ${email}\n` +
     `Slot: ${label}, 12:30–1:00 PM ET\n\nUse-case:\n${intro}\n\n` +
     `A calendar invite (.ics) has been generated for both attendees.`
