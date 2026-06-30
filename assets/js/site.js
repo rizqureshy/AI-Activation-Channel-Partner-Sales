@@ -374,7 +374,7 @@ ROUTES.videos = {
   html: () => hero({
     eyebrow: "✦ AI Tips in Minutes",
     h1: `AI Tips in <span class="gradient-text">Minutes</span>`,
-    lead: "Quick videos and simple guidance to help you build useful AI habits — one tip at a time.",
+    lead: "Looking to skill up in minutes? Browse these quick videos to help you build useful AI habits — one tip at a time.",
     cta: [{ t: "Start with Prompt Engineering", k: "primary", scroll: slug("Prompt Engineering"), svg: "play" }],
   })
   + LEARN_TRACKS.map((tr) => block({
@@ -424,7 +424,7 @@ ROUTES.learning = {
   html: () => hero({
     eyebrow: "✦ AI Mastery Paths",
     h1: `AI Mastery <span class="gradient-text">Paths</span>`,
-    lead: "Curated learning journeys to help you strengthen AI capability, improve judgment, and apply AI with purpose.",
+    lead: "Ready to build your AI Expertise? Explore the curated learning journeys to help you strengthen AI capability, improve judgment, and apply AI with purpose.",
   })
   + block({ kicker: "Choose your route", title: "Four paths to grow", inner: `<div class="grid c2 tool-grid">` + MASTERY_PATHS.map(pathCard).join("") + `</div>` })
   + block({
@@ -488,7 +488,7 @@ ROUTES.teams = {
   html: () => hero({
     eyebrow: "✦ Guided AI Program",
     h1: `Guided AI <span class="gradient-text">Program</span>`,
-    lead: "We guide your team through using AI on your real work, step by step. You bring the goals, we build the sessions and hands-on practice around them. Customized to your team, with options from single-day workshops to monthly programs with ongoing guidance.",
+    lead: "Looking for a structured AI program to upskill your team? We guide your team through using AI on your real work, step by step. You bring the goals, we build the sessions and hands-on practice around them. Customized to your team, with options from single-day workshops to monthly programs with ongoing guidance.",
     cta: [{ t: "Learn More", k: "primary", h: "https://gtm-webapps.corp.equinix.com/gtmWebApps/v1/aiActivationStudio/", svg: "rocket" }],
   })
   + block({
@@ -549,7 +549,7 @@ ROUTES.tools = {
   html: () => hero({
     eyebrow: "✦ Tools & Resources",
     h1: `Which AI Tool <span class="gradient-text">Should I Use?</span>`,
-    lead: "Each AI tool at Equinix serves a distinct purpose and may draw from different data and knowledge sources. Unsure which one to use? Check out the decision tree below.",
+    lead: "Not sure which AI tool to use? Each tool at Equinix is designed for a specific purpose and may leverage different data sources. Use the decision tree below to find the right one.",
   })
   + block({ inner: `<div class="grid c2 tool-grid">` + TOOLS.map(toolCard).join("") + `</div>` }),
 };
@@ -600,12 +600,12 @@ ROUTES.calendar = {
   html: () => hero({
     eyebrow: "✦ AI Events Calendar",
     h1: `AI Events <span class="gradient-text">Calendar</span>`,
-    lead: "AI-upskilling events hosted by teams across CRO — each tailored to how that team works. Drop into any session that's relevant to you.",
+    lead: "Looking to participate in an AI training session? Check out our AI-upskilling events hosted by teams across CRO — each tailored to how that team works. Drop into any session that's relevant to you.",
     cta: [{ t: "See events in Viva Engage", k: "primary", h: VIVA_URL, svg: "share" }],
   })
   + block({ kicker: "Hosted by your teams", title: "Sessions built for how each team works",
     inner: `<div class="grid c2">` + EVENTS.map(eventCard).join("") + `</div>` })
-  + block({ panel: true, title: "Want your team to host one?",
+  + block({ panel: true, title: "Interested in hosting a session?",
     lead: "Running an AI-upskilling session for your group? Share it in the community and we'll add it to the calendar.",
     inner: ctas([{ t: "Add your event in Viva Engage", k: "primary", h: VIVA_URL, svg: "share" }]) }),
 };
