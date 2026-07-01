@@ -583,7 +583,7 @@ const EVENTS = [
     desc: "Summarize accounts, prep QBRs, and surface renewal and churn signals with AI.",
   },
   {
-    group: "GTST", color: "#9b5dff", cadence: "Monthly",
+    group: "Solutions Engineering", color: "#9b5dff", cadence: "Monthly",
     title: "AI for Technical Solution Prep",
     desc: "Speed up solution design, discovery, and technical responses with AI.",
   },
